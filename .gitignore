@@ -1,0 +1,13 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+int/extdata/application
+int/extdata/IHME*
+data-raw
+.Rdata
+.httr-oauth
+.DS_Store
+.quarto
+inst/doc
+docs

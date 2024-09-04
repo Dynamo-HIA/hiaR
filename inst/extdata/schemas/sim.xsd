@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Created with Liquid XML Studio 6.1.18.0 - FREE Community Edition (http://www.liquid-technologies.com)-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="sim">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="lb" />
+        <xs:element name="timestep" type="xs:int" />
+        <xs:element name="runmode" type="xs:string" />
+        <xs:element name="stepsbetweensaves" type="xs:int" />
+        <xs:element name="stepsinrun" type="xs:string" />
+        <xs:element name="stoppingcondition" />
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="pop" type="xs:string" />
+        <xs:element name="updaterules">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" name="updaterule">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="characteristicid" type="xs:int" />
+                    <xs:element name="classname" type="xs:string" />
+                    <xs:element minOccurs="0" name="configurationfile" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

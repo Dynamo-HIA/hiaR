@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Created with Liquid XML Studio - FREE Community Edition 7.1.0.1135 (http://www.liquid-technologies.com)-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="riskfactor_continuous">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="referencevalue">
+          <xs:simpleType>
+            <xs:restriction base="xs:float" />
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="cutoffs">
+          <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="9">
+              <xs:element name="cutoff">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="flexdex">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:int">
+                          <xs:minInclusive value="1" />
+                          <xs:maxInclusive value="9" />
+                        </xs:restriction>
+                      </xs:simpleType>
+                     </xs:element>
+                    <xs:element name="value" type="xs:float" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

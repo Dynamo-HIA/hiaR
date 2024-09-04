@@ -1,0 +1,121 @@
+#' Function running the java version of Dynamo-HIA
+#'
+#' @param dynamodir Full path of Dynaomo-HIA work directory (containing a valid Reference_Data and Simulations subdirectory)
+#' @param simulationName Name of simulation (equal to a directory name  under "Simulations")#'
+#' @param runDir name of the directory containing the Dynamo-HIA application#'
+#' @return results of run
+#' @export
+#'
+#' @examples
+runDynamoHIA <- function(dynamodir,simulationName,runDir = "extdata/application"){
+   ## check existence of valid dynamodir 
+  tree <- makeTreeList(dynamodir)
+  if  (!(attr(tree, "valid"))) stop( attr(tree, "errors"))
+  ## check existence of valid configuration file
+  
+    ## TODO write test: 
+    ##  1. check if all the disease / riskfactors used are valid in the tree
+   ## check if dynamo program is present
+  
+  ##  2. check that the RR files exist
+  if (length(list.files(path = runDir, pattern = "runbatch.bat"))==0) stop("Dynamo-HIA program not found (file runbatch.bat missing)")
+  if (length(list.files(path = runDir, pattern = "DynamoHIA.exe"))==0) stop("Dynamo-HIA program not found (DynamoHIA.exe missing)")
+ 
+  system.time(shell(paste(runDir,"\runbatch.bat ",dynamodir,simulationName,".txt",sep="")))
+  print(paste("now running: runbatch.bat ", dynamodir,simulationName,".txt",sep=""))
+  if (length(list.files(path = paste0(dynamodir,"/Simulations/",simulationName,"/results"), pattern = "batchoutput.txt"))==0) stop("Dynamo-HIA program did not produce output")
+  result <- read.delim(paste0(dynamodir,"/Simulations/",simulationName,"/results/batchoutput.txt"), sep=";")
+  return(result)
+  
+}
+
+### below old code that sets up configuration based on old configuration (to be removed)
+
+if(F){
+#setupSimulation <- shinymod{}
+## delivers a simobject 
+configureSimulation <- function(){
+  retrun(simobject)}
+
+runDynamo <- function (dynamodir, simobject)
+
+setwd(runDir)
+system.time(shell(paste("runbatch.bat ",basisWD,simname,".txt",sep="")))
+print(paste("runbatch.bat ", basisWD,simname,".txt",sep=""))
+
+
+## This scripts assumes that there is already a directory with
+## the simulation to be run (a directory under “Simulations”
+## containing a configuration.xml file)
+## Also, it assumes that 100 alternative files are available of
+## each file that needs to be resampled
+## these files should have the same name as the original file,
+## but with _no1 _no2 _no3 etc. added to the filename (before
+## the .xml, and for RR files, before the –riskfactorname.xml),
+## so for instance: RR_CHD_salt-salt.xml will need 100
+## additional files named RR_CHD_salt_no1-salt.xml to
+## RR_CHD_salt_no100-salt.xml files )
+## give the DYNAMO work directory (where the data are)
+## NB THIS PATH SHOULD NOT CONTAIN ANY SPACES !!!!!!!
+basisWD <-"R:/Projects/DYNAMO_workdirs/Netherlands/"
+## NB in the next statement you should use \\ as a directory
+## separator and NOT /
+## the directory that contains DYNAMOHIA.exe
+runDir<-('C:\\DYNAMO-HIA-2 Application\\eclipse - 64bits')
+## give the name of the simulation (= name of the existing
+## subdirectory of the Directory “simulations” containing the
+## configuration.xml file)
+name.simulation<-"Nederland_5gram"
+## give the part of the filename to which _no1 _no2 etc is added
+## NB this should be a unique string, not used in other
+## filenames that are used in the simulation (unless they need
+## to be changed too)
+## or in xml tags as used in configuration.xml
+filepart <- "zout_1-2012"
+setwd(basisWD)
+## read the configuration.xml file
+fileName<-
+paste("Simulations/",name.simulation,"/","configuration.xml",sep
+="")
+CONFIGbasis<-readChar(fileName, file.info(fileName)$size)
+## loop over the number of draws of the uncertainty
+## parameters
+for (iter in 1:100)
+
+{
+
+ setwd(basisWD)
+## make the simulation directory and write
+## the configuration.xml file to that directory
+
+simname<-paste(name.simulation,iter,sep="_")
+fileName<-paste("Simulations/",simname,"/","configuration.xml",sep="")
+CONFIG <-gsub(filepart,paste(filepart,"_no",iter,sep=""),CONFIGbasis, fixed=T)
+ dir.create(paste("Simulations/",simname,sep="") )
+ writeChar(CONFIG,fileName,eos=NULL)
+ ## make the file needed by the DYNAMO batchrunner
+ ## which only contains the simulation name
+ writeChar(simname,paste(simname,".txt",sep=""),eos=NULL)
+
+
+#calls the aforementioned textfile with absolute directory reference from the
+#Dynamo directory ( place of DYNAMO-hia.exe)
+ setwd(runDir)
+ system.time(shell(paste("runbatch.bat ",basisWD,simname,".txt",sep="")))
+ print(paste("runbatch.bat ", basisWD,simname,".txt",sep=""))
+
+
+}
+## this program will yield a set of 100 subdirectories
+## under the “simulations” directory
+## in these directories there will be a directory “results”
+## which contains the output in batchoutput.csv, cohortLE.csv
+## and sullivan.csv
+## these can be read in and processed.
+## the system.time statement copies the content of the
+## runbatch.bat file to the console, and additionally
+## any output (info and error messages) generated by
+## DYNAMO-HIA
+## warnings and some error messages are found in the logging
+## (written to the runDir as czm_mono) 
+}

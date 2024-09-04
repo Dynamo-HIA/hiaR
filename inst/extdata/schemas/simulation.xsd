@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Created with Liquid XML Studio - FREE Community Edition 7.1.0.1135 (http://www.liquid-technologies.com)-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="simulation">
+    <xs:complexType>
+      <xs:sequence>
+        
+        <xs:element name="hasnewborns">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="false" />
+              <xs:enumeration value="true" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="startingYear">
+          <xs:simpleType>
+            <xs:restriction base="xs:int" />
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="numberOfYears">
+          <xs:simpleType>
+            <xs:restriction base="xs:int" />
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="simPopSize">
+          <xs:simpleType>
+            <xs:restriction base="xs:int" />
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="minAge">
+          <xs:simpleType>
+            <xs:restriction base="xs:int">
+              <xs:minInclusive value="0" />
+              <xs:maxInclusive value="95" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="maxAge">
+          <xs:simpleType>
+            <xs:restriction base="xs:int">
+              <xs:minInclusive value="0" />
+              <xs:maxInclusive value="95" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="timeStep">
+          <xs:simpleType>
+            <xs:restriction base="xs:int">
+              <xs:minInclusive value="1" />
+              <xs:maxInclusive value="1" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="refScenarioName" minOccurs="0">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="randomSeed" type="xs:int" />
+        <!-- resultType is Passive element: 
+        	will not be used in 1.0 -->
+        <xs:element name="resultType">
+          <xs:simpleType>
+            <xs:restriction base="xs:string" />
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="popFileName">
+          <xs:simpleType>
+            <xs:restriction base="xs:string" />
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="scenarios">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" name="scenario">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="uniquename" type="xs:string" />
+                    <xs:element name="successRate">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:int">
+                          <xs:minInclusive value="0" />
+                          <xs:maxInclusive value="100" />
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="targetMinAge">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:int">
+                          <xs:minInclusive value="0" />
+                          <xs:maxInclusive value="95" />
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="targetMaxAge">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:int">
+                          <xs:minInclusive value="0" />
+                          <xs:maxInclusive value="95" />
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="targetSex">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:int">
+                          <xs:minInclusive value="0" />
+                          <xs:maxInclusive value="2" />
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="transfilename" type="xs:string" />
+                    <xs:element name="prevfilename" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="diseases">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" name="disease">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="uniquename" type="xs:string" />
+                    <xs:element name="prevfilename" type="xs:string" />
+                    <xs:element name="incfilename" type="xs:string" />
+                    <xs:element name="excessmortfilename" type="xs:string" />
+                    <xs:element name="dalyweightsfilename" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="riskfactors">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" name="riskfactor">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="uniquename" type="xs:string" />
+                    <xs:element name="transfilename" type="xs:string" />
+                    <xs:element name="prevfilename" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="RRs">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" name="RR">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="RRindex">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:int" />
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="isRRfrom">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string" />
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="isRRto">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string" />
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="isRRFile">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string" />
+                      </xs:simpleType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
