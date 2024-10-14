@@ -4,7 +4,12 @@
 \alias{create.shiny.server}
 \title{This creates the Shiny server.}
 \usage{
-create.shiny.server()
+create.shiny.server(
+  risk.factor.prevalence,
+  risk.factor.transition,
+  relative.risks,
+  relative.risk.other
+)
 }
 \description{
 This creates the Shiny server.

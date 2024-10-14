@@ -4,7 +4,7 @@
 \alias{create.shiny.ui}
 \title{This creates the Shiny UI.}
 \usage{
-create.shiny.ui()
+create.shiny.ui(dynamodir, rundir, simdir, population, diseases)
 }
 \value{
 dashboardPage A Shiny dashboardPage() element.

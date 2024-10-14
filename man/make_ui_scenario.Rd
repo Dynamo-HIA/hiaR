@@ -4,7 +4,13 @@
 \alias{make_ui_scenario}
 \title{Title and description.}
 \usage{
-make_ui_scenario(id, input, save)
+make_ui_scenario(
+  risk.factor.prevalence,
+  risk.factor.transition,
+  id,
+  input,
+  save
+)
 }
 \description{
 Title and description.
