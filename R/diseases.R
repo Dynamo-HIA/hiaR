@@ -106,16 +106,16 @@ create_disease_disability_xml <- function(disease_disability_df) {
 #' @return Returns `TRUE` if the directory structure and XML files were created successfully.
 #'
 #' @details The function creates a directory named after the disease and subdirectories for:
-#' - Relative risks from risk factors
-#' - Relative risks from diseases
+#' - Relative_Risks_From_Risk_Factor
+#' - Relative_Risks_From_Diseases
 #' - Prevalences
 #' - Incidences
-#' - Excess mortalities
+#' - Excess_Mortalities
 #' - Disabilities
 #'
 #' For each category, the function generates XML files based on the data provided in the corresponding input list. Each XML file is saved in the appropriate subdirectory.
 #'
-#' The risk factor `"type"` can be `"continuous"`, `"continuous4p"`, `"categorical"`, `"categorical4p"`, `"compound"`, or `"compound4p"`. The excess mortality `"parameter_type"` can be `"Acutely Fatal"` or `"Cured Fraction"`. The function will generate the appropriate XML schemata.
+#' The risk factor `"type"` can be `"continuous"`, `"continuous4p"`, `"categorical"`, `"categorical4p"`, `"compound"`, or `"compound4p"`. The excess mortality `"parameter_type"` can be `"Acutely Fatal"` or `"Cured Fraction"`.
 #'
 #' @seealso
 #' \code{\link{create_population_dir}}
@@ -123,7 +123,7 @@ create_disease_disability_xml <- function(disease_disability_df) {
 #' @examples
 #' \dontrun{
 #' # A list element corresponds to a risk factor (e.g., smoking)
-#' risk_factors <- list("smoking" = list(data = data.frame(...), type = "binary"))
+#' risk_factors <- list("smoking" = list(data = data.frame(...), type = "categorical"))
 #'
 #' # A list element corresponds to another disease (e.g., diabetes)
 #' diseases <- list("diabetes" = list(data = data.frame(...)))

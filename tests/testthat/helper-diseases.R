@@ -37,8 +37,8 @@ generate_relriskfromriskfactor_test_data <- function(mode = "continuous", n = 19
       end = end
     )
   } else {  # categorical mode
-    # Categorical mode: cat (0-50) and value for each row
-    cat <- sample(0:50, n, replace = TRUE)
+    # Categorical mode: cat (1-50) and value for each row
+    cat <- sample(1:50, n, replace = TRUE)
     value <- runif(n)
 
     df <- data.frame(age = age, sex = sex, cat = cat, value = value)
