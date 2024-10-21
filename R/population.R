@@ -1,7 +1,8 @@
 
 create_newborns_xml <- function(sex_ratio, starting_year, newborns_df) {
-  # Create the root element
-  root <- xml2::xml_new_root("newborns")
+  schema_name <- "newborns"
+
+  root <- xml2::xml_new_root(schema_name)
 
   # Add sexratio and startingYear elements
   xml2::xml_add_child(root, "sexratio", sex_ratio)
@@ -12,35 +13,46 @@ create_newborns_xml <- function(sex_ratio, starting_year, newborns_df) {
 
   add_df_to_xml(amounts, newborns_df, "amount")
 
+  validate_xml_schema(root, schema_name)
+
   return(root)
 }
 
 
 create_population_size_xml <- function(size_df) {
-  # Create the root element
-  root <- xml2::xml_new_root("populationsize")
+  schema_name <- "populationsize"
+
+  root <- xml2::xml_new_root(schema_name)
 
   add_df_to_xml(root, size_df, "size")
+
+  validate_xml_schema(root, schema_name)
 
   return(root)
 }
 
 
 create_overall_mortality_xml <- function(mortality_df) {
-  # Create the root element
-  root <- xml2::xml_new_root("overallmortality")
+  schema_name <- "overallmortality"
+
+  root <- xml2::xml_new_root(schema_name)
 
   add_df_to_xml(root, mortality_df, "mortality")
+
+  validate_xml_schema(root, schema_name)
 
   return(root)
 }
 
 
 create_overall_disability_xml <- function(disability_df) {
-  # Create the root element
-  root <- xml2::xml_new_root("overalldisability")
+  schema_name <- "overalldisability"
+
+  root <- xml2::xml_new_root(schema_name)
 
   add_df_to_xml(root, disability_df, "weight")
+
+  validate_xml_schema(root, schema_name)
 
   return(root)
 }
