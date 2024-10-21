@@ -76,8 +76,8 @@ read_xml_schema <- function(filename) {
 }
 
 
-create_xml_schema_error <- function(schema_name) {
-  return(paste0("Validation of XML schema ", schema_name, " failed"))
+create_xml_schema_error <- function(schema_name, errors) {
+  return(paste0("Validation of XML schema ", schema_name, " failed:\n", paste(attr(errors, "errors"), collapse = "\n")))
 }
 
 
@@ -105,7 +105,8 @@ create_xml_schema_error <- function(schema_name) {
 #'
 #' @export
 validate_xml_schema <- function(root, schema_name) {
-  if(!xml2::xml_validate(root, read_xml_schema(schema_name))) {
-    stop(create_xml_schema_error(schema_name))
+  is_valid <- xml2::xml_validate(root, read_xml_schema(schema_name))
+  if (!is_valid) {
+    stop(create_xml_schema_error(schema_name, is_valid))
   }
 }
