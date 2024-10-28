@@ -1,5 +1,3 @@
-
-
 #' Add a data frame to an XML document
 #'
 #' This function appends rows from a data frame as child elements to a specified root XML node. Each row is added as a new child element with column values either as attributes or child elements, depending on the structure of the data.
@@ -21,15 +19,15 @@
 #' @examples
 #' \dontrun{
 #' # Example for disease prevalence across age and sex groups
-#' root <- xml2::xml_new_root("prevalences")
+#' root <- xml2::xml_new_root('prevalences')
 #' df <- data.frame(age = c(21, 21, 22, 22), sex = c(0, 1, 0, 1), value = c(1000, 2000, 1500, 3000))
-#' root <- add_df_to_xml(root, df, "prevalence")
+#' root <- add_df_to_xml(root, df, 'prevalence')
 #' }
 #'
 #' @export
 add_df_to_xml <- function(root, df, row_name) {
   # Iterate over each row in the data frame
-  for (i in 1:nrow(df)) {
+  for (i in seq_len(nrow(df))) {
     # Add a new child element for each row
     row_node <- xml2::xml_add_child(root, row_name)
 
@@ -61,23 +59,29 @@ add_df_to_xml <- function(root, df, row_name) {
 #'
 #' @examples
 #' \dontrun{
-#' # Read an XML schema file named "example_schema" from the package
-#' schema <- read_xml_schema("populationsize")
+#' # Read an XML schema file named 'example_schema' from the package
+#' schema <- read_xml_schema('populationsize')
 #' }
 #'
 #' @export
 read_xml_schema <- function(filename) {
   full_filepath <- fs::path_package(
-    "extdata/schemas",
-    fs::path_ext_set(filename, "xsd"),
+    "extdata/schemas", fs::path_ext_set(filename, "xsd"),
     package = "hiaR"
-    )
+  )
   return(xml2::read_xml(full_filepath))
 }
 
 
 create_xml_schema_error <- function(schema_name, errors) {
-  return(paste0("Validation of XML schema ", schema_name, " failed:\n", paste(attr(errors, "errors"), collapse = "\n")))
+  return(
+    paste0(
+      "Validation of XML schema ", schema_name, " failed:\n", paste(
+        attr(errors, "errors"),
+        collapse = "\n"
+      )
+    )
+  )
 }
 
 
@@ -98,9 +102,9 @@ create_xml_schema_error <- function(schema_name, errors) {
 #'
 #' @examples
 #' \dontrun{
-#' # Validate an XML document against the "example_schema" schema
-#' root <- xml2::read_xml("<root><child>Example</child></root>")
-#' validate_xml_schema(root, "example_schema")
+#' # Validate an XML document against the 'example_schema' schema
+#' root <- xml2::read_xml('<root><child>Example</child></root>')
+#' validate_xml_schema(root, 'example_schema')
 #' }
 #'
 #' @export

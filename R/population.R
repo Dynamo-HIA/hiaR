@@ -1,4 +1,3 @@
-
 create_newborns_xml <- function(sex_ratio, starting_year, newborns_df) {
   schema_name <- "newborns"
 
@@ -90,19 +89,34 @@ create_overall_disability_xml <- function(disability_df) {
 #' mortality <- data.frame(...)
 #' disability <- data.frame(...)
 #'
-#' create_population_dir("ExamplePopulation", 1.05, 2009, newborns, size, mortality, disability)
+#' create_population_dir('ExamplePopulation', 1.05, 2009, newborns, size, mortality, disability)
 #' }
 #'
 #' @export
-create_population_dir <- function(population_name, sex_ratio, starting_year, newborns_df, size_df, mortality_df, disability_df) {
+create_population_dir <- function(
+  population_name, sex_ratio, starting_year, newborns_df, size_df, mortality_df,
+  disability_df
+) {
   if (!dir.exists(population_name)) {
     dir.create(population_name)
   }
 
-  xml2::write_xml(create_newborns_xml(sex_ratio, starting_year, newborns_df), file.path(population_name, "newborns.xml"))
-  xml2::write_xml(create_population_size_xml(size_df), file.path(population_name, "size.xml"))
-  xml2::write_xml(create_overall_mortality_xml(mortality_df), file.path(population_name, "overallmortality.xml"))
-  xml2::write_xml(create_overall_disability_xml(disability_df), file.path(population_name, "overalldisability.xml"))
+  xml2::write_xml(
+    create_newborns_xml(sex_ratio, starting_year, newborns_df),
+    file.path(population_name, "newborns.xml")
+  )
+  xml2::write_xml(
+    create_population_size_xml(size_df),
+    file.path(population_name, "size.xml")
+  )
+  xml2::write_xml(
+    create_overall_mortality_xml(mortality_df),
+    file.path(population_name, "overallmortality.xml")
+  )
+  xml2::write_xml(
+    create_overall_disability_xml(disability_df),
+    file.path(population_name, "overalldisability.xml")
+  )
 
   return(TRUE)
 }

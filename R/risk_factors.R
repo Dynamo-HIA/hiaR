@@ -1,5 +1,3 @@
-
-
 create_transition_matrix_xml <- function(transition_df, type = c("zero", "netto")) {
   matrix_schema_name <- "transitionmatrix"
 
@@ -18,10 +16,13 @@ create_transition_matrix_xml <- function(transition_df, type = c("zero", "netto"
 }
 
 
-create_transition_drift_xml <- function(transition_df, type = c("zero", "netto"), trend = NULL) {
-  if (type == "netto" & is.null(trend)) {
+create_transition_drift_xml <- function(
+    transition_df, type = c("zero", "netto"),
+    trend = NULL
+) {
+  if (type == "netto" && is.null(trend)) {
     stop("Trend data must be provided for netto transition drifts")
-  } else if (type == "zero" & !is.null(trend)) {
+  } else if (type == "zero" && !is.null(trend)) {
     warning("Trend data is not required for zero transition drifts")
   }
 
@@ -46,16 +47,20 @@ create_transition_drift_xml <- function(transition_df, type = c("zero", "netto")
 }
 
 
-create_relative_risks_death_xml <- function(relative_risks_death_df,
-                                            type = c("continuous",
-                                                     "categorical",
-                                                     "compound")
+create_relative_risks_death_xml <- function(
+    relative_risks_death_df, type = c(
+      "continuous", "categorical",
+      "compound"
+    )
 ) {
   schema_name <- paste0("relrisksfordeath_", type)
 
   root <- xml2::xml_new_root(schema_name)
 
-  add_df_to_xml(root, relative_risks_death_df, "relriskfordeath")
+  add_df_to_xml(
+    root, relative_risks_death_df,
+    "relriskfordeath"
+  )
 
   validate_xml_schema(root, schema_name)
 
@@ -63,14 +68,9 @@ create_relative_risks_death_xml <- function(relative_risks_death_df,
 }
 
 
-create_risk_factor_prevalences_xml <- function(prevalences_df,
-                                               type = c("continuous",
-                                                        "categorical",
-                                                        "duration"),
-                                               distribution = c(
-                                                   "Normal",
-                                                   "Log normal"
-                                                 )
+create_risk_factor_prevalences_xml <- function(
+    prevalences_df, type = c("continuous", "categorical", "duration"),
+    distribution = c("Normal", "Log normal")
 ) {
   schema_name <- paste0("riskfactorprevalences_", type)
 
@@ -89,17 +89,20 @@ create_risk_factor_prevalences_xml <- function(prevalences_df,
 }
 
 
-create_relative_risks_disability_xml <- function(relative_risks_disability_df,
-                                                 type = c(
-                                                   "continuous",
-                                                   "categorical",
-                                                   "compound")
+create_relative_risks_disability_xml <- function(
+    relative_risks_disability_df, type = c(
+      "continuous", "categorical",
+      "compound"
+    )
 ) {
   schema_name <- paste0("relrisksfordisability_", type)
 
   root <- xml2::xml_new_root(schema_name)
 
-  add_df_to_xml(root, relative_risks_disability_df, "relriskfordisability")
+  add_df_to_xml(
+    root, relative_risks_disability_df,
+    "relriskfordisability"
+  )
 
   validate_xml_schema(root, schema_name)
 
@@ -107,36 +110,33 @@ create_relative_risks_disability_xml <- function(relative_risks_disability_df,
 }
 
 
-create_risk_factor_configuration <- function(configuration_df,
-                                             reference_list,
-                                             type = c(
-                                               "continuous",
-                                               "categorical",
-                                               "compound"
-                                             )) {
-  if (type == "continuous" & length(reference_list) != 1 && names(reference_list) != "referencevalue") {
+create_risk_factor_configuration <- function(
+    configuration_df,
+    reference_list,
+    type = c("continuous", "categorical", "compound")
+) {
+  if (type == "continuous" && length(reference_list) != 1
+      && names(reference_list) != "referencevalue") {
     stop("The reference list must contain a single reference value for continuous risk factors")
-  } else if (type == "categorical" & length(reference_list) != 1 && names(reference_list) != "referenceclass") {
+  } else if (type == "categorical" && length(reference_list) != 1
+             && names(reference_list) != "referenceclass") {
     stop("The reference list must contain a single reference class for categorical risk factors")
-  } else if (type == "compound" & length(reference_list) != 2 && names(reference_list) != c("referenceclass", "referenceduration")) {
-    stop("The reference list must contain a reference class and a reference duration for compound risk factors")
+  } else if (type == "compound" && length(reference_list) != 2 &&
+             names(reference_list) != c("referenceclass", "referenceduration")) {
+    stop(
+      "The reference list must contain a reference class and a reference duration for compound risk factors"
+    )
   }
 
   schema_name <- paste0("riskfactor_", type)
 
   root <- xml2::xml_new_root(schema_name)
 
-  root_name <- switch(type,
-                      "continuous" = "cutoffs",
-                      "categorical" = "classes",
-                      "compound" = "classes")
+  root_name <- switch(type, continuous = "cutoffs", categorical = "classes", compound = "classes")
 
   child_node <- xml2::xml_add_child(root, root_name)
 
-  child_name <- switch(type,
-                       "continuous" = "cutoff",
-                       "categorical" = "class",
-                       "compound" = "class")
+  child_name <- switch(type, continuous = "cutoff", categorical = "class", compound = "class")
 
   add_df_to_xml(child_node, configuration_df, child_name)
 
@@ -156,19 +156,19 @@ create_risk_factor_configuration <- function(configuration_df,
 #' @param risk_factor_name A character string specifying the name of the risk factor.
 #' A directory will be created with this name if it does not already exist.
 #' @param transition_matrix_list A list of transition matrices, where each element contains
-#'   a list with `"data"` and `"type"` components.
+#'   a list with `'data'` and `'type'` components.
 #' @param transition_drift_list A list of transition drifts, where each element contains
-#'   a list with `"data"`, `"type"`, and `"trend"` components.
+#'   a list with `'data'`, `'type'`, and `'trend'` components.
 #' @param relative_risks_death_list A list of relative risks for death, where each element
-#'   contains a list with `"data"` and `"type"` components.
+#'   contains a list with `'data'` and `'type'` components.
 #' @param prevalences_list A list of prevalences, where each element contains a list with
-#'   `"data"`, `"type"`, and `"distribution"` components.
+#'   `'data'`, `'type'`, and `'distribution'` components.
 #' @param prevalences_duration_list A list of prevalence durations, where each element
-#'   contains a list with a `"data"`` component.
+#'   contains a list with a `'data'`` component.
 #' @param relative_risks_disability_list A list of relative risks for disability, where
-#'   each element contains a list with `"data"` and `"type"` components.
+#'   each element contains a list with `'data'` and `'type'` components.
 #' @param risk_factor_configuration A list of risk factor configurations containing
-#'  `"data"`, `"reference"`, and `"type"` components.
+#'  `'data'`, `'reference'`, and `'type'` components.
 #'
 #' @return A logical value: TRUE if the directory structure was successfully created.
 #'
@@ -184,28 +184,28 @@ create_risk_factor_configuration <- function(configuration_df,
 #' For each category, the function generates XML files based on the data provided in the corresponding input list.
 #' Each XML file is saved in the appropriate subdirectory.
 #'
-#' The transition matrix and drift type can be `"zero"` or `"netto"`.
-#' The risk factor `"type"` can be `"continuous"`, `"categorical"`, or `"compound"`.
-#' For `prevalences_list`, only `"continuous"` and `"categorical"` are valid types.
+#' The transition matrix and drift type can be `'zero'` or `'netto'`.
+#' The risk factor `'type'` can be `'continuous'`, `'categorical'`, or `'compound'`.
+#' For `prevalences_list`, only `'continuous'` and `'categorical'` are valid types.
 #'
 #' @examples
 #' \dontrun{
 #' # A list element corresponds to a population
-#' transition_matrix_list <- list("NL" = list(data = data.frame(...), type = "zero"))
-#' transition_drift_list <- list("NL" = list(data = data.frame(...), type = "zero"))
+#' transition_matrix_list <- list('NL' = list(data = data.frame(...), type = 'zero'))
+#' transition_drift_list <- list('NL' = list(data = data.frame(...), type = 'zero'))
 #'
-#' prevalences_list <- list("NL" = list(data = data.frame(...), type = "continuous", distribution = "normal")
-#' prevalences_duration_list <-  list("NL" = list(data = data.frame(...)))
+#' prevalences_list <- list('NL' = list(data = data.frame(...), type = 'continuous', distribution = 'normal')
+#' prevalences_duration_list <-  list('NL' = list(data = data.frame(...)))
 #'
 #' # A list element corresponds to a risk factor
-#' relative_risks_death_list <- list("continuous" = list(data = data.frame(...), type = "continuous")
-#' relative_risks_disability_list <-  list("continuous" = list(data = data.frame(...), type = "continuous")
+#' relative_risks_death_list <- list('continuous' = list(data = data.frame(...), type = 'continuous')
+#' relative_risks_disability_list <-  list('continuous' = list(data = data.frame(...), type = 'continuous')
 #'
 #' # Configuration for which risk factor element to use
-#' list(data = data.frame(...), reference = list(referencevalue = 0.5), type = "continuous")
+#' list(data = data.frame(...), reference = list(referencevalue = 0.5), type = 'continuous')
 #'
 #' create_risk_factor_dir(
-#'   "smoking",
+#'   'smoking',
 #'   transition_matrix_list = transition_matrix_list,
 #'   transition_drift_list = transition_drift_list,
 #'   relative_risks_death_list = relative_risks_death_list,
@@ -217,14 +217,12 @@ create_risk_factor_configuration <- function(configuration_df,
 #' }
 #'
 #' @export
-create_risk_factor_dir <- function(risk_factor_name,
-                                   transition_matrix_list,
-                                   transition_drift_list,
-                                   relative_risks_death_list,
-                                   prevalences_list,
-                                   prevalences_duration_list,
-                                   relative_risks_disability_list,
-                                   risk_factor_configuration) {
+create_risk_factor_dir <- function(
+    risk_factor_name, transition_matrix_list, transition_drift_list,
+    relative_risks_death_list, prevalences_list,
+    prevalences_duration_list, relative_risks_disability_list,
+    risk_factor_configuration
+) {
 
   # Create the risk factor directory if it doesn't exist
   if (!dir.exists(risk_factor_name)) {
@@ -238,37 +236,54 @@ create_risk_factor_dir <- function(risk_factor_name,
   }
 
   for (name in names(transition_matrix_list)) {
-    transition <- create_transition_matrix_xml(transition_matrix_list[[name]][["data"]], transition_matrix_list[[name]][["type"]])
+    transition <- create_transition_matrix_xml(
+      transition_matrix_list[[name]][["data"]],
+      transition_matrix_list[[name]][["type"]]
+    )
     xml2::write_xml(
-      transition[["matrix"]],
-      file.path(
-        transition_dirname,
-        paste0("Transition_Matrix_", name, "_", basename(risk_factor_name), ".xml")
+      transition[["matrix"]], file.path(
+        transition_dirname, paste0(
+          "Transition_Matrix_", name, "_",
+          basename(risk_factor_name),
+          ".xml"
+        )
       )
     )
     xml2::write_xml(
-      transition[["type"]],
-      file.path(
-        transition_dirname,
-        paste0("Transition_Matrix_", name, "_", basename(risk_factor_name), "_", transition_matrix_list[[name]][["type"]], ".xml")
+      transition[["type"]], file.path(
+        transition_dirname, paste0(
+          "Transition_Matrix_", name, "_",
+          basename(risk_factor_name),
+          "_", transition_matrix_list[[name]][["type"]],
+          ".xml"
+        )
       )
     )
   }
 
   for (name in names(transition_drift_list)) {
-    transition <- create_transition_drift_xml(transition_drift_list[[name]][["data"]], transition_drift_list[[name]][["type"]], transition_drift_list[[name]][["trend"]])
+    transition <- create_transition_drift_xml(
+      transition_drift_list[[name]][["data"]],
+      transition_drift_list[[name]][["type"]],
+      transition_drift_list[[name]][["trend"]]
+    )
     xml2::write_xml(
-      transition[["matrix"]],
-      file.path(
-        transition_dirname,
-        paste0("Transition_Drift_", name, "_", basename(risk_factor_name), ".xml")
+      transition[["matrix"]], file.path(
+        transition_dirname, paste0(
+          "Transition_Drift_", name, "_",
+          basename(risk_factor_name),
+          ".xml"
+        )
       )
     )
     xml2::write_xml(
-      transition[["type"]],
-      file.path(
-        transition_dirname,
-        paste0("Transition_Drift_", name, "_", basename(risk_factor_name), "_", transition_drift_list[[name]][["type"]], ".xml")
+      transition[["type"]], file.path(
+        transition_dirname, paste0(
+          "Transition_Drift_", name, "_",
+          basename(risk_factor_name),
+          "_", transition_drift_list[[name]][["type"]],
+          ".xml"
+        )
       )
     )
   }
@@ -286,8 +301,11 @@ create_risk_factor_dir <- function(risk_factor_name,
         relative_risks_death_list[[name]][["type"]]
       ),
       file.path(
-        relative_risks_death_dirname,
-        paste0("Relative_Risk_Death_", name, "_", basename(risk_factor_name), ".xml")
+        relative_risks_death_dirname, paste0(
+          "Relative_Risk_Death_", name,
+          "_", basename(risk_factor_name),
+          ".xml"
+        )
       )
     )
   }
@@ -306,8 +324,10 @@ create_risk_factor_dir <- function(risk_factor_name,
         prevalences_list[[name]][["distribution"]]
       ),
       file.path(
-        prevalences_dirname,
-        paste0(name, "_", risk_factor_name, "_Prevalences.xml")
+        prevalences_dirname, paste0(
+          name, "_", risk_factor_name,
+          "_Prevalences.xml"
+        )
       )
     )
   }
@@ -320,11 +340,15 @@ create_risk_factor_dir <- function(risk_factor_name,
 
   for (name in names(prevalences_duration_list)) {
     xml2::write_xml(
-      create_risk_factor_prevalences_xml(prevalences_duration_list[[name]][["data"]],
-                                         type = "duration"),
+      create_risk_factor_prevalences_xml(
+        prevalences_duration_list[[name]][["data"]],
+        type = "duration"
+      ),
       file.path(
-        prevalences_duration_dirname,
-        paste0(name, "_", risk_factor_name, "_Prevalence_Duration.xml")
+        prevalences_duration_dirname, paste0(
+          name, "_", risk_factor_name,
+          "_Prevalence_Duration.xml"
+        )
       )
     )
   }
@@ -343,7 +367,11 @@ create_risk_factor_dir <- function(risk_factor_name,
       ),
       file.path(
         relative_risks_disability_dirname,
-        paste0("Relative_Risk_Disability_", name, "_", basename(risk_factor_name), ".xml")
+        paste0(
+          "Relative_Risk_Disability_",
+          name, "_", basename(risk_factor_name),
+          ".xml"
+        )
       )
     )
   }
@@ -355,10 +383,7 @@ create_risk_factor_dir <- function(risk_factor_name,
       risk_factor_configuration[["reference"]],
       risk_factor_configuration[["type"]]
     ),
-    file.path(
-      risk_factor_name,
-      "configuration.xml"
-    )
+    file.path(risk_factor_name, "configuration.xml")
   )
 
   return(TRUE)

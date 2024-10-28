@@ -1,12 +1,8 @@
-create_relative_risks_from_risk_factor_xml <- function(relative_risks_risk_factor_df,
-                                                       type = c(
-                                                         "continuous",
-                                                         "continuous4p",
-                                                         "categorical",
-                                                         "categorical4p",
-                                                         "compound",
-                                                         "compound4p"
-                                                       )) {
+create_relative_risks_from_risk_factor_xml <- function(
+    relative_risks_risk_factor_df, type = c(
+      "continuous", "continuous4p", "categorical", "categorical4p", "compound",
+      "compound4p"
+    )) {
   schema_name <- paste0("relrisksfromriskfactor_", type)
 
   root <- xml2::xml_new_root(schema_name)
@@ -58,9 +54,10 @@ create_disease_incidences_xml <- function(disease_incidences_df) {
 }
 
 
-create_disease_excess_mortalities_xml <- function(unit_type,
-                                                parameter_type,
-                                                disease_excess_mortalities_df) {
+create_disease_excess_mortalities_xml <- function(
+    unit_type,
+    parameter_type,
+    disease_excess_mortalities_df) {
   schema_name <- "excessmortality"
 
   root <- xml2::xml_new_root(schema_name)
@@ -96,12 +93,12 @@ create_disease_disability_xml <- function(disease_disability_df) {
 #' This function creates a directory structure for a specified disease and generates XML files for relative risks from risk factors and other diseases, as well as for disease prevalences, incidences, excess mortalities, and disability data. The directories and XML files are named and organized according to the input lists provided for each category.
 #'
 #' @param disease_name A character string representing the name of the disease. A directory will be created with this name if it does not already exist.
-#' @param risk_factor_list A named list where each element is a list containing two components: `"data"` (the risk factor data) and `"type"` (the type of risk factor). XML files will be generated for each risk factor.
-#' @param diseases_list A named list where each element is a list containing disease data under the key `"data"`. XML files will be generated for relative risks from other diseases.
-#' @param prevalences_list A named list where each element is a list containing prevalence data under the key `"data"`. XML files will be generated for each prevalence.
-#' @param incidences_list A named list where each element is a list containing incidence data under the key `"data"`. XML files will be generated for each incidence.
-#' @param excess_mortalities_list A named list where each element is a list containing three components: `"unit_type"` (the unit of the data), `"parameter_type"` (the type of parameter), and `"data"` (the excess mortality data). XML files will be generated for each excess mortality.
-#' @param disability_list A named list where each element is a list containing disability data under the key `"data"`. XML files will be generated for each disability dataset.
+#' @param risk_factor_list A named list where each element is a list containing two components: `'data'` (the risk factor data) and `'type'` (the type of risk factor). XML files will be generated for each risk factor.
+#' @param diseases_list A named list where each element is a list containing disease data under the key `'data'`. XML files will be generated for relative risks from other diseases.
+#' @param prevalences_list A named list where each element is a list containing prevalence data under the key `'data'`. XML files will be generated for each prevalence.
+#' @param incidences_list A named list where each element is a list containing incidence data under the key `'data'`. XML files will be generated for each incidence.
+#' @param excess_mortalities_list A named list where each element is a list containing three components: `'unit_type'` (the unit of the data), `'parameter_type'` (the type of parameter), and `'data'` (the excess mortality data). XML files will be generated for each excess mortality.
+#' @param disability_list A named list where each element is a list containing disability data under the key `'data'`. XML files will be generated for each disability dataset.
 #'
 #' @return Returns `TRUE` if the directory structure and XML files were created successfully.
 #'
@@ -115,7 +112,7 @@ create_disease_disability_xml <- function(disease_disability_df) {
 #'
 #' For each category, the function generates XML files based on the data provided in the corresponding input list. Each XML file is saved in the appropriate subdirectory.
 #'
-#' The risk factor `"type"` can be `"continuous"`, `"continuous4p"`, `"categorical"`, `"categorical4p"`, `"compound"`, or `"compound4p"`. The excess mortality `"parameter_type"` can be `"Acutely Fatal"` or `"Cured Fraction"`.
+#' The risk factor `'type'` can be `'continuous'`, `'continuous4p'`, `'categorical'`, `'categorical4p'`, `'compound'`, or `'compound4p'`. The excess mortality `'parameter_type'` can be `'Acutely Fatal'` or `'Cured Fraction'`.
 #'
 #' @seealso
 #' \code{\link{create_population_dir}}
@@ -131,21 +128,24 @@ create_disease_disability_xml <- function(disease_disability_df) {
 #' # A list element corresponds to a population (e.g., Netherlands)
 #' prevalences <- list("NL" = list(data = data.frame(...)))
 #' incidences <- list("NL" = list(data = data.frame(...)))
-#' mortalities <- list("NL" = list(unit_type = "Rate", parameter_type = "Acutely Fatal", data = data.frame(...)))
+#' mortalities <- list("NL" = list(
+#'   unit_type = "Rate",
+#'   parameter_type = "Acutely Fatal",
+#'   data = data.frame(...)
+#' ))
 #' disabilities <- list("NL" = list(data = data.frame(...)))
 #'
-#' create_disease_dir("stroke", risk_factors, diseases, prevalences, incidences, mortalities, disabilities)
+#' create_disease_dir(
+#'   "stroke", risk_factors, diseases, prevalences,
+#'   incidences, mortalities, disabilities
+#' )
 #' }
 #'
 #' @export
 
-create_disease_dir <- function(disease_name,
-                               risk_factor_list,
-                               diseases_list,
-                               prevalences_list,
-                               incidences_list,
-                               excess_mortalities_list,
-                               disability_list) {
+create_disease_dir <- function(
+    disease_name, risk_factor_list, diseases_list, prevalences_list, incidences_list,
+    excess_mortalities_list, disability_list) {
   if (!dir.exists(disease_name)) {
     dir.create(disease_name)
   }
@@ -160,13 +160,13 @@ create_disease_dir <- function(disease_name,
   for (name in names(risk_factor_list)) {
     xml2::write_xml(
       create_relative_risks_from_risk_factor_xml(
-        risk_factor_list[[name]][["data"]],
-        risk_factor_list[[name]][["type"]]
+        risk_factor_list[[name]][["data"]], risk_factor_list[[name]][["type"]]
       ),
       file.path(
-        relative_risks_dirname,
-        paste0(
-          "Relative_Risk_", name, "_", basename(disease_name), "-", name, ".xml")
+        relative_risks_dirname, paste0(
+          "Relative_Risk_", name, "_", basename(disease_name),
+          "-", name, ".xml"
+        )
       )
     )
   }
@@ -180,13 +180,12 @@ create_disease_dir <- function(disease_name,
 
   for (name in names(diseases_list)) {
     xml2::write_xml(
-      create_relative_risks_from_diseases_xml(
-        diseases_list[[name]][["data"]]
-      ),
+      create_relative_risks_from_diseases_xml(diseases_list[[name]][["data"]]),
       file.path(
-        other_diseases_dirname,
-        paste0(
-          "Relative_Risk_", name, "_", basename(disease_name), "-", name, ".xml")
+        other_diseases_dirname, paste0(
+          "Relative_Risk_", name, "_", basename(disease_name),
+          "-", name, ".xml"
+        )
       )
     )
   }
@@ -200,14 +199,9 @@ create_disease_dir <- function(disease_name,
 
   for (name in names(prevalences_list)) {
     xml2::write_xml(
-      create_disease_prevalences_xml(
-        prevalences_list[[name]][["data"]]
-      ),
+      create_disease_prevalences_xml(prevalences_list[[name]][["data"]]),
       file.path(
-        prevalences_dirname,
-        paste(
-          name, disease_name, "Prevalences.xml", sep = "_"
-        )
+        prevalences_dirname, paste(name, disease_name, "Prevalences.xml", sep = "_")
       )
     )
   }
@@ -221,14 +215,9 @@ create_disease_dir <- function(disease_name,
 
   for (name in names(incidences_list)) {
     xml2::write_xml(
-      create_disease_incidences_xml(
-        incidences_list[[name]][["data"]]
-      ),
+      create_disease_incidences_xml(incidences_list[[name]][["data"]]),
       file.path(
-        incidences_dirname,
-        paste(
-          name, disease_name, "Incidences.xml", sep = "_"
-        )
+        incidences_dirname, paste(name, disease_name, "Incidences.xml", sep = "_")
       )
     )
   }
@@ -245,13 +234,10 @@ create_disease_dir <- function(disease_name,
       create_disease_excess_mortalities_xml(
         excess_mortalities_list[[name]][["unit_type"]],
         excess_mortalities_list[[name]][["parameter_type"]],
-         excess_mortalities_list[[name]][["data"]]
+        excess_mortalities_list[[name]][["data"]]
       ),
       file.path(
-        mortalities_dirname,
-        paste(
-          name, disease_name, "Mortalities.xml", sep = "_"
-        )
+        mortalities_dirname, paste(name, disease_name, "Mortalities.xml", sep = "_")
       )
     )
   }
@@ -265,14 +251,9 @@ create_disease_dir <- function(disease_name,
 
   for (name in names(disability_list)) {
     xml2::write_xml(
-      create_disease_disability_xml(
-        disability_list[[name]][["data"]]
-      ),
+      create_disease_disability_xml(disability_list[[name]][["data"]]),
       file.path(
-        disability_dirname,
-        paste(
-          name, disease_name, "Disability.xml", sep = "_"
-        )
+        disability_dirname, paste(name, disease_name, "Disability.xml", sep = "_")
       )
     )
   }
