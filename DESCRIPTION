@@ -28,6 +28,5 @@ Imports:
     shinyjs,
     stats,
     utils,
-    XML,
     xml2,
     fs
