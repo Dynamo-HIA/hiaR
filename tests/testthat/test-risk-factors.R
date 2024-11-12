@@ -66,18 +66,7 @@ test_that("create_risk_factor_dir creates correct directory structure and files"
 
     names(relative_risks_disability_list) <- risk_factor_types
 
-    risk_factor_configuration_list <- lapply(risk_factor_types, function(type) {
-      config <- generate_riskfactorconfiguration_test_data(mode = type)
-      return(list(
-        data = config[["data"]],
-        reference = config[["reference"]],
-        type = type
-      ))
-    })
-
     risk_factor_configuration <- generate_riskfactorconfiguration_test_data(mode = "continuous")
-
-    names(risk_factor_configuration_list) <- risk_factor_types
 
     result <- create_risk_factor_dir(
       risk_factor_name = risk_factor_name,

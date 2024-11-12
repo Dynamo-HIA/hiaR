@@ -252,9 +252,9 @@ create_risk_factor_dir <- function(
     xml2::write_xml(
       transition[["type"]], file.path(
         transition_dirname, paste0(
-          "Transition_Matrix_", name, "_",
+          "Transition_", name, "_",
           basename(risk_factor_name),
-          "_", transition_matrix_list[[name]][["type"]],
+          "_", tools::toTitleCase(transition_matrix_list[[name]][["type"]]),
           ".xml"
         )
       )
@@ -270,7 +270,7 @@ create_risk_factor_dir <- function(
     xml2::write_xml(
       transition[["matrix"]], file.path(
         transition_dirname, paste0(
-          "Transition_Drift_", name, "_",
+          "Transition_Matrix_Drift_", name, "_",
           basename(risk_factor_name),
           ".xml"
         )
@@ -281,7 +281,7 @@ create_risk_factor_dir <- function(
         transition_dirname, paste0(
           "Transition_Drift_", name, "_",
           basename(risk_factor_name),
-          "_", transition_drift_list[[name]][["type"]],
+          "_", tools::toTitleCase(transition_drift_list[[name]][["type"]]),
           ".xml"
         )
       )
@@ -345,10 +345,7 @@ create_risk_factor_dir <- function(
         type = "duration"
       ),
       file.path(
-        prevalences_duration_dirname, paste0(
-          name, "_", risk_factor_name,
-          "_Prevalence_Duration.xml"
-        )
+        prevalences_duration_dirname, "durationprevalence.xml"
       )
     )
   }
