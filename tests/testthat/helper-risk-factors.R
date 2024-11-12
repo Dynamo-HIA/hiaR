@@ -1,105 +1,59 @@
-generate_transitionmatrix_test_data <- function(n = 576) {
-  if (n < 576 || n > 5760000) {
-    stop("The number of rows must be between 576 and 5760000.")
-  }
+generate_transitionmatrix_test_data <- function(num_cat = 3) {
+  df <- generate_age_sex_test_data()
 
-  # Generate random values for the data.frame according to the schema
-  age <- sample(0:95, n, replace = TRUE)       # Age: Integer between 0 and 95
-  sex <- sample(0:1, n, replace = TRUE)         # Sex: 0 or 1
-  from <- sample(1:50, n, replace = TRUE)       # From state: Integer (arbitrary range 1-50)
-  to <- sample(1:50, n, replace = TRUE)         # To state: Integer (arbitrary range 1-50)
-  percent <- runif(n, 0, 100)                   # Percent: Random float between 0 and 100
+  from <- 1:num_cat
+  to <- 1:num_cat
 
-  # Create the data.frame
-  transition_matrix_df <- data.frame(
-    age = age,
-    sex = sex,
-    from = from,
-    to = to,
-    percent = percent
-  )
+  df <- merge(df, data.frame(from = from, to = to), by = NULL)
 
-  return(transition_matrix_df)
+  df$percent <- 100/num_cat
+
+  return(df)
 }
 
 
 generate_transitiondrift_test_data <- function() {
-  n <- 192
+  df <- generate_age_sex_test_data()
+  df$mean <- runif(nrow(df))
 
-  # Generate random values for the data.frame according to the schema
-  age <- sample(0:95, n, replace = TRUE)
-  sex <- sample(0:1, n, replace = TRUE)
-  mean <- runif(n)
-
-  # Create the data.frame
-  transition_matrix_df <- data.frame(
-    age = age,
-    sex = sex,
-    mean = mean
-  )
-
-  return(transition_matrix_df)
+  return(df)
 }
 
 
 
-generate_riskfactorprevalences_test_data <- function(mode = c("continous", "categorical", "duration"), n = 192) {
-  # Generate age values (0-95)
-  age <- sample(0:95, n, replace = TRUE)
+generate_riskfactorprevalences_test_data <- function(mode = c("continous", "categorical", "duration"), num_cat = 3) {
+  df <- generate_age_sex_test_data()
 
-  # Generate sex values (0 or 1)
-  sex <- sample(0:1, n, replace = TRUE)
+  n <- nrow(df)
 
-  cat <- sample(1:50, n, replace = TRUE)
-
-  duration <- sample(0:20, n, replace = TRUE)
-
-  mean <- runif(n)
-  std <- runif(n)
-  skewness <- runif(n)
-
-  # Generate percent values (0-100)
-  percent <- runif(n, min = 0, max = 100)
-
-  # Create the data frame
-  df <- data.frame(
-    age = age,
-    sex = sex
-  )
+  cat <- 1:num_cat
 
   if (mode == "categorical") {
-    df$cat <- cat
-    df$percent <- percent
+    df <- merge(df, data.frame(cat = cat))
+    n <- nrow(df)
+    df$percent <- 100/num_cat
   } else if (mode == "duration") {
-    df$duration <- duration
-    df$percent <- percent
+    df <- merge(df, data.frame(duration = cat))
+    n <- nrow(df)
+    df$percent <- 100/num_cat
   } else {
-    df$mean <- mean
-    df$standarddeviation <- std
-    df$skewness <- skewness
+    df$mean <- runif(n)
+    df$standarddeviation <- runif(n)
+    df$skewness <- runif(n)
   }
 
   return(df)
 }
 
 
-generate_riskfactorconfiguration_test_data <- function(mode = c("continuous", "categorical", "compound")) {
-  # Generate age values (0-95)
-  n <- switch(mode,
-    continuous = 9,
-    categorical = 50,
-    compound = 10
-  )
+generate_riskfactorconfiguration_test_data <- function(mode = c("continuous", "categorical", "compound"), num_cat = 3) {
+  if (mode == "continuous") {
+    num_cat <- 9
+  }
 
-  flexdex <- 1:n
-  value <- runif(n)
+  flexdex <- 1:num_cat
+  value <- runif(num_cat)
   name <- "test"
-
-  reference <- list(
-    referencevalue = runif(1),
-    referenceclass = sample(1:n, 1),
-    referenceduration = sample(1:n, 1)
-  )
 
   if (mode == "continuous") {
     df <- data.frame(
@@ -117,7 +71,7 @@ generate_riskfactorconfiguration_test_data <- function(mode = c("continuous", "c
     )
 
     reference <- list(
-      referenceclass = sample(1:n, 1)
+      referenceclass = sample(1:num_cat, 1)
     )
   } else {
     df <- data.frame(
@@ -126,8 +80,8 @@ generate_riskfactorconfiguration_test_data <- function(mode = c("continuous", "c
     )
 
     reference <- list(
-      referenceclass = sample(1:n, 1),
-      referenceduration = sample(1:n, 1)
+      referenceclass = sample(1:num_cat, 1),
+      durationclass = sample(1:num_cat, 1)
     )
   }
 
