@@ -3,9 +3,12 @@
 #' A wrapper for running the Java application. Runs the application in batch mode.
 #'
 #' @param simulation_filename Path to the simulation batch file. Each line of this file must contain
-#' a directory name of a simulation that should be run.
+#' a directory name of a simulation that should be run. This file should be located in the
+#' "working directory", i.e., a directory that contains the `Reference_Data` and `Simulations`
+#' subdirectories.
 #' @param app_filename Path to the Java application.
-#' @param log_filename Path to a log file. Can also be `FALSE` to disable logging.
+#' @param log_filename Path to a log file. The default filename is `run_dynamo_hia.log`.
+#'  Can also be `FALSE` to disable logging.
 #'
 #' @return Returns \code{TRUE} if the simulations ran successfully. Otherwise, it will forward the
 #' exception returned by the Java application.
