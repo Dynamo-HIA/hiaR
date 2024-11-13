@@ -5,10 +5,10 @@
 #' @param simulation_filename Path to the simulation batch file. Each line of this file must contain
 #' a directory name of a simulation that should be run.
 #' @param app_filename Path to the Java application.
-#' @param log_filename Path to a log file.
+#' @param log_filename Path to a log file. Can also be `FALSE` to disable logging.
 #'
 #' @return Returns \code{TRUE} if the simulations ran successfully. Otherwise, it will forward the
-#' exception returned by the Java application
+#' exception returned by the Java application.
 #' @export
 #'
 #' @example
@@ -19,7 +19,7 @@ run_dynamo_hia <- function(simulation_filename, app_filename, log_filename = "ru
   output <- system2(
     command = app_filename,
     args = simulation_filename,
-    stdout = "run_dynamo_hia.log",
+    stdout = log_filename,
     stderr = TRUE
   )
 
