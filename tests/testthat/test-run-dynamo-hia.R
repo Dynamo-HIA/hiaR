@@ -248,7 +248,7 @@ test_that("run_dynamo_hia runs without error", {
     })
     write(paste(populations, collapse = "\n"), "simulationnames.txt")
 
-    print(fs::dir_tree("."))
+    skip_on_ci() # TODO: Cannot run on CI because it requires Dynamo-HIA
 
     result <- run_dynamo_hia("simulationnames.txt", Sys.getenv("DYNAMO_HIA_PATH"))
 
