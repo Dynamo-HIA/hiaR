@@ -114,3 +114,57 @@ validate_xml_schema <- function(root, schema_name) {
     stop(create_xml_schema_error(schema_name, is_valid))
   }
 }
+
+
+#' Validate that a string has N substrings of a given pattern
+#'
+#' @param s The string to check.
+#' @param pattern The pattern to search for.
+#' @param count The number of occurrences of `pattern` in `s`.
+#'
+#' @return Throws an error if the check fails.
+#'
+#' @examples
+#' \dontrun{
+#' validate_n_substrings("hello-world", "-", 1) # passes
+#' validate_n_substrings("hello-world", "!", 1) # fails 
+#' }
+validate_n_substrings <- function(s, pattern, count) {
+  if (length(gregexpr(pattern, s)) != count){
+    msg <- paste0("Invalid filename:", s, ". Expected to have ", count, "occurences of ", pattern, ".")
+    stop(msg)
+  }
+}
+
+
+#' Validate the file ending of a file
+#'
+#' @param file_name String of the file name.
+#' @param ending The file name suffix, ie `.xml`.
+#'
+#' @return Throws an error if validation fails.
+#'
+#' @examples
+#' \dontrun{
+#' validate_file_ending("hello.txt", ".xml") # error
+#' validate_file_ending("hello.py", ".py") # success 
+#' }
+validate_file_ending <- function(file_name, ending) {
+  
+  if (!is.character(file_name)) {
+    msg <- paste("Invalid type. Exepcted string but got ", typeof(file_name))
+    stop(msg)
+  }
+  n_chars <- nchar(file_name)
+  start <- n_chars - nchar(ending) + 1
+  file_ending <- substr(file_name, start, n_chars)
+  
+  
+  if (file_ending != ending) {
+    msg <- paste("Invalid ending for file:", file_name, ". Expected ", ending, " ending.")
+    stop(msg)
+  }
+ 
+}
+
+

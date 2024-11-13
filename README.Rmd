@@ -33,6 +33,19 @@ devtools::install_github("rivm-syso/hiaR")
 
 TODO
 
+## Development documentation
+
+Make sure you have the right settings for line endings.
+
+**In RStudio**
+- Open `Tools` -> `Project Options` -> `Code Editing`
+- Tick `Ensure that source files end with newline`
+- Set `Line ending conversions to Windows (CR/LF)` 
+
+**In the console**
+- run `usethis::use_rstudio(line_ending = "windows")`
+
+
 ## Credits
 
 The code in this repository has been partly generated and/or refined using
