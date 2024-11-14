@@ -29,5 +29,6 @@ Imports:
     shinyjs,
     stats,
     sys,
+    tools,
     withr,
     xml2,
