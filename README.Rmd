@@ -29,6 +29,13 @@ You can install the development version of hiaR via `devtools`:
 devtools::install_github("rivm-syso/hiaR")
 ```
 
+## Running the app
+
+You can start the app with `launch_application`:
+```r
+launch_application()
+```
+
 ## Example
 
 TODO
@@ -44,6 +51,22 @@ Make sure you have the right settings for line endings.
 
 **In the console**
 - run `usethis::use_rstudio(line_ending = "windows")`
+
+### Conventions
+
+#### Naming of modules
+
+If R shiny modules are developed, use the following naming pattern
+- the R script with the module is called "my_purpose_module.R"
+- inside `my_purpose_module.R`, define the functions `my_purpose_ui` for the user
+interface and `my_purpose_server` for the server
+- If possible, add automatic tests for the server functionality. The UI functionality is 
+more complex to test and we decided to test this manually for now.
+
+#### Imports
+
+Any functions from `shiny` can be used directly without the `shiny::` prefix.
+For any other packages, be explicit and use `mypackage::myfunction()`.
 
 
 ## Credits

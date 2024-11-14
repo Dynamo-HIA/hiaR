@@ -1,13 +1,13 @@
 #' This creates the Shiny UI.
-#' 
+#'
 #' @return dashboardPage A Shiny dashboardPage() element.
-#' 
+#'
 #' @import shiny
 #' @import shinydashboard
 #' @import shinyjs
 #' @import shinyFiles
 #' @import stats
-create.shiny.ui <- function(dynamodir, rundir, simdir, population, diseases) {
+create.shiny.ui <- function(dynamodir, rundir, simdir, population, diseases, risk.factor, relative.risks) {
 
 	ui <- fluidPage(
 	  useShinyjs(),
@@ -46,10 +46,10 @@ create.shiny.ui <- function(dynamodir, rundir, simdir, population, diseases) {
 				 tableOutput('show_inputs')),
 		tabPanel("Diseases",
 				 do.call(fluidPage,
-						 purrr::map(seq_len(nrow(diseases)), ~ 
+						 purrr::map(seq_len(nrow(diseases)), ~
 									  fluidRow(
 										column(4, checkboxInput(paste0(diseases$id[[.x]], "_enabled"), diseases$disease[[.x]], value = FALSE)),
-										column(8, 
+										column(8,
 											   selectInput(paste0(diseases$id[[.x]], "_prevalence"), "Prevalence:", choices=diseases$prevalence[[.x]]),
 											   selectInput(paste0(diseases$id[[.x]], "_incidence"), "Incidence:", choices=diseases$incidence[[.x]]),
 											   selectInput(paste0(diseases$id[[.x]], "_excess_mortality"), "Excess Mortality:", choices=diseases$excess.mortality[[.x]]),
@@ -61,11 +61,11 @@ create.shiny.ui <- function(dynamodir, rundir, simdir, population, diseases) {
 		),
 		tabPanel("Relative Risks",
 				 do.call(fluidPage,
-						 purrr::map(seq_len(nrow(relative.risks)), ~ 
+						 purrr::map(seq_len(nrow(relative.risks)), ~
 									  fluidRow(id = relative.risks$id[[.x]],
-											   column(4, checkboxInput(paste0(relative.risks$id[[.x]], "_enabled"), 
+											   column(4, checkboxInput(paste0(relative.risks$id[[.x]], "_enabled"),
 																	   paste(relative.risks$from[[.x]], relative.risks$to[[.x]], sep=" to "), value = FALSE)),
-											   column(8, selectInput(paste0(relative.risks$id[[.x]], "_filename"), "Relative Risk:", 
+											   column(8, selectInput(paste0(relative.risks$id[[.x]], "_filename"), "Relative Risk:",
 																	 choices=c("None", relative.risks$fileName[[.x]])))
 									  )
 						 )
