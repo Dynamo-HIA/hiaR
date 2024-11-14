@@ -1,5 +1,12 @@
+# This is an integration test of the run_dynamo_hia function which wraps the Java application.
+# It first creates dummy XML config files for risk factors, diseases, populations, and a simulation.
+# Then it uses the run_dynamo_hia function to run the Java application with these files.
+# For this test to run, the path to the Java application must be set in the environment variable
+# `DYNAMO_HIA_PATH`.
 test_that("run_dynamo_hia runs without error", {
+  # Run this in a temporary directory to leave no traces
   withr::with_tempdir({
+    # Create reference data directory
     fs::dir_create("Reference_Data")
     withr::with_dir("Reference_Data", {
       populations <- c("Netherlands", "France")
@@ -16,8 +23,11 @@ test_that("run_dynamo_hia runs without error", {
       starting_year <- 2009
       ending_year <- 2012
 
+      # Create populations subdirectory
       fs::dir_create("Populations")
 
+      # Disability and mortality data for each population are needed later for diseases
+      # because the disease mortalities must be lower than the overall population mortalities
       disability_list <- list()
       mortality_list <- list()
 
@@ -37,6 +47,9 @@ test_that("run_dynamo_hia runs without error", {
             mortality_df,
             disability_df
           )
+          expect_true(result)
+          # Reduce the disability by 20% to make sure the disability is lower for diseases
+          # than the population
           disability_df$percent <- pmax(disability_df$percent - 20.0, 0.0)
           disability_list[[population]][["data"]] <- disability_df
           mortality_list[[population]][["data"]] <- mortality_df
@@ -46,6 +59,7 @@ test_that("run_dynamo_hia runs without error", {
       names(disability_list) <- populations
       names(mortality_list) <- populations
 
+      # Create transition matrices for risk factors
       matrix_types <- c("zero", "netto")
 
       transition_matrix_list <- lapply(matrix_types, function(type) {
@@ -67,8 +81,7 @@ test_that("run_dynamo_hia runs without error", {
 
       names(transition_drift_list) <- matrix_types
 
-      risk_factor_paths <- list()
-
+      # Create a risk factor subdirectory
       fs::dir_create("Risk_Factors")
 
       withr::with_dir("Risk_Factors", {
@@ -112,7 +125,7 @@ test_that("run_dynamo_hia runs without error", {
 
           risk_factor_configuration <- generate_riskfactorconfiguration_test_data(mode = risk_factor_type, num_cat = 3)
 
-          risk_factor_paths[[risk_factor]] <- create_risk_factor_dir(
+          result <- create_risk_factor_dir(
             risk_factor_name = risk_factor,
             transition_matrix_list = transition_matrix_list,
             transition_drift_list = transition_drift_list,
@@ -122,9 +135,11 @@ test_that("run_dynamo_hia runs without error", {
             relative_risks_disability_list = relative_risks_disability_list,
             risk_factor_configuration = risk_factor_configuration
           )
+          expect_true(result)
         }
       })
 
+      # Create a diseases subdirectory
       fs::dir_create("Diseases")
 
       withr::with_dir("Diseases", {
@@ -156,6 +171,7 @@ test_that("run_dynamo_hia runs without error", {
 
           names(incidences_list) <- populations
 
+          # Set the disease excess mortality lower than the overall population mortalities
           excess_mortalities_list <- lapply(populations, function(population) {
             df <- mortality_list[[population]][["data"]]
             value <- df$value
@@ -181,20 +197,24 @@ test_that("run_dynamo_hia runs without error", {
             excess_mortalities_list = excess_mortalities_list,
             disability_list = disability_list
           )
+          expect_true(result)
         }
       })
     })
 
+    # Create a simulations directory
     fs::dir_create("Simulations")
 
     withr::with_dir("Simulations", {
       for (risk_factor in names(risk_factors)) {
         for (population in populations) {
+          # Continuous risk factors need a drift transition matrix
           if (risk_factors[[risk_factor]] == "continuous") {
             transition_filename <- paste0("Transition_Drift_netto_", risk_factor, "_Netto")
           } else {
             transition_filename <- paste0("Transition_netto_", risk_factor, "_Netto")
           }
+          # Create lists with filenames of XML configs of risk factors, diseases, populations
           scenario_configs <- list(list(
             uniquename = paste(population, risk_factor, "scenario", sep = "_"),
             successRate = 80,
