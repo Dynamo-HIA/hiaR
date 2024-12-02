@@ -4,7 +4,7 @@
   <xs:element name="simulation">
     <xs:complexType>
       <xs:sequence>
-        
+
         <xs:element name="hasnewborns">
           <xs:simpleType>
             <xs:restriction base="xs:string">
@@ -59,7 +59,7 @@
           </xs:simpleType>
         </xs:element>
         <xs:element name="randomSeed" type="xs:int" />
-        <!-- resultType is Passive element: 
+        <!-- resultType is Passive element:
         	will not be used in 1.0 -->
         <xs:element name="resultType">
           <xs:simpleType>
@@ -138,7 +138,7 @@
         <xs:element name="riskfactors">
           <xs:complexType>
             <xs:sequence>
-              <xs:element minOccurs="0" name="riskfactor">
+              <xs:element minOccurs="0" maxOccurs="unbounded" name="riskfactor">
                 <xs:complexType>
                   <xs:sequence>
                     <xs:element name="uniquename" type="xs:string" />
