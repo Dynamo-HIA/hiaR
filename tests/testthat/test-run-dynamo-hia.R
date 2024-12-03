@@ -215,57 +215,66 @@ test_that("run_dynamo_hia runs without error", {
             transition_filename <- paste0("Transition_netto_", risk_factor, "_Netto")
           }
           # Create lists with filenames of XML configs of risk factors, diseases, populations
-          scenario_configs <- list(list(
-            uniquename = paste(population, risk_factor, "scenario", sep = "_"),
-            successRate = 80,
-            targetMinAge = 20,
-            targetMaxAge = 50,
-            targetSex = 1,
-            transfilename = transition_filename,
-            prevfilename = paste(population, risk_factor, "Prevalences", sep = "_")
+          scenario_configs <- list(configure_scenario(
+            name = paste(population, risk_factor, "scenario", sep = "_"),
+            success_rate = 80,
+            min_age = 20,
+            max_age = 50,
+            gender = 1,
+            transition_filename = transition_filename,
+            prevalence_filename = paste(population, risk_factor, "Prevalences", sep = "_")
           ))
 
           disease_configs <- lapply(diseases, function(disease) {
-            return(list(
-              uniquename = disease,
-              prevfilename = paste(population, disease, "Prevalences", sep = "_"),
-              incfilename = paste(population, disease, "Incidences", sep = "_"),
-              excessmortfilename = paste(population, disease, "Mortalities", sep = "_"),
-              dalyweightsfilename = paste(population, disease, "Disability", sep = "_")
+            return(configure_disease(
+              name = disease,
+              prevalence_filename = paste(population, disease, "Prevalences", sep = "_"),
+              incidence_filename = paste(population, disease, "Incidences", sep = "_"),
+              excess_mortality_filename = paste(population, disease, "Mortalities", sep = "_"),
+              disability_weights_filename = paste(population, disease, "Disability", sep = "_")
             ))
           })
 
-          risk_factor_configs <- list(list(
-            uniquename = risk_factor,
-            transfilename = transition_filename,
-            prevfilename = paste(population, risk_factor, "Prevalences", sep = "_")
-          ))
+          risk_factor_config <- configure_risk_factor(
+            name = risk_factor,
+            transition_filename = transition_filename,
+            prevalence_filename = paste(population, risk_factor, "Prevalences", sep = "_")
+          )
 
-          population_config <- list(
+          relative_risk_config <- lapply(seq_along(diseases), function(i) {
+            return(configure_relative_risk(
+              index = i, # Start with zero
+              from = risk_factor,
+              to = diseases[i],
+              relative_risk_filename = paste0(
+                "Relative_Risk_", risk_factor, "_", diseases[i],
+                "-", risk_factor
+              )
+            ))
+          })
+
+          create_simulation_dir(
+            population,
             has_newborns = TRUE,
             starting_year = starting_year,
             number_of_years = ending_year - starting_year,
-            sim_pop_size = 1,
+            population_size = 1,
             min_age = 0,
             max_age = 95,
             time_step = 1,
             ref_scenario_name = paste0(population, "_Reference_Scenario"),
             random_seed = 42,
             result_type = "Emptyness2BFilled",
-            pop_file_name = population,
+            population_name = population,
             scenarios = scenario_configs,
             diseases = disease_configs,
-            risk_factors = risk_factor_configs,
-            relative_risks = list() # TODO: Add relative risks
-          )
-
-          create_simulation_dir(
-            population,
-            population_config
+            risk_factors = risk_factor_config,
+            relative_risks = relative_risk_config
           )
         }
       }
     })
+
     write(paste(populations, collapse = "\n"), "simulationnames.txt")
 
     skip_on_ci() # TODO: Cannot run on CI because it requires Dynamo-HIA
