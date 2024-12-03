@@ -48,21 +48,19 @@ create_simulation_diseases_xml <- function(parent_node, diseases) {
   return(diseases_node)
 }
 
-create_simulation_risk_factors_xml <- function(parent_node, risk_factors) {
-  risk_factors_node <- xml2::xml_add_child(parent_node, "riskfactors")
-  if (length(risk_factors) > 0) {
-    for (rf in risk_factors) {
-      stopifnot(
-        all(c("uniquename", "transfilename", "prevfilename") %in% names(rf))
-      )
+create_simulation_risk_factor_xml <- function(parent_node, risk_factor) {
+  risk_factor_node <- xml2::xml_add_child(parent_node, "riskfactors")
 
-      rf_node <- xml2::xml_add_child(risk_factors_node, "riskfactor")
-      xml2::xml_add_child(rf_node, "uniquename", rf$uniquename)
-      xml2::xml_add_child(rf_node, "transfilename", rf$transfilename)
-      xml2::xml_add_child(rf_node, "prevfilename", rf$prevfilename)
-    }
-  }
-  return(risk_factors_node)
+  stopifnot(
+    all(c("uniquename", "transfilename", "prevfilename") %in% names(risk_factor))
+  )
+
+  risk_factor_node <- xml2::xml_add_child(risk_factor_node, "riskfactor")
+  xml2::xml_add_child(risk_factor_node, "uniquename", risk_factor$uniquename)
+  xml2::xml_add_child(risk_factor_node, "transfilename", risk_factor$transfilename)
+  xml2::xml_add_child(risk_factor_node, "prevfilename", risk_factor$prevfilename)
+
+  return(risk_factor_node)
 }
 
 create_simulation_relative_risks_xml <- function(parent_node, rrs) {
@@ -100,19 +98,6 @@ create_simulation_configuration_xml <- function(has_newborns = FALSE,
                                                 diseases = list(),
                                                 risk_factors = list(),
                                                 relative_risks = list()) {
-  # Input validation
-  stopifnot(
-    is.logical(has_newborns),
-    is.numeric(starting_year),
-    is.numeric(number_of_years),
-    is.numeric(sim_pop_size),
-    is.numeric(min_age), min_age >= 0, min_age <= 95,
-    is.numeric(max_age), max_age >= 0, max_age <= 95,
-    time_step == 1,
-    is.numeric(random_seed),
-    is.character(pop_file_name)
-  )
-
   schema_name <- "simulation"
 
   # Create root node
@@ -139,7 +124,7 @@ create_simulation_configuration_xml <- function(has_newborns = FALSE,
   # Add complex elements using helper functions
   create_simulation_scenarios_xml(root, scenarios)
   create_simulation_diseases_xml(root, diseases)
-  create_simulation_risk_factors_xml(root, risk_factors)
+  create_simulation_risk_factor_xml(root, risk_factors)
   create_simulation_relative_risks_xml(root, relative_risks)
 
   validate_xml_schema(doc, schema_name)
@@ -147,29 +132,108 @@ create_simulation_configuration_xml <- function(has_newborns = FALSE,
   return(doc)
 }
 
-
+#' Create a simulation directory with configuration file
+#'
+#' Creates a new directory for a simulation and generates a configuration XML file.
+#' The configuration is read by the DYNAMO-HIA model to run the configured simulation. Simulation
+#' results will be stored in the same directory.
+#'
+#' @param simulation_name A character string with the name of the simulation directory to be created.
+#' @param population_name A character string with the name of the population directory to be used.
+#' @param starting_year A numeric indicating the year in which the simulation starts.
+#' @param number_of_years A numeric indicating the duration of the simulation in years.
+#' @param population_size A Numeric indicating the size of the population to simulate.
+#' @param ref_scenario_name A character string with the name of the reference scenario.
+#' @param has_newborns A logical for whether to include newborns in the simulation.
+#' Default is `FALSE`.
+#' @param min_age A numeric indicating the minimum age for the population (0-95). Default is 0.
+#' @param max_age A numeric indicating the maximum age for the population (0-95). Default is 95.
+#' @param time_step A numeric indicating the time step for the simulation. Must be 1.
+#' @param result_type The type of results to generate. Can be `NULL` or a character string.
+#' @param random_seed An optional seed for random number generation.
+#' @param scenarios A list of scenario configurations. Each scenario must be a list containing:
+#'   \itemize{
+#'     \item uniquename: A character string which uniquely identifies the scenario
+#'     \item successRate: A numeric which specifies the success rate between 0 and 100
+#'     \item targetMinAge: A numeric which sets the minimum target age (0-95)
+#'     \item targetMaxAge: A numeric which sets the maximum target age (0-95)
+#'     \item targetSex: A numeric which indicates the target sex code (0: male; 1: female; 2: both)
+#'     \item transfilename: A character string which specifies the transition filename
+#'     \item prevfilename: A character string which specifies the prevalence filename
+#'   }
+#'
+#' @param diseases A list of disease configurations. Each disease must be a list containing:
+#'   \itemize{
+#'     \item uniquename: A character string which uniquely identifies the disease
+#'     \item prevfilename: A character string which specifies the prevalence filename
+#'     \item incfilename: A character string which specifies the incidence filename
+#'     \item excessmortfilename: A character string which specifies the excess mortality filename
+#'     \item dalyweightsfilename: A character string which specifies the disability weights filename
+#'   }
+#'
+#' @param risk_factors A list containing a single risk factor configuration with:
+#'   \itemize{
+#'     \item uniquename: A character string which uniquely identifies the risk factor
+#'     \item transfilename: A character string which specifies the transition filename
+#'     \item prevfilename: A character string which specifies the prevalence filename
+#'   }
+#'
+#' @param relative_risks A list of relative risk configurations. Each relative risk must be a list
+#' containing:
+#'   \itemize{
+#'     \item RRindex: A character string which identifies the relative risk relationship
+#'     \item isRRfrom: A character string which specifies the source. Must be the name of a
+#'     disease or risk factor
+#'     \item isRRto: A character string which specifies the target identifier. Must be the name of a
+#'     disease or risk factor
+#'     \item isRRFile: A character string which specifies the relative risk file path
+#'   }
+#'
+#' @return Logical TRUE if directory creation and configuration was successful.
+#'
+#' @examples
+#' create_simulation_dir(
+#'   simulation_name = "test_sim",
+#'   population_name = "test_pop",
+#'   starting_year = 2024,
+#'   number_of_years = 10,
+#'   population_size = 1000,
+#'   ref_scenario_name = "baseline",
+#'   random_seed = 42
+#' )
+#'
+#' @details
+#' The function creates a directory with the specified simulation name and generates
+#' a `configuration.xml` file inside it using the provided parameters.
+#'
+#' @export
 create_simulation_dir <- function(simulation_name,
-                                  simulation_config = list(
-                                    has_newborns = FALSE,
-                                    starting_year = NULL,
-                                    number_of_years = NULL,
-                                    sim_pop_size = NULL,
-                                    min_age = NULL,
-                                    max_age = NULL,
-                                    time_step = 1,
-                                    ref_scenario_name = NULL,
-                                    random_seed = NULL,
-                                    result_type = "",
-                                    pop_file_name = NULL,
-                                    scenarios = list(),
-                                    diseases = list(),
-                                    risk_factors = list(),
-                                    relative_risks = list()
-                                  )) {
-  # Input validation
+                                  population_name,
+                                  starting_year,
+                                  number_of_years,
+                                  population_size,
+                                  ref_scenario_name,
+                                  has_newborns = FALSE,
+                                  min_age = 0,
+                                  max_age = 95,
+                                  time_step = 1,
+                                  result_type = NULL,
+                                  random_seed = NULL,
+                                  scenarios = list(),
+                                  diseases = list(),
+                                  risk_factors = list(),
+                                  relative_risks = list()) {
   stopifnot(
     is.character(simulation_name),
-    is.list(simulation_config)
+    is.logical(has_newborns),
+    is.numeric(starting_year),
+    is.numeric(number_of_years),
+    is.numeric(population_size),
+    is.numeric(min_age), min_age >= 0, min_age <= 95,
+    is.numeric(max_age), max_age >= 0, max_age <= 95,
+    time_step == 1,
+    is.numeric(random_seed),
+    is.character(population_name)
   )
 
   # Create main directory if it doesn't exist
@@ -179,7 +243,23 @@ create_simulation_dir <- function(simulation_name,
 
   # Create simulation configuration XML
   xml2::write_xml(
-    do.call(create_simulation_configuration_xml, simulation_config),
+    create_simulation_configuration_xml(
+      has_newborns = has_newborns,
+      starting_year = starting_year,
+      number_of_years = number_of_years,
+      sim_pop_size = population_size,
+      min_age = min_age,
+      max_age = max_age,
+      time_step = time_step,
+      ref_scenario_name = ref_scenario_name,
+      random_seed = random_seed,
+      result_type = result_type,
+      pop_file_name = population_name,
+      scenarios = scenarios,
+      diseases = diseases,
+      risk_factors = risk_factors,
+      relative_risks = relative_risks
+    ),
     file.path(simulation_name, "configuration.xml")
   )
 
