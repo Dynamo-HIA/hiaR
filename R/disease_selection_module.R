@@ -149,36 +149,28 @@ disease_selection_ui <- function(id, reference_data) {
 disease_selection_server <- function(id, reference_data) {
   moduleServer(id, function(input, output, session) {
 
-    disease_inputs <- reactiveVal()
+    disease_names <- reactiveVal()
     disease_servers <- reactiveValues(servers = list())
+    server_name_prefix <- "disease_"
 
     observeEvent(reference_data(), {
-      new_diseases <- reference_data()$diseases
-      disease_inputs(new_diseases)
+      new_data <- reference_data()$diseases
+      disease_names(names(new_data))
       disease_servers$servers <- NULL
-      lapply(seq_along(names(new_diseases)), function(i) {
-        id_name <- paste0("disease_", i)
-        disease_servers$servers[[id_name]] <- single_disease_server(id_name)
+      lapply(seq_along(names(new_data)), function(i) {
+        server_name <- paste0(server_name_prefix, i)
+        disease_servers$servers[[server_name]] <- single_disease_server(server_name)
       })
     })
 
 
     # Display the selected outputs
     user_data <- reactive({
-      outputs <- lapply(seq_along(names(disease_servers$servers)), function(i) {
-        disease_name <- paste0("disease_", i)
-        values <- tryCatch(disease_servers$servers[[disease_name]](), error = function(e) NULL)
-        if (!is.null(values)) {
-          list(
-            name = names(disease_inputs())[i],
-            values = values
-          )
-        } else {
-          NULL
-        }
-      })
-
-      Filter(Negate(is.null), outputs)
+      fetch_server_data(
+        server_name_prefix = server_name_prefix,
+        server_list = disease_servers$servers,
+        item_names = disease_names()
+      )
     })
 
    return(user_data)
