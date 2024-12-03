@@ -19,7 +19,6 @@ ui <- fluidPage(
                       uiOutput("disease_selection_ui"),
                       verbatimTextOutput("selected_diseases_display")
                       )
-
   )
 )
 
@@ -69,7 +68,6 @@ server <- function(input, output, session) {
   observeEvent(selected_diseases(), {
     output$selected_diseases_display <- renderPrint({ selected_diseases() })
   })
-
 }
 
 shinyApp(ui, server)
