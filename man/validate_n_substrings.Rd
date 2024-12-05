@@ -22,6 +22,6 @@ Validate that a string has N substrings of a given pattern
 \examples{
 \dontrun{
 validate_n_substrings("hello-world", "-", 1) # passes
-validate_n_substrings("hello-world", "!", 1) # fails 
+validate_n_substrings("hello-world", "!", 1) # fails
 }
 }
