@@ -131,7 +131,7 @@ smoking_intervention = configure_scenario(
 )
 ```
 
-Now that we have configured a risk factor, disease, and scenario, we write them to an XML file in a new sub folder in the `Simulations` folder using the `create_simulation_dir` function. The function requires the name of the simulation and additional parameters to configure the simulation. We will simulate the effect of the smoking intervention on the Dutch population for 10 years starting in 2010. We will use a random seed of 42 to ensure reproducibility.
+Now that we have configured a risk factor, disease, and scenario, we write them to an XML file in a new subfolder in the `Simulations` folder using the `create_simulation_dir` function. The function requires the name of the simulation and additional parameters to configure the simulation. We will simulate the effect of the smoking intervention on the Dutch population for 10 years starting in 2010. We will use a random seed of 42 to ensure reproducibility.
 
 ```{r}
 simulation_name <- "Netherlands_Smoking_Intervention"
@@ -155,13 +155,13 @@ create_simulation_dir(
   relative_risks = list(lung_cancer_smoking_rr_config) # Wrap in list because we could have multiple relative risks
 )
 ```
-The function returns `TRUE` indicating that our configurations are valid and the sub folder was successfully created. We can look at all the available simulations with the `get_simulation_names` function:
+The function returns `TRUE` indicating that our configurations are valid and the subfolder was successfully created. We can look at all the available simulations with the `get_simulation_names` function:
 
 ```{r}
 get_simulation_names(temp_dir)
 ```
 
-The sub folder will also contain the results from the simulation.
+The subfolder will also contain the results from the simulation.
 
 Before we can run the simulation, we need to add the simulation name to a batch file which we will use as input for the DYNAMO-HIA Java application.
 
