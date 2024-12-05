@@ -22,7 +22,10 @@ ui <- fluidPage(
              tabPanel("Diseases",
                       uiOutput("disease_selection_ui"),
                       verbatimTextOutput("selected_diseases_display")
-                      )
+                      ),
+             tabPanel("Relative Risks",
+                      uiOutput("relative_risk_ui"),
+                      verbatimTextOutput("selected_relative_risk_display"))
   )
 )
 
@@ -32,6 +35,7 @@ server <- function(input, output, session) {
     dynamo_path = NULL,
     working_path = NULL
   )
+  available_relative_risks <- reactiveVal(NULL)
 
   user_program_config <- program_config_server("program_config")
   user_simulation_config <- simulation_config_server("simulation_config", reference_data)
@@ -65,15 +69,30 @@ server <- function(input, output, session) {
 
   selected_risk_factors <- risk_factor_server("risk_factors", reference_data)
 
-  # without this button, selected_diseases_display updates automatically
-  #module_selection_inputs <- eventReactive(input$update_data, {
-  #  selected_diseases()
-  #})
+  output$relative_risk_ui <- renderUI({
+    req(available_relative_risks())
+    relative_risk_ui("relative_risks", available_relative_risks)
+  })
 
-  #observeEvent(input$update_data, {
-  #  message("loaded")
-  #  output$selected_diseases_display <- renderPrint({ selected_diseases() })
-  #})
+  selected_relative_risks <- relative_risk_server(
+    "relative_risks", available_relative_risks)
+
+  # Update the choice options for relative risks ratios into diseases
+  # depending on user input from selected risk factors and diseases
+  observe({ # https://groups.google.com/g/shiny-discuss/c/vd_nB-BH8sw
+
+    relative_risks <- reference_data()$relative_risks
+
+    if (is.null(relative_risks)) { # re-set if no reference data
+      available_relative_risks(NULL)
+    } else {
+      diseases <- names(selected_diseases())
+      risk_factors <- names(selected_risk_factors())
+      available_relative_risks(
+        filter_relative_risks(relative_risks, diseases, risk_factors)
+      )
+    }
+  })
 
   # this is for debugging at the moment
   observeEvent(selected_diseases(), {
@@ -83,6 +102,12 @@ server <- function(input, output, session) {
   observeEvent(selected_risk_factors(), {
     output$selected_risk_factors_display <- renderPrint({ selected_risk_factors() })
   })
+
+  observeEvent(selected_relative_risks(), {
+    output$selected_relative_risk_display <- renderPrint({ selected_relative_risks() })
+  })
+
+
 }
 
 shinyApp(ui, server)
