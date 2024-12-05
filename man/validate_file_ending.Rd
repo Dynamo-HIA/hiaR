@@ -20,6 +20,6 @@ Validate the file ending of a file
 \examples{
 \dontrun{
 validate_file_ending("hello.txt", ".xml") # error
-validate_file_ending("hello.py", ".py") # success 
+validate_file_ending("hello.py", ".py") # success
 }
 }

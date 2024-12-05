@@ -15,6 +15,10 @@ ui <- fluidPage(
                         )
                       )
              ),
+             tabPanel("Risk Factors",
+                      uiOutput("risk_factor_ui"),
+                      verbatimTextOutput("selected_risk_factors_display")
+                      ),
              tabPanel("Diseases",
                       uiOutput("disease_selection_ui"),
                       verbatimTextOutput("selected_diseases_display")
@@ -54,6 +58,13 @@ server <- function(input, output, session) {
 
   selected_diseases <- disease_selection_server("selection1", reference_data)
 
+  output$risk_factor_ui <- renderUI({
+    req(reference_data())
+    risk_factor_ui("risk_factors", reference_data)
+  })
+
+  selected_risk_factors <- risk_factor_server("risk_factors", reference_data)
+
   # without this button, selected_diseases_display updates automatically
   #module_selection_inputs <- eventReactive(input$update_data, {
   #  selected_diseases()
@@ -67,6 +78,10 @@ server <- function(input, output, session) {
   # this is for debugging at the moment
   observeEvent(selected_diseases(), {
     output$selected_diseases_display <- renderPrint({ selected_diseases() })
+  })
+
+  observeEvent(selected_risk_factors(), {
+    output$selected_risk_factors_display <- renderPrint({ selected_risk_factors() })
   })
 }
 

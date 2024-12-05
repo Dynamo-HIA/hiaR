@@ -127,7 +127,7 @@ validate_xml_schema <- function(root, schema_name) {
 #' @examples
 #' \dontrun{
 #' validate_n_substrings("hello-world", "-", 1) # passes
-#' validate_n_substrings("hello-world", "!", 1) # fails 
+#' validate_n_substrings("hello-world", "!", 1) # fails
 #' }
 validate_n_substrings <- function(s, pattern, count) {
   if (length(gregexpr(pattern, s)) != count){
@@ -147,10 +147,10 @@ validate_n_substrings <- function(s, pattern, count) {
 #' @examples
 #' \dontrun{
 #' validate_file_ending("hello.txt", ".xml") # error
-#' validate_file_ending("hello.py", ".py") # success 
+#' validate_file_ending("hello.py", ".py") # success
 #' }
 validate_file_ending <- function(file_name, ending) {
-  
+
   if (!is.character(file_name)) {
     msg <- paste("Invalid type. Exepcted string but got ", typeof(file_name))
     stop(msg)
@@ -158,13 +158,44 @@ validate_file_ending <- function(file_name, ending) {
   n_chars <- nchar(file_name)
   start <- n_chars - nchar(ending) + 1
   file_ending <- substr(file_name, start, n_chars)
-  
-  
+
+
   if (file_ending != ending) {
     msg <- paste("Invalid ending for file:", file_name, ". Expected ", ending, " ending.")
     stop(msg)
   }
- 
+
+}
+
+
+#' Get return data from a list of servers
+#'
+#' @param server_name_prefix The prefix for the server names. The function looks
+#' for server names with `server_name_prefix` + `i`, where `i` ranges from 1 to
+#' the number of servers in `server_list`.
+#' @param server_list A list of shiny `moduleServer`s.
+#' @param item_names The names of items which each server refers to. For instance,
+#' these can be the names of diseases or risk factors.
+#'
+#' @returns A named list of non-NULL server values.
+fetch_server_data <- function(server_name_prefix, server_list, item_names) {
+  stopifnot(length(server_list) == length(item_names))
+
+  out_names <- c()
+  outputs <- list()
+
+  for (i in seq_along(names(server_list))) {
+    server_name <- paste0(server_name_prefix, i)
+    values <- tryCatch(server_list[[server_name]](), error = function(e) NULL)
+    if (!is.null(values)) {
+      current_length <- length(outputs)
+      outputs[[current_length + 1]] <- values
+      out_names[current_length + 1] <- item_names[i]
+    }
+  }
+
+  names(outputs) <- out_names
+  return(outputs)
 }
 
 
