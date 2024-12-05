@@ -18,9 +18,3 @@ An invisible character vector of simulation directory names or paths.
 \description{
 Retrieves the names or paths of simulation directories within the project structure.
 }
-\examples{
-root_dir <- system.file("extdata", "example-nl", "Reference_Data", package = "hiaR")
-get_simulation_names(root_dir)
-get_simulation_names(root_dir, return_paths = TRUE)
-
-}

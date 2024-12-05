@@ -232,11 +232,6 @@ get_risk_factor_names <- function(root_dir, return_paths = FALSE) {
 #'
 #' @export
 #'
-#' @examples
-#' root_dir <- system.file("extdata", "example-nl", "Reference_Data", package = "hiaR")
-#' get_simulation_names(root_dir)
-#' get_simulation_names(root_dir, return_paths = TRUE)
-#'
 get_simulation_names <- function(root_dir, return_paths = FALSE) {
   return(get_directory_names(fs::path(root_dir, "Simulations"), return_paths))
 }
