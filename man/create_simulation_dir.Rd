@@ -99,15 +99,3 @@ results will be stored in the same directory.
 The function creates a directory with the specified simulation name and generates
 a \code{configuration.xml} file inside it using the provided parameters.
 }
-\examples{
-create_simulation_dir(
-  simulation_name = "test_sim",
-  population_name = "test_pop",
-  starting_year = 2024,
-  number_of_years = 10,
-  population_size = 1000,
-  ref_scenario_name = "baseline",
-  random_seed = 42
-)
-
-}
