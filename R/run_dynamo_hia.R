@@ -19,16 +19,20 @@
 #' run_dynamo_hia("simulation_batch.txt", "DYNAMO-HIA")
 #' }
 run_dynamo_hia <- function(simulation_filename, app_filename, log_filename = "run_dynamo_hia.log") {
-  output <- system2(
-    command = app_filename,
-    args = simulation_filename,
-    stdout = log_filename,
-    stderr = TRUE
-  )
+  withr::with_tempfile("std_err", {
+    sys::exec_wait(
+      cmd = app_filename,
+      args = simulation_filename,
+      std_out = log_filename,
+      std_err = std_err
+    )
 
-  if (length(output) > 0) {
-    stop(output)
-  }
+    errors <- readLines(std_err)
+
+    if (length(errors) > 0) {
+      stop(errors)
+    }
+  })
 
   return(TRUE)
 }
