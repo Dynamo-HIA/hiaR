@@ -148,3 +148,297 @@ collect_relative_risks <- function(in_list, keyword_map) {
     return(out)
   }, simplify = FALSE, USE.NAMES = TRUE)
 }
+
+get_directory_names <- function(dir_name, return_paths = FALSE) {
+  tree <- fs::dir_tree(dir_name, type = "directory", recurse = FALSE)
+  if (return_paths) {
+    return(invisible(tree))
+  }
+  return(invisible(fs::path_file(tree)))
+}
+
+#' Get disease directory names
+#'
+#' Retrieves the names or paths of disease directories within the project structure.
+#'
+#' @param root_dir A character string which specifies the root directory of the project.
+#' @param return_paths A logical which determines whether to return full paths (TRUE) or
+#' only directory names (FALSE).
+#'
+#' @return An invisible character vector of disease directory names or paths.
+#'
+#' @export
+#'
+#' @examples
+#' root_dir <- system.file("extdata", "example-nl", "Reference_Data", package = "hiaR")
+#' get_disease_names(root_dir)
+#' get_disease_names(root_dir, return_paths = TRUE)
+#'
+get_disease_names <- function(root_dir, return_paths = FALSE) {
+  return(get_directory_names(fs::path(root_dir, "Diseases"), return_paths))
+}
+
+#' Get population directory names
+#'
+#' Retrieves the names or paths of population directories within the project structure.
+#'
+#' @param root_dir A character string which specifies the root directory of the project.
+#' @param return_paths A logical which determines whether to return full paths (TRUE) or
+#' only directory names (FALSE).
+#'
+#' @return An invisible character vector of population directory names or paths.
+#'
+#' @export
+#'
+#' @examples
+#' root_dir <- system.file("extdata", "example-nl", "Reference_Data", package = "hiaR")
+#' get_population_names(root_dir)
+#' get_population_names(root_dir, return_paths = TRUE)
+#'
+get_population_names <- function(root_dir, return_paths = FALSE) {
+  return(get_directory_names(fs::path(root_dir, "Populations"), return_paths))
+}
+
+#' Get risk factor directory names
+#'
+#' Retrieves the names or paths of risk factor directories within the project structure.
+#'
+#' @param root_dir A character string which specifies the root directory of the project.
+#' @param return_paths A logical which determines whether to return full paths (TRUE) or
+#' only directory names (FALSE).
+#'
+#' @return An invisible character vector of risk factor directory names or paths.
+#'
+#' @export
+#'
+#' @examples
+#' root_dir <- system.file("extdata", "example-nl", "Reference_Data", package = "hiaR")
+#' get_risk_factor_names(root_dir)
+#' get_risk_factor_names(root_dir, return_paths = TRUE)
+#'
+get_risk_factor_names <- function(root_dir, return_paths = FALSE) {
+  return(get_directory_names(fs::path(root_dir, "Risk_Factors"), return_paths))
+}
+
+#' Get simulation directory names
+#'
+#' Retrieves the names or paths of simulation directories within the project structure.
+#'
+#' @param root_dir A character string which specifies the root directory of the project.
+#' @param return_paths A logical which determines whether to return full paths (TRUE) or
+#' only directory names (FALSE).
+#'
+#' @return An invisible character vector of simulation directory names or paths.
+#'
+#' @export
+#'
+get_simulation_names <- function(root_dir, return_paths = FALSE) {
+  return(get_directory_names(fs::path(root_dir, "Simulations"), return_paths))
+}
+
+get_directory_filenames <- function(root_dir, dir_name, sub_dir_name) {
+  return(fs::dir_tree(fs::path(root_dir, dir_name, sub_dir_name)))
+}
+
+#' Get disease filenames
+#'
+#' Retrieves all filenames associated with a specific disease.
+#'
+#' @param root_dir A character string which specifies the root directory of the project.
+#' @param disease_name A character string which specifies the name of the disease directory.
+#'
+#' @return A character vector of filenames associated with the specified disease.
+#'
+#' @export
+#'
+#' @examples
+#' root_dir <- system.file("extdata", "example-nl", "Reference_Data", package = "hiaR")
+#' get_disease_filenames(root_dir, "Lung_Cancer")
+#'
+get_disease_filenames <- function(root_dir, disease_name) {
+  return(get_directory_filenames(root_dir, "Diseases", disease_name))
+}
+
+#' Get population filenames
+#'
+#' Retrieves all filenames associated with a specific population.
+#'
+#' @param root_dir A character string which specifies the root directory of the project.
+#' @param population_name A character string which specifies the name of the population directory.
+#'
+#' @return A character vector of filenames associated with the specified population.
+#'
+#' @export
+#'
+#' @examples
+#' root_dir <- system.file("extdata", "example-nl", "Reference_Data", package = "hiaR")
+#' get_population_filenames(root_dir, "Netherlands")
+#'
+get_population_filenames <- function(root_dir, population_name) {
+  return(get_directory_filenames(root_dir, "Populations", population_name))
+}
+
+#' Get risk factor filenames
+#'
+#' Retrieves all filenames associated with a specific risk factor.
+#'
+#' @param root_dir A character string which specifies the root directory of the project.
+#' @param risk_factor_name A character string which specifies the name of the risk factor directory.
+#'
+#' @return A character vector of filenames associated with the specified risk factor.
+#'
+#' @export
+#'
+#' @examples
+#' root_dir <- system.file("extdata", "example-nl", "Reference_Data", package = "hiaR")
+#' get_risk_factor_filenames(root_dir, "Smoking_cat3")
+#'
+get_risk_factor_filenames <- function(root_dir, risk_factor_name) {
+  return(get_directory_filenames(root_dir, "Risk_Factors", risk_factor_name))
+}
+
+#' Configure a risk factor
+#'
+#' @description Creates a configuration list for a risk factor in the simulation.
+#'
+#' @param name A character string which specifies the unique name of the risk factor.
+#' @param transition_filename A character string which specifies the path to the
+#' transition rates file.
+#' @param prevalence_filename A character string which specifies the path to the prevalence file.
+#'
+#' @return A list containing the risk factor configuration parameters.
+#'
+#' @export
+#'
+#' @examples
+#' configure_risk_factor(
+#'   name = "Smoking_cat3", # Should be the same as the name in the reference data
+#'   transition_filename = "NL_RF_smoking_Transitions_Netto",
+#'   prevalence_filename = "NL_RF_smoking_cat3_Prev_V1"
+#' )
+#'
+configure_risk_factor <- function(name, transition_filename, prevalence_filename) {
+  return(list(
+    uniquename = name,
+    transfilename = transition_filename,
+    prevfilename = prevalence_filename
+  ))
+}
+
+#' Configure a disease
+#'
+#' @description Creates a configuration list for a disease in the simulation.
+#'
+#' @param name A character string which specifies the unique name of the disease.
+#' @param prevalence_filename A character string which specifies the path to the prevalence file.
+#' @param incidence_filename A character string which specifies the path to the incidence file.
+#' @param excess_mortality_filename A character string which specifies the path to the
+#' excess mortality file.
+#' @param disability_weights_filename A character string which specifies the path to the
+#' disability weights file.
+#'
+#' @return A list containing the disease configuration parameters.
+#'
+#' @export
+#'
+#' @examples
+#' configure_disease(
+#'   name = "Lung_Cancer",
+#'   prevalence_filename = "NL_disease_LungCa_Prev_V2",
+#'   incidence_filename = "NL_disease_LungCa_Inc_V2",
+#'   excess_mortality_filename = "NL_disease_LungCa_ExecMor_V2",
+#'   disability_weights_filename = "NL_disease_LungCa_DALY_V1"
+#' )
+#'
+configure_disease <- function(name,
+                              prevalence_filename,
+                              incidence_filename,
+                              excess_mortality_filename,
+                              disability_weights_filename) {
+  return(list(
+    uniquename = name,
+    prevfilename = prevalence_filename,
+    incfilename = incidence_filename,
+    excessmortfilename = excess_mortality_filename,
+    dalyweightsfilename = disability_weights_filename
+  ))
+}
+
+#' Configure a relative risk
+#'
+#' @description Creates a configuration list for a relative risk relationship between a
+#' risk factor and disease.
+#'
+#' @param index A character string which specifies the unique identifier for this
+#' relative risk relationship.
+#' @param from A character string which specifies the source (usually a risk factor).
+#' @param to A character string which specifies the target (usually a disease).
+#' @param relative_risk_filename A character string which specifies the path to the
+#' relative risk file.
+#'
+#' @return A list containing the relative risk configuration parameters.
+#'
+#' @export
+#'
+#' @examples
+#' configure_relative_risk(
+#'   index = 0,
+#'   from = "Smoking_cat3",
+#'   to = "Lung_Cancer",
+#'   relative_risk_filename = "RR_to_LungCa-Smoking_cat3"
+#' )
+#'
+configure_relative_risk <- function(index, from, to, relative_risk_filename) {
+  return(list(
+    RRindex = index,
+    isRRfrom = from,
+    isRRto = to,
+    isRRFile = relative_risk_filename
+  ))
+}
+
+#' Configure a scenario
+#'
+#' @description Creates a configuration list for an intervention scenario in the simulation.
+#'
+#' @param name A character string which specifies the unique name of the scenario.
+#' @param success_rate A numeric which specifies the intervention success rate (0-100).
+#' @param min_age A numeric which specifies the minimum target age (0-95).
+#' @param max_age A numeric which specifies the maximum target age (0-95).
+#' @param gender A numeric which specifies the target gender (0=both, 1=male, 2=female).
+#' @param transition_filename A character string which specifies the path to the
+#' transition rates file.
+#' @param prevalence_filename A character string which specifies the path to the prevalence file.
+#'
+#' @return A list containing the scenario configuration parameters.
+#'
+#' @export
+#'
+#' @examples
+#' configure_scenario(
+#'   name = "All_Never_Smokers",
+#'   success_rate = 80,
+#'   min_age = 18,
+#'   max_age = 65,
+#'   gender = 2, # Both female and male
+#'   transition_filename = "NL_RF_smoking_Transitions_Netto",
+#'   prevalence_filename = "RF_smoking_cat_All_Never_Smokers_Prev"
+#' )
+#'
+configure_scenario <- function(name,
+                               success_rate,
+                               min_age,
+                               max_age,
+                               gender,
+                               transition_filename,
+                               prevalence_filename) {
+  return(list(
+    uniquename = name,
+    successRate = success_rate,
+    targetMinAge = min_age,
+    targetMaxAge = max_age,
+    targetSex = gender,
+    transfilename = transition_filename,
+    prevfilename = prevalence_filename
+  ))
+}

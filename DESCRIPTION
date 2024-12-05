@@ -22,10 +22,11 @@ VignetteBuilder: knitr
 Config/testthat/edition: 3
 Imports: 
     dplyr,
+    fs,
     shiny,
     shinydashboard,
     shinyFiles,
     shinyjs,
     stats,
-    xml2,
-    fs
+    withr,
+    xml2
