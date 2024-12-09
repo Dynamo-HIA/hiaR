@@ -2,7 +2,7 @@
 generate_test_file_groups <- function(file_group) {
   if (file_group == "disease") {
     lookup_items <- c("Relative_Risks_From_Risk_Factor", "Relative_Risks_From_Diseases")
-    
+
     input_list <- list(
       Disease1 = list(
         Relative_Risks_From_Risk_Factor = list(
@@ -14,7 +14,7 @@ generate_test_file_groups <- function(file_group) {
         ),
         unrelated_item = list(
           "another-item.xml" = NULL
-        ) 
+        )
       ),
       Disease2 = list(
         Relative_Risks_From_Risk_Factor = list(
@@ -48,7 +48,7 @@ generate_test_file_groups <- function(file_group) {
       )
     )
   }
-  
+
   return(list(
     inputs = input_list,
     lookup_items = lookup_items
@@ -64,7 +64,7 @@ generate_relative_risk_data <- function() {
   df_b1 = data.frame(
       filename = c("file3", "file4"),
       from = c("source3", "source4"),
-      to = c("disease1", "disease1") 
+      to = c("disease1", "disease1")
   )
   df_a2 = data.frame(
       filename = c("file11", "file12"),
@@ -74,10 +74,10 @@ generate_relative_risk_data <- function() {
   df_b2 = data.frame(
       filename = c("file13", "file14"),
       from = c("source13", "source14"),
-      to = c("disease2", "disease2") 
+      to = c("disease2", "disease2")
   )
   cols_input <- c("filename", "from")
-  
+
   input_list <- list(
     disease1 = list(
       key_a = df_a1[cols_input],
@@ -85,11 +85,11 @@ generate_relative_risk_data <- function() {
       key_nonmatching = NULL
     ),
     disease2 = list(
-      key_a = df_a2[cols_input], 
+      key_a = df_a2[cols_input],
       key_b = df_b2[cols_input]
     )
   )
-  
+
   return(list(
     input_list = input_list,
     kw_map =  list(
@@ -97,8 +97,8 @@ generate_relative_risk_data <- function() {
       key_b = NULL
     ),
     expected = list(
-      key_a = bind_rows(df_a1, df_a2),
-      key_b = bind_rows(df_b1, df_b2)
+      key_a = rbind(df_a1, df_a2),
+      key_b = rbind(df_b1, df_b2)
     )
     )
   )
