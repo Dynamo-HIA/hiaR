@@ -1,8 +1,12 @@
 Package: hiaR
 Title: Dynamic Modeling for Health Impact Assessment
-Version: 0.0.0.9000
-Authors@R: 
-    person("Hendriek", "Boshuizen", , "hendriek.boshuizen@rivm.nl", role = c("aut", "cre"))
+Version: 1.0.0
+Authors@R: c(
+        person("Hendriek", "Boshuizen", email = "hendriek.boshuizen@rivm.nl", role = c("aut")),
+        person("Malte", "Lüken", email = "m.luken@esciencecenter.nl", role = c("aut")),
+        person("Flavio", "Hafner", email = "f.hafner@esciencecenter.nl", role = c("aut")),
+        person("Laurens", "Bogaardt", email = "laurens.bogaardt@rivm.nl", role = c("aut", "cre"))
+    )
 Description: DYNAMO-HIA (DYNamic MOdeling for Health Impact Assessment) is
     a generic software tool specially designed to aid the quantification
     step in health impact assessment. DYNAMO-HIA is generic in the sense
@@ -20,13 +24,9 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-Imports: 
-    dplyr,
+Imports:
     fs,
     shiny,
-    shinydashboard,
-    shinyFiles,
-    shinyjs,
     stats,
     withr,
     xml2
