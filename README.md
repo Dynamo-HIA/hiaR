@@ -6,6 +6,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/Dynamo-HIA/hiaR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Dynamo-HIA/hiaR/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/Dynamo-HIA/hiaR/graph/badge.svg)](https://app.codecov.io/gh/Dynamo-HIA/hiaR)
 <!-- badges: end -->
 
 The goal of the `hiaR` R package is to provide a user-friendly interface
