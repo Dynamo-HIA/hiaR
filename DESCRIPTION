@@ -2,10 +2,10 @@ Package: hiaR
 Title: Dynamic Modeling of Health Impact Assessment in R
 Version: 1.0.0
 Authors@R: c(
-        person("Hendriek", "Boshuizen", email = "hendriek.boshuizen@rivm.nl", role = c("aut")),
+        person("Hendriek", "Boshuizen", email = "hendriek.boshuizen@rivm.nl", role = c("aut", "cre")),
         person("Malte", "Lüken", email = "m.luken@esciencecenter.nl", role = c("aut")),
         person("Flavio", "Hafner", email = "f.hafner@esciencecenter.nl", role = c("aut")),
-        person("Laurens", "Bogaardt", email = "laurens.bogaardt@rivm.nl", role = c("aut", "cre"))
+        person("Laurens", "Bogaardt", email = "laurens.bogaardt@rivm.nl", role = c("aut"))
     )
 Description: The hiaR package provides a user-friendly interface to the DYNAMO-HIA software tool.
     It contains R functions to configure and run DYNAMO-HIA, and to visualize the results.
