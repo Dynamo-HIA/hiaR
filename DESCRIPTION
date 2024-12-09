@@ -30,3 +30,4 @@ Imports:
     stats,
     withr,
     xml2
+URL: https://dynamo-hia.github.io/hiaR/
