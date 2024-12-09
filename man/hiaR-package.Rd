@@ -8,8 +8,22 @@
 \description{
 DYNAMO-HIA (DYNamic MOdeling for Health Impact Assessment) is a generic software tool specially designed to aid the quantification step in health impact assessment. DYNAMO-HIA is generic in the sense that it allows arbitrary chronic diseases or risk-factors that fit the standard causal pathway of the health impact assessment framework to be modeled. The user can import and use his or her own data to add and analyze diseases or populations that are of interest to him or her.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://dynamo-hia.github.io/hiaR/}
+}
+
+}
 \author{
-\strong{Maintainer}: Hendriek Boshuizen \email{hendriek.boshuizen@rivm.nl}
+\strong{Maintainer}: Laurens Bogaardt \email{laurens.bogaardt@rivm.nl}
+
+Authors:
+\itemize{
+  \item Hendriek Boshuizen \email{hendriek.boshuizen@rivm.nl}
+  \item Malte Lüken \email{m.luken@esciencecenter.nl}
+  \item Flavio Hafner \email{f.hafner@esciencecenter.nl}
+}
 
 }
 \keyword{internal}
