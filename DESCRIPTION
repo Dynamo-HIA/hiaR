@@ -35,3 +35,4 @@ Imports:
     withr,
     xml2
 URL: https://dynamo-hia.github.io/hiaR/
+BugReports: https://dynamo-hia.github.io/hiaR/issues
