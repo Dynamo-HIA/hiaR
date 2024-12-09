@@ -1,4 +1,32 @@
 url: https://dynamo-hia.github.io/hiaR/
 template:
   bootstrap: 5
-
+reference:
+- title: "Inspect reference data"
+  desc: >
+    Functions to get an overview of the available reference data.
+  contents:
+  - starts_with("get_")
+- title: "Configuration"
+  desc: >
+    Functions for configuring DYNAMO-HIA simulations.
+  contents:
+  - starts_with("configure")
+  - create_simulation_dir
+- title: "Run DYNAMO-HIA from R"
+  desc: >
+    Run one or multiple simulations using the DYNAMO-HIA Java program.
+  contents:
+  - run_dynamo_hia
+- title: "Run DYNAMO-HIA interactively"
+  desc: >
+    Launch the Shiny app to run DYNAMO-HIA interactively.
+  contents:
+  - launch_application
+- title: "Create reference data"
+  desc: >
+    Functions to create reference data for DYNAMO-HIA.
+  contents:
+  - create_disease_dir
+  - create_population_dir
+  - create_risk_factor_dir
