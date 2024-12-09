@@ -1,6 +1,24 @@
 url: https://dynamo-hia.github.io/hiaR/
 template:
   bootstrap: 5
+home:
+  sidebar:
+    structure: [toc, links, license, authors, dev]
+  links:
+  - text: DYNAMO-HIA website
+    href: https://dynamo-hia.github.io/
+navbar:
+  left:
+    - text: "Get started"
+      href: articles/hiaR.html
+    - text: "Reference"
+      href: reference/index.html
+    - text: "Citation"  # Your new section
+      href: articles/citation.html  # Path to your R Markdown file
+  right:
+    - search: true
+    - icon: fa-github
+      href: https://github.com/Dynamo-HIA/hiaR
 reference:
 - title: "Inspect reference data"
   desc: >
