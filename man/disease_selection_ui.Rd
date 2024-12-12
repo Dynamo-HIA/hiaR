@@ -26,6 +26,4 @@ This function generates a UI for multiple diseases based on the provided
 reference data. For each disease in the reference data, it creates a \code{single_disease_ui}
 component, allowing users to select specific XML files for various disease parameters.
 }
-\seealso{
-\code{\link{single_disease_ui}}
-}
+\keyword{internal}

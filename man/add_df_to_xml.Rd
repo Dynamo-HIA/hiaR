@@ -33,6 +33,4 @@ root <- add_df_to_xml(root, df, 'prevalence')
 }
 
 }
-\seealso{
-\code{\link[xml2]{xml_add_child}} for adding child elements to XML nodes, \code{\link[xml2]{xml_new_root}} for creating new XML root nodes.
-}
+\keyword{internal}

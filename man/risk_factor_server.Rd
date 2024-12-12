@@ -22,8 +22,4 @@ Each element in the list corresponds to an active risk factor and contains a nes
 Dynamically create and manage individual risk factor servers based on the provided reference data,
 and collect user inputs for all active risk factors.
 }
-\seealso{
-\code{\link{risk_factor_ui}} for the corresponding UI component.
-\code{\link{single_risk_factor_server}} for the individual risk factor server logic.
-\code{\link{fetch_server_data}} for the helper function that collects data from multiple servers.
-}
+\keyword{internal}

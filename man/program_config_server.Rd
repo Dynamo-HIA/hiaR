@@ -21,3 +21,4 @@ A named list of reactive values with the following elements
 The function observes the values in the UI, loads reference meta data and
 sends them back as reactive values to the caller.
 }
+\keyword{internal}

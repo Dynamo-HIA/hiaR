@@ -25,6 +25,4 @@ schema <- read_xml_schema('populationsize')
 }
 
 }
-\seealso{
-\code{\link[xml2]{read_xml}} for reading and parsing XML documents.
-}
+\keyword{internal}

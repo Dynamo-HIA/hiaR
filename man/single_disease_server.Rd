@@ -23,3 +23,4 @@ Each of the items contain the xml file the user chose in the UI.
 \description{
 Server part for a single disease
 }
+\keyword{internal}

@@ -27,38 +27,37 @@
 #' and "Relative_Risks_From_Diseases". For risk factors, it searches for "Relative_Risks_For_Death"
 #' and "Relative_Risks_For_Disability".
 #'
-#' @seealso \code{\link{get_file_tree}}, \code{\link{get_relative_risk_source}}
-#'
-#' @export
-#'
 #' @examples
 #' \dontrun{
 #' root_dir <- "../data/Tutorial_Data/Reference_Data"
 #' file_groups <- get_reference_data(root_dir)
 #' }
+#'
+#' @keywords internal
+#'
 get_reference_data <- function(root_dir) {
   groups <- list(diseases = "Diseases",
                  populations = "Populations",
                  risk_factors = "Risk_Factors")
-  
+
   groups <- sapply(groups, function(x) {
     get_file_tree(file.path(root_dir, x))
   }, USE.NAMES = TRUE)
-  
+
   kw_map_diseases <- list(
     Relative_Risks_From_Risk_Factor = NULL,
     Relative_Risks_From_Diseases = NULL
   )
   rr_diseases <- get_relative_risk_source(groups$diseases, names(kw_map_diseases))
   rr_diseases <- collect_relative_risks(rr_diseases, kw_map_diseases)
-  
+
   kw_map_risk_factors <- list(Relative_Risks_For_Death = "death",
                               Relative_Risks_For_Disability = "disability")
   rr_risk_factors <- get_relative_risk_source(groups$risk_factors, names(kw_map_risk_factors), FALSE)
   rr_risk_factors <- collect_relative_risks(rr_risk_factors, kw_map_risk_factors)
-  
+
   groups[["relative_risks"]] <- list(diseases = rr_diseases, risk_factors = rr_risk_factors)
-  
+
   return(groups)
 }
 

@@ -1,15 +1,24 @@
 Package: hiaR
-Title: Dynamic Modeling for Health Impact Assessment
-Version: 0.0.0.9000
-Authors@R: 
-    person("Hendriek", "Boshuizen", , "hendriek.boshuizen@rivm.nl", role = c("aut", "cre"))
-Description: DYNAMO-HIA (DYNamic MOdeling for Health Impact Assessment) is
-    a generic software tool specially designed to aid the quantification
-    step in health impact assessment. DYNAMO-HIA is generic in the sense
-    that it allows arbitrary chronic diseases or risk-factors that fit the
-    standard causal pathway of the health impact assessment framework to
-    be modeled. The user can import and use his or her own data to add and
-    analyze diseases or populations that are of interest to him or her.
+Title: Dynamic Modeling of Health Impact Assessment in R
+Version: 1.0.0
+Authors@R: c(
+        person("Hendriek", "Boshuizen", email = "hendriek.boshuizen@rivm.nl", role = c("aut", "cre")),
+        person("Malte", "Lüken", email = "m.luken@esciencecenter.nl", role = c("aut")),
+        person("Flavio", "Hafner", email = "f.hafner@esciencecenter.nl", role = c("aut")),
+        person("Laurens", "Bogaardt", email = "laurens.bogaardt@rivm.nl", role = c("aut"))
+    )
+Description: The hiaR package provides a user-friendly interface to the DYNAMO-HIA software tool.
+    It contains R functions to configure and run DYNAMO-HIA, and to visualize the results.
+    The package also contains a Shiny app to interactively run DYNAMO-HIA.
+    DYNAMO-HIA (DYNamic MOdeling
+    for Health Impact Assessment) is a generic software tool
+    specially designed to aid the quantification step in
+    health impact assessment. DYNAMO-HIA is generic in the
+    sense that it allows arbitrary chronic diseases or
+    risk-factors that fit the standard causal pathway of the
+    health impact assessment framework to be modeled. Users
+    can import and use their own data to add and analyze
+    diseases or populations of interest.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -20,13 +29,12 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-Imports: 
-    dplyr,
+Imports:
     fs,
     shiny,
-    shinydashboard,
     shinyFiles,
-    shinyjs,
     stats,
     withr,
     xml2
+URL: https://dynamo-hia.github.io/hiaR/
+BugReports: https://dynamo-hia.github.io/hiaR/issues

@@ -29,3 +29,4 @@ fields for prevalence, incidence, excess mortality and disability.
 \description{
 UI for selecting a single disease
 }
+\keyword{internal}

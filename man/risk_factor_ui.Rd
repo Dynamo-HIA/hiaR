@@ -20,7 +20,4 @@ A tagList containing UI components for each risk factor.
 Create a collection of individual risk factor UI elements based on the
 provided reference data.
 }
-\seealso{
-\code{\link{single_risk_factor_ui}} for the individual risk factor UI component.
-\code{\link{risk_factor_server}} for the corresponding server-side logic.
-}
+\keyword{internal}

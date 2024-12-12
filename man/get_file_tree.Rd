@@ -17,3 +17,4 @@ Recurses through \code{tree_root} and returns a nested, named list
 corresponding to the nesting structure of files. At the leaf nodes,
 which can be empty directories or files, it returns NULL.
 }
+\keyword{internal}

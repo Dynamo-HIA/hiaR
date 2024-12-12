@@ -17,3 +17,4 @@ does not have the right content.
 Creates two panels for the user to choose the paths to the DYNAMO executable
 and to the working directory.
 }
+\keyword{internal}

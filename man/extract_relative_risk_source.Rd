@@ -20,4 +20,6 @@ Extracts the substring after the unique hyphen in the file name.
 \dontrun{
 extract_relative_risk_source("RR_to_BreatCa-Smoking_dur.xml")
 }
+
 }
+\keyword{internal}

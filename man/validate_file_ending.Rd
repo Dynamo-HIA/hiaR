@@ -22,4 +22,6 @@ Validate the file ending of a file
 validate_file_ending("hello.txt", ".xml") # error
 validate_file_ending("hello.py", ".py") # success
 }
+
 }
+\keyword{internal}
