@@ -118,7 +118,7 @@ create_simulation_configuration_xml <- function(has_newborns = FALSE,
   }
 
   xml2::xml_add_child(root, "randomSeed", random_seed)
-  xml2::xml_add_child(root, "resultType", result_type)
+  xml2::xml_add_child(root, "resultType", result_type) # Not used by Java application
   xml2::xml_add_child(root, "popFileName", pop_file_name)
 
   # Add complex elements using helper functions
@@ -149,7 +149,6 @@ create_simulation_configuration_xml <- function(has_newborns = FALSE,
 #' @param min_age A numeric indicating the minimum age for the population (0-95). Default is 0.
 #' @param max_age A numeric indicating the maximum age for the population (0-95). Default is 95.
 #' @param time_step A numeric indicating the time step for the simulation. Must be 1.
-#' @param result_type The type of results to generate. Can be `NULL` or a character string.
 #' @param random_seed An optional seed for random number generation.
 #' @param scenarios A list of scenario configurations. Each scenario must be a list containing:
 #'   \itemize{
@@ -206,7 +205,6 @@ create_simulation_dir <- function(simulation_name,
                                   min_age = 0,
                                   max_age = 95,
                                   time_step = 1,
-                                  result_type = NULL,
                                   random_seed = NULL,
                                   scenarios = list(),
                                   diseases = list(),
@@ -242,7 +240,6 @@ create_simulation_dir <- function(simulation_name,
       time_step = time_step,
       ref_scenario_name = ref_scenario_name,
       random_seed = random_seed,
-      result_type = result_type,
       pop_file_name = population_name,
       scenarios = scenarios,
       diseases = diseases,

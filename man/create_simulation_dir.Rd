@@ -15,7 +15,6 @@ create_simulation_dir(
   min_age = 0,
   max_age = 95,
   time_step = 1,
-  result_type = NULL,
   random_seed = NULL,
   scenarios = list(),
   diseases = list(),
@@ -44,8 +43,6 @@ Default is \code{FALSE}.}
 \item{max_age}{A numeric indicating the maximum age for the population (0-95). Default is 95.}
 
 \item{time_step}{A numeric indicating the time step for the simulation. Must be 1.}
-
-\item{result_type}{The type of results to generate. Can be \code{NULL} or a character string.}
 
 \item{random_seed}{An optional seed for random number generation.}
 

@@ -264,7 +264,6 @@ test_that("run_dynamo_hia runs without error", {
             time_step = 1,
             ref_scenario_name = paste0(population, "_Reference_Scenario"),
             random_seed = 42,
-            result_type = "Emptyness2BFilled",
             population_name = population,
             scenarios = scenario_configs,
             diseases = disease_configs,

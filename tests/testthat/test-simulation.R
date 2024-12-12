@@ -14,7 +14,6 @@ test_that("create_simulation_dir creates directory and configuration file correc
       time_step = 1,
       ref_scenario_name = "test_reference",
       random_seed = 42,
-      result_type = "standard",
       population_name = "test_population",
       scenarios = list(
         list(
