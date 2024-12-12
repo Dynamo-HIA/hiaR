@@ -148,15 +148,19 @@ collect_relative_risks <- function(in_list, keyword_map) {
     out <- lapply(in_list, function(x)
       x[[keyword]])
     out <- do.call(rbind, out)
-    if (!is.null(short_keyword)) {
-      out$to <- short_keyword
+    if (is.null(out)) {
+      return(out)
+    } else{
+      if (!is.null(short_keyword)) {
+        out$to <- short_keyword
+      }
+      else {
+        out$to <- row.names(out)
+        out$to <- sub("\\.[0-9]+$", "", out$to)
+      }
+      rownames(out) <- NULL
+      return(out)
     }
-    else {
-      out$to <- row.names(out)
-      out$to <- sub("\\.[0-9]+$", "", out$to)
-    }
-    rownames(out) <- NULL
-    return(out)
   }, simplify = FALSE, USE.NAMES = TRUE)
 }
 

@@ -201,4 +201,182 @@ fetch_server_data <- function(server_name_prefix, server_list, item_names) {
   return(outputs)
 }
 
+#' Filter relative risks based on selected diseases and risk factors
+#'
+#' @param relative_risks A list containing relative risk data.
+#' @param diseases A vector of selected disease names.
+#' @param risk_factors A vector of selected risk factor names.
+#'
+#' @returns A list containing data frames:
+#'   \item{from_diseases}{Relative risks between diseases}
+#'   \item{from_risk_factors}{Relative risks from risk factors to diseases}
+#'   \item{to_death}{Relative risks from risk factors to death}
+#'   \item{to_disability}{Relative risks from risk factors to disability}
+#'
+#' @details
+#' This function filters the relative risk data based on the provided diseases
+#' and risk factors. It returns a subset of the original data that only includes
+#' the specified diseases and risk factors. If there are no relative risk for a
+#' given category, it returns an empty data frame in that category.
+#'
+#' @keywords internal
+filter_relative_risks <- function(relative_risks, diseases, risk_factors) {
+
+  stopifnot(is.list(relative_risks))
+
+  if (
+    length(relative_risks) > 0
+    && length(diseases) > 0
+    && length(risk_factors) > 0)
+    {
+
+    # into diseases
+    rr_from_diseases <- relative_risks$diseases$Relative_Risks_From_Diseases
+    if (!is.null(rr_from_diseases)) {
+      rr_from_diseases <- subset(rr_from_diseases, from %in% diseases | to %in% diseases)
+    } else{
+      rr_from_diseases <- data.frame()
+    }
+
+    rr_from_risk_factors <- relative_risks$diseases$Relative_Risks_From_Risk_Factor
+    if (!is.null(rr_from_risk_factors)) {
+      rr_from_risk_factors <- subset(rr_from_risk_factors, from %in% risk_factors & to %in% diseases)
+    } else {
+      rr_from_risk_factors <- data.frame()
+    }
+
+    # from risk factors
+    rr_to_death <- relative_risks$risk_factors$Relative_Risks_For_Death
+    if (!is.null(rr_to_death)) {
+      rr_to_death <- subset(rr_to_death, from %in% risk_factors)
+    } else {
+      rr_to_death <- data.frame()
+    }
+
+    rr_to_disability <- relative_risks$risk_factors$Relative_Risks_For_Disability
+    if (!is.null(rr_to_disability)) {
+      rr_to_disability <- subset(rr_to_disability, from %in% risk_factors)
+    } else {
+      rr_to_disability <- data.frame()
+    }
+
+
+    return(list(
+      from_diseases = rr_from_diseases,
+      from_risk_factors = rr_from_risk_factors,
+      to_death = rr_to_death,
+      to_disability = rr_to_disability
+    ))
+  } else {
+    return(list())
+  }
+
+}
+
+#' Create choices from filtered relative risks
+#'
+#' @param relative_risks A list containing available relative risk data.
+#' @param caller A string indicating the calling context, either "ui" or "server".
+#'
+#' @returns A list containing four elements:
+#'   \item{disease_choices}{A list of choices for relative risks from disease to disease}
+#'   \item{risk_factor_choices}{A list of choices for relative risks from risk factor to disease}
+#'   \item{death_choices}{A list of choices for relataive risks from risk factor to death}
+#'   \item{disability_choices}{A list of choices for relative risks from risk factor to disability}
+#'
+#' @details
+#' This function processes the available relative risk data and creates choice
+#' lists. The lists can be used in UI elements such as checkBoxGroupInput.
+#' If using `caller = "server"`, it can be used in the server listening to the
+#' respective UI to return the file names of the elements chosen by the user.
+#'
+#' @keywords internal
+create_choices_from_relative_risks <- function(
+    relative_risks,
+    caller = "ui") {
+
+  output <- list(
+    from_diseases = list(),
+    from_risk_factors = list(),
+    to_death = list(),
+    to_disability = list()
+  )
+
+  if (length(relative_risks) > 0) {
+    items <- names(output)
+    stopifnot(all(items %in% names(relative_risks)))
+    output <- sapply(items, function(x) {
+      create_choice_list(relative_risks[[x]], caller = caller)
+    }, USE.NAMES = TRUE, simplify = FALSE)
+  }
+
+  return(output)
+}
+
+
+#' Create a choice list from a data frame of relative risks
+#'
+#' @param input_df A data frame containing relative risk data.
+#' @param caller A string indicating the calling context, either "ui" or "server".
+#'
+#' @returns A named list where names are either full descriptions of the relative
+#' risks (if `caller = "ui"`) or file names (if `caller = "server"`).
+#'
+#' @details
+#' This function generates a choice list from a data frame of relative risks.
+#' The format of the returned list depends on whether it's being called
+#' from the UI or server context.
+#'
+#' @keywords internal
+create_choice_list <- function(input_df, caller = "ui") {
+
+  stopifnot(is.data.frame(input_df))
+
+  if (nrow(input_df) == 0) {
+    return(list())
+  } else{
+    choice_list <- sapply(seq_along(input_df$from), function(i) {
+      if (caller == "ui") {
+        val <- paste0(input_df$from[i], " -> ", input_df$to[i])
+      } else if (caller == "server") {
+        val <- input_df$filename[i]
+      }
+      setNames(i, val)
+    })
+    return(as.list(choice_list))
+  }
+}
+
+
+#' Filter a dataframe based on return values from a list of servers.
+#'
+#' @param df_to_filter A data frame to be filtered by the output of `server_list`.
+#' @param server_list A list of servers, each returning a character vector, for instance
+#' of user-chosen elements.
+#' @param filter_col The column in `df_to_filter` to use for subsetting relative to
+#' user input data.
+#'
+#' @returns A `data.frame`
+#'
+#' @keywords internal
+#'
+filter_df_from_server_data <- function(
+    df_to_filter, server_list, filter_col = "filename") {
+  server_output <- lapply(server_list, function(x) x())
+  selected_items <- unlist(server_output, use.names = FALSE)
+
+  if (length(selected_items) > 0 && nrow(df_to_filter) > 0) {
+    output_df <- subset(df_to_filter, df_to_filter[[filter_col]] %in% selected_items)
+    return(output_df)
+  } else {
+    return(data.frame())
+  }
+}
+
+
+
+
+
+
+
 
