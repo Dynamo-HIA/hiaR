@@ -11,15 +11,19 @@ authors:
   - given-names: Hendriek
     family-names: Boshuizen
     email: hendriek.boshuizen@rivm.nl
+    orcid: "https://orcid.org/0000-0002-3916-9095"
   - given-names: Malte
     family-names: Lüken
     email: m.luken@esciencecenter.nl
+    orcid: "https://orcid.org/0000-0001-7095-203X"
   - given-names: Flavio
     family-names: Hafner
     email: f.hafner@esciencecenter.nl
+    orcid: "https://orcid.org/0009-0000-5893-9000"
   - given-names: Laurens
     family-names: Bogaardt
     email: laurens.bogaardt@rivm.nl
+    orcid: "https://orcid.org/0000-0002-7712-6627"
 repository-code: 'https://github.com/Dynamo-HIA/hiaR'
 url: 'https://dynamo-hia.github.io/hiaR/'
 abstract: >-
@@ -33,9 +37,8 @@ abstract: >-
   health impact assessment. DYNAMO-HIA is generic in the
   sense that it allows arbitrary chronic diseases or
   risk-factors that fit the standard causal pathway of the
-  health impact assessment framework to be modeled. The user
-  can import and use his or her own data to add and analyze
-  diseases or populations that are of interest to him or
-  her.
+  health impact assessment framework to be modeled. Users
+  can import and use their own data to add and analyze
+  diseases or populations of interest.
 license: GPL-3.0-or-later
 version: 1.0.0
