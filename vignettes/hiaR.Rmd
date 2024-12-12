@@ -122,10 +122,6 @@ We create a scenario that intervenes on the risk factor smoking and assumes that
 ```{r}
 smoking_intervention = configure_scenario(
   name = "All_Never_Smokers",
-  success_rate = 80,
-  min_age = 18,
-  max_age = 65,
-  gender = 2, # Both female and male
   transition_filename = "NL_RF_smoking_Transitions_Netto", # Same as in reference scenario
   prevalence_filename = "RF_smoking_cat_All_Never_Smokers_Prev" # Different from reference scenario
 )
