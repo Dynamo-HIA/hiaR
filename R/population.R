@@ -102,14 +102,13 @@ create_overall_disability_xml <- function(disability_df) {
 #' mortality <- data.frame(...)
 #' disability <- data.frame(...)
 #'
-#' create_population_dir('ExamplePopulation', 1.05, 2009, newborns, size, mortality, disability)
+#' create_population_dir("ExamplePopulation", 1.05, 2009, newborns, size, mortality, disability)
 #' }
 #'
 #' @export
 write_population_dir <- function(
-  population_name, sex_ratio, starting_year, newborns_df, size_df, mortality_df,
-  disability_df
-) {
+    population_name, sex_ratio, starting_year, newborns_df, size_df, mortality_df,
+    disability_df) {
   if (!dir.exists(population_name)) {
     dir.create(population_name)
   }

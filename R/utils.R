@@ -16,9 +16,9 @@
 #' @examples
 #' \dontrun{
 #' # Example for disease prevalence across age and sex groups
-#' root <- xml2::xml_new_root('prevalences')
+#' root <- xml2::xml_new_root("prevalences")
 #' df <- data.frame(age = c(21, 21, 22, 22), sex = c(0, 1, 0, 1), value = c(1000, 2000, 1500, 3000))
-#' root <- add_df_to_xml(root, df, 'prevalence')
+#' root <- add_df_to_xml(root, df, "prevalence")
 #' }
 #'
 #' @keywords internal
@@ -55,7 +55,7 @@ add_df_to_xml <- function(root, df, row_name) {
 #' @examples
 #' \dontrun{
 #' # Read an XML schema file named 'example_schema' from the package
-#' schema <- read_xml_schema('populationsize')
+#' schema <- read_xml_schema("populationsize")
 #' }
 #'
 #' @keywords internal
@@ -96,8 +96,8 @@ create_xml_schema_error <- function(schema_name, errors) {
 #' @examples
 #' \dontrun{
 #' # Validate an XML document against the 'example_schema' schema
-#' root <- xml2::read_xml('<root><child>Example</child></root>')
-#' validate_xml_schema(root, 'example_schema')
+#' root <- xml2::read_xml("<root><child>Example</child></root>")
+#' validate_xml_schema(root, "example_schema")
 #' }
 #'
 #' @keywords internal
@@ -127,7 +127,7 @@ validate_xml_schema <- function(root, schema_name) {
 #' @keywords internal
 #'
 validate_n_substrings <- function(s, pattern, count) {
-  if (length(gregexpr(pattern, s)) != count){
+  if (length(gregexpr(pattern, s)) != count) {
     msg <- paste0("Invalid filename:", s, ". Expected to have ", count, "occurences of ", pattern, ".")
     stop(msg)
   }
@@ -150,7 +150,6 @@ validate_n_substrings <- function(s, pattern, count) {
 #' @keywords internal
 #'
 validate_file_ending <- function(file_name, ending) {
-
   if (!is.character(file_name)) {
     msg <- paste("Invalid type. Exepcted string but got ", typeof(file_name))
     stop(msg)
@@ -164,7 +163,6 @@ validate_file_ending <- function(file_name, ending) {
     msg <- paste("Invalid ending for file:", file_name, ". Expected ", ending, " ending.")
     stop(msg)
   }
-
 }
 
 
@@ -221,20 +219,17 @@ fetch_server_data <- function(server_name_prefix, server_list, item_names) {
 #'
 #' @keywords internal
 filter_relative_risks <- function(relative_risks, diseases, risk_factors) {
-
   stopifnot(is.list(relative_risks))
 
   if (
-    length(relative_risks) > 0
-    && length(diseases) > 0
-    && length(risk_factors) > 0)
-    {
-
+    length(relative_risks) > 0 &&
+      length(diseases) > 0 &&
+      length(risk_factors) > 0) {
     # into diseases
     rr_from_diseases <- relative_risks$diseases$Relative_Risks_From_Diseases
     if (!is.null(rr_from_diseases)) {
       rr_from_diseases <- subset(rr_from_diseases, from %in% diseases | to %in% diseases)
-    } else{
+    } else {
       rr_from_diseases <- data.frame()
     }
 
@@ -270,7 +265,6 @@ filter_relative_risks <- function(relative_risks, diseases, risk_factors) {
   } else {
     return(list())
   }
-
 }
 
 #' Create choices from filtered relative risks
@@ -294,7 +288,6 @@ filter_relative_risks <- function(relative_risks, diseases, risk_factors) {
 create_choices_from_relative_risks <- function(
     relative_risks,
     caller = "ui") {
-
   output <- list(
     from_diseases = list(),
     from_risk_factors = list(),
@@ -329,12 +322,11 @@ create_choices_from_relative_risks <- function(
 #'
 #' @keywords internal
 create_choice_list <- function(input_df, caller = "ui") {
-
   stopifnot(is.data.frame(input_df))
 
   if (nrow(input_df) == 0) {
     return(list())
-  } else{
+  } else {
     choice_list <- sapply(seq_along(input_df$from), function(i) {
       if (caller == "ui") {
         val <- paste0(input_df$from[i], " -> ", input_df$to[i])
@@ -372,11 +364,3 @@ filter_df_from_server_data <- function(
     return(data.frame())
   }
 }
-
-
-
-
-
-
-
-

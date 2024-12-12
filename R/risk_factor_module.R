@@ -1,4 +1,3 @@
-
 #' Create UI for a Single Risk Factor
 #'
 #' Generate a UI component for a single risk factor in a Shiny application.
@@ -36,14 +35,15 @@ single_risk_factor_ui <- function(id, risk_factor_name, risk_factor_files) {
         div(
           style = "margin-left: 20px;",
           selectInput(ns("prevalence"), "Prevalence",
-                      choices = names(risk_factor_files$Prevalences)),
+            choices = names(risk_factor_files$Prevalences)
+          ),
           selectInput(ns("transitions"), "Transitions",
-                      choices = names(risk_factor_files$Transitions))
+            choices = names(risk_factor_files$Transitions)
+          )
         )
       )
     )
   )
-
 }
 
 
@@ -127,7 +127,6 @@ risk_factor_ui <- function(id, reference_data) {
 #'
 risk_factor_server <- function(id, reference_data) {
   moduleServer(id, function(input, output, session) {
-
     risk_factor_names <- reactiveVal()
     risk_factor_servers <- reactiveValues(servers = list())
     server_name_prefix <- "risk_factor_"
@@ -141,7 +140,6 @@ risk_factor_server <- function(id, reference_data) {
         server_name <- paste0(server_name_prefix, i)
         risk_factor_servers$servers[[server_name]] <- single_risk_factor_server(server_name)
       })
-
     })
 
     user_data <- reactive({
@@ -152,7 +150,6 @@ risk_factor_server <- function(id, reference_data) {
       )
     })
 
-   return(user_data)
-
+    return(user_data)
   })
 }

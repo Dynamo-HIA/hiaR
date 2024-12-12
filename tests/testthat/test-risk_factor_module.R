@@ -1,6 +1,7 @@
 test_that("single_risk_factor_server functions correctly", {
   testServer(
-    single_risk_factor_server, {
+    single_risk_factor_server,
+    {
       session$setInputs(
         check = FALSE
       )
@@ -33,10 +34,6 @@ test_that("single_risk_factor_server functions correctly", {
       )
 
       expect_equal(actual, expected)
-
     }
-
   )
 })
-
-

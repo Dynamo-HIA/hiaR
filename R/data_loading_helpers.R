@@ -102,8 +102,7 @@ get_relative_risk_source <- function(input_list, lookup_items, extract = TRUE) {
       if (length(indicators) > 0) {
         if (isTRUE(extract)) {
           from <- sapply(indicators, extract_relative_risk_source, USE.NAMES = FALSE)
-        }
-        else {
+        } else {
           from <- rep(item_name, length(indicators))
         }
         data.frame(
@@ -145,16 +144,16 @@ get_relative_risk_source <- function(input_list, lookup_items, extract = TRUE) {
 collect_relative_risks <- function(in_list, keyword_map) {
   sapply(names(keyword_map), function(keyword) {
     short_keyword <- keyword_map[[keyword]]
-    out <- lapply(in_list, function(x)
-      x[[keyword]])
+    out <- lapply(in_list, function(x) {
+      x[[keyword]]
+    })
     out <- do.call(rbind, out)
     if (is.null(out)) {
       return(out)
-    } else{
+    } else {
       if (!is.null(short_keyword)) {
         out$to <- short_keyword
-      }
-      else {
+      } else {
         out$to <- row.names(out)
         out$to <- sub("\\.[0-9]+$", "", out$to)
       }

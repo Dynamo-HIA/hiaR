@@ -6,7 +6,7 @@ generate_transitionmatrix_test_data <- function(num_cat = 3) {
 
   df <- merge(df, data.frame(from = from, to = to), by = NULL)
 
-  df$percent <- 100/num_cat
+  df$percent <- 100 / num_cat
 
   return(df)
 }
@@ -31,11 +31,11 @@ generate_riskfactorprevalences_test_data <- function(mode = c("continous", "cate
   if (mode == "categorical") {
     df <- merge(df, data.frame(cat = cat))
     n <- nrow(df)
-    df$percent <- 100/num_cat
+    df$percent <- 100 / num_cat
   } else if (mode == "duration") {
     df <- merge(df, data.frame(duration = cat))
     n <- nrow(df)
-    df$percent <- 100/num_cat
+    df$percent <- 100 / num_cat
   } else {
     df$mean <- runif(n)
     df$standarddeviation <- runif(n)

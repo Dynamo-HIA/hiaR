@@ -1,4 +1,3 @@
-
 test_that("create_risk_factor_dir creates correct directory structure and files", {
   withr::with_tempdir({
     risk_factor_name <- "TestRiskFactor"

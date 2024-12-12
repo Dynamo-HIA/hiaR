@@ -1,4 +1,3 @@
-
 #' UI part for simulation config
 #'
 #' @param id The id for the namespace of the module.
@@ -7,7 +6,7 @@
 #'
 #' @keywords internal
 #'
-simulation_config_ui <- function(id){
+simulation_config_ui <- function(id) {
   ns <- NS(id)
   tagList(
     textInput(ns("simulation_name"), "Simulation name:", ""),
@@ -18,7 +17,7 @@ simulation_config_ui <- function(id){
     numericInput(ns("years"), "Number of years:", value = 25),
     numericInput(ns("time_step"), "Calculation time step:", value = 1),
     numericInput(ns("random_seed"), "Random seed:", value = 1),
-		actionButton(ns("save"), "Save and Run", class = "btn-lg btn-success")
+    actionButton(ns("save"), "Save and Run", class = "btn-lg btn-success")
   )
 }
 
@@ -42,7 +41,7 @@ simulation_config_ui <- function(id){
 simulation_config_server <- function(id, reference_data) {
   moduleServer(
     id,
-    function(input, output, session){
+    function(input, output, session) {
       user_data <- reactive({
         list(
           simulation_name = input$simulation_name,
@@ -57,18 +56,21 @@ simulation_config_server <- function(id, reference_data) {
       })
 
       observeEvent( # TODO: send data to Java program from here
-        input$save, {
+        input$save,
+        {
           message("Running simulation now")
-          #message(paste0("user_data$population is now ", user_data()$population))
+          # message(paste0("user_data$population is now ", user_data()$population))
           print("How much input checking to do?")
-          #if (input$dir_simulation == "")
+          # if (input$dir_simulation == "")
           #  showNotification("Select simulation directory first", type='warning')
-        })
+        }
+      )
 
       observeEvent(reference_data(), {
         updateSelectInput(session, "population",
-                          choices = names(reference_data()$population),
-                          selected = NULL)
+          choices = names(reference_data()$population),
+          selected = NULL
+        )
       })
 
       return(user_data)

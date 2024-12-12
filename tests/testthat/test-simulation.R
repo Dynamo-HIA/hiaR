@@ -47,7 +47,8 @@ test_that("create_simulation_dir creates directory and configuration file correc
           isRRto = "risk1",
           isRRFile = "rr.csv"
         )
-      ))
+      )
+    )
 
     # Assertions
     expect_true(result)

@@ -1,4 +1,3 @@
-
 test_that("create_disease_dir creates correct directory structure and files", {
   withr::with_tempdir({
     disease_name <- "TestDisease"

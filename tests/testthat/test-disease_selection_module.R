@@ -1,6 +1,7 @@
 test_that("single_disease_server functions correctly", {
   testServer(
-    single_disease_server, {
+    single_disease_server,
+    {
       session$setInputs(
         check = FALSE
       )
@@ -38,9 +39,7 @@ test_that("single_disease_server functions correctly", {
         disability = "disability.xml"
       )
       expect_equal(actual, expected)
-
     }
-
   )
 })
 
@@ -67,19 +66,9 @@ test_reference_data <- list(
 test_that("single_disease_server functions correctly", {
   testServer(
     disease_selection_server,
-    args = list(reference_data = reactiveVal(NULL)), {
+    args = list(reference_data = reactiveVal(NULL)),
+    {
       expect_equal(session$returned(), list())
     }
   )
-
 })
-
-
-
-
-
-
-
-
-
-

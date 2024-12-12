@@ -137,6 +137,7 @@ create_simulation_configuration_xml <- function(has_newborns = FALSE,
 #' Creates a new directory for a simulation and generates a configuration XML file.
 #' The configuration is read by the DYNAMO-HIA model to run the configured simulation. Simulation
 #' results will be stored in the same directory.
+#' The function overwrites existing configuration files.
 #'
 #' @param simulation_name A character string with the name of the simulation directory to be created.
 #' @param population_name A character string with the name of the population directory to be used.

@@ -1,4 +1,3 @@
-
 test_that("program config returns the right type with the right names", {
   testServer(program_config_server, {
     session$flushReact()
@@ -7,7 +6,6 @@ test_that("program config returns the right type with the right names", {
 
     expect_type(returned, "list")
     expect_true(setequal(names(returned), expected_names))
-
   })
 })
 
@@ -22,10 +20,13 @@ test_that("program_config_server returns correct and reactive values", {
     local_mocked_bindings(
       parse_dirpath_wrapper = function(...) "/path/to/working/dir",
       parse_filepath_wrapper = function(...) {
-        data.frame(name = "myapplication.exe",
-                   size = 100,
-                   type = "",
-                   datapath = "/path/to/app/myapplication.exe")},
+        data.frame(
+          name = "myapplication.exe",
+          size = 100,
+          type = "",
+          datapath = "/path/to/app/myapplication.exe"
+        )
+      },
       get_reference_data = mock_get_reference_data
     )
 
@@ -47,4 +48,3 @@ test_that("program_config_server returns correct and reactive values", {
     expect_type(result$reference_data, "closure")
   })
 })
-

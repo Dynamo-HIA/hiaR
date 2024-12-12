@@ -1,4 +1,3 @@
-
 #' Create UI for a single group of relative risks.
 #'
 #' Generate a UI component for a single relative risk group,
@@ -14,13 +13,15 @@
 single_relative_risk_ui <- function(id, title, choices) {
   ns <- NS(id)
 
-  choices = choices()
+  choices <- choices()
 
   bslib::card(
     class = "mb-3",
     bslib::card_body(
-      checkboxGroupInput(ns("check_group"), label = title,
-                         choices = choices)
+      checkboxGroupInput(ns("check_group"),
+        label = title,
+        choices = choices
+      )
     )
   )
 }
@@ -75,7 +76,9 @@ relative_risk_ui <- function(id, relative_risks) {
   relative_risks <- relative_risks()
 
   choices <- create_choices_from_relative_risks(
-    relative_risks, caller = "ui")
+    relative_risks,
+    caller = "ui"
+  )
   disease_choices(choices$from_diseases)
   risk_factor_choices(choices$from_risk_factors)
   death_choices(choices$to_death)
@@ -95,7 +98,6 @@ relative_risk_ui <- function(id, relative_risks) {
       ns("to_disability"), "From Risk Factors to Disability", disability_choices
     )
   )
-
 }
 
 #' Server Logic for Relative Risk Selection
@@ -111,9 +113,7 @@ relative_risk_ui <- function(id, relative_risks) {
 #'
 #' @keywords internal
 relative_risk_server <- function(id, relative_risks) {
-
   moduleServer(id, function(input, output, session) {
-
     disease_choices <- reactiveVal(NULL)
     risk_factor_choices <- reactiveVal(NULL)
     death_choices <- reactiveVal(NULL)
@@ -128,7 +128,9 @@ relative_risk_server <- function(id, relative_risks) {
       relative_risk_df(new_relative_risk_df)
 
       choices <- create_choices_from_relative_risks(
-        current_relative_risks, caller = "server")
+        current_relative_risks,
+        caller = "server"
+      )
       disease_choices(choices$from_diseases)
       risk_factor_choices(choices$from_risk_factors)
       death_choices(choices$to_death)
@@ -159,12 +161,3 @@ relative_risk_server <- function(id, relative_risks) {
     return(user_data)
   })
 }
-
-
-
-
-
-
-
-
-

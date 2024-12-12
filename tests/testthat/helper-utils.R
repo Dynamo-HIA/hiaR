@@ -1,11 +1,11 @@
-
 generate_filtered_relative_risk_data <- function() {
-
   from_diseases <- data.frame(
     from = c("disease1", "disease1", "disease2"),
-    filename = c("RR_to_disease4-disease1.xml",
-                 "RR_to_disease3-disease1.xml",
-                 "RR_to_disease1-disease2.xml"),
+    filename = c(
+      "RR_to_disease4-disease1.xml",
+      "RR_to_disease3-disease1.xml",
+      "RR_to_disease1-disease2.xml"
+    ),
     to = c("disease4", "disease3", "disease1")
   )
 
@@ -35,7 +35,6 @@ generate_filtered_relative_risk_data <- function() {
       to_disability = to_disability
     )
   )
-
 }
 
 
@@ -50,12 +49,12 @@ generate_raw_relative_risk_data <- function() {
     filename = c("file10.xml", "file11.xml", "file12.xml", "file13.xml", "file14.xml", "file15.xml"),
     to = c("disease1", "disease2", "disease1", "disease2", "disease3", "disease3")
   )
-  to_death = data.frame(
+  to_death <- data.frame(
     from = c("risk_factor1", "risk_factor2", "risk_factor3"),
     filename = c("file20.xml", "file21.xml", "file22.xml"),
     to = rep("death", 3)
   )
-  to_disability = data.frame(
+  to_disability <- data.frame(
     from = c("risk_factor1", "risk_factor2", "risk_factor3"),
     filename = c("file30.xml", "file31.xml", "file32.xml"),
     to = rep("death", 3)
@@ -71,11 +70,3 @@ generate_raw_relative_risk_data <- function() {
     )
   ))
 }
-
-
-
-
-
-
-
-

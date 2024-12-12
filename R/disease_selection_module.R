@@ -1,5 +1,3 @@
-
-
 #' UI for selecting a single disease
 #'
 #' @param id A string. The id for the namespace in the module
@@ -34,18 +32,21 @@ single_disease_ui <- function(id, disease_name, disease_files) {
         div(
           style = "margin-left: 20px;",
           selectInput(ns("prevalence"), "Prevalence",
-                      choices = names(disease_files$Prevalences)),
+            choices = names(disease_files$Prevalences)
+          ),
           selectInput(ns("incidence"), "Incidence",
-                      choices = names(disease_files$Incidences)),
+            choices = names(disease_files$Incidences)
+          ),
           selectInput(ns("excess_mortality"), "Excess mortality",
-                      choices = names(disease_files$Excess_Mortalities)),
+            choices = names(disease_files$Excess_Mortalities)
+          ),
           selectInput(ns("disability"), "Disabling Impact or DALYweight",
-                      choices = names(disease_files$Disability))
+            choices = names(disease_files$Disability)
+          )
         )
       )
     )
   )
-
 }
 
 
@@ -145,7 +146,6 @@ disease_selection_ui <- function(id, reference_data) {
 #'
 disease_selection_server <- function(id, reference_data) {
   moduleServer(id, function(input, output, session) {
-
     disease_names <- reactiveVal()
     disease_servers <- reactiveValues(servers = list())
     server_name_prefix <- "disease_"
@@ -170,7 +170,6 @@ disease_selection_server <- function(id, reference_data) {
       )
     })
 
-   return(user_data)
-
+    return(user_data)
   })
 }

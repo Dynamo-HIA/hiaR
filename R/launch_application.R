@@ -1,4 +1,3 @@
-
 # Launch the Shiny app
 #' Starts the R shiny app to define the settings and then run the HIA Java app.
 #'
