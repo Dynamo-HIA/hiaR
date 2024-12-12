@@ -22,3 +22,4 @@ A named list of non-NULL server values.
 \description{
 Get return data from a list of servers
 }
+\keyword{internal}

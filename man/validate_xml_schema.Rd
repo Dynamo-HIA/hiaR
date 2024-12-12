@@ -28,6 +28,4 @@ validate_xml_schema(root, 'example_schema')
 }
 
 }
-\seealso{
-\code{\link[xml2]{xml_validate}} for XML validation, \code{\link{read_xml_schema}} for reading the schema.
-}
+\keyword{internal}

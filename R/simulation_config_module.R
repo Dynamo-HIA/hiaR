@@ -5,7 +5,8 @@
 #' @param population_choices A character vector with possible choices of
 #' populations.
 #'
-#' @export
+#' @keywords internal
+#'
 simulation_config_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -36,7 +37,8 @@ simulation_config_ui <- function(id){
 #' @returns A reactive list of key-value pairs read from the config UI, to be
 #' used in the app/by other modules.
 #'
-#' @export
+#' @keywords internal
+#'
 simulation_config_server <- function(id, reference_data) {
   moduleServer(
     id,

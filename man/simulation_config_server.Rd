@@ -21,3 +21,4 @@ Uses some reference meta data for letting the user choose between options.
 When the \code{save} button is clicked, it will start and run the Java app
 (not yet implemented).
 }
+\keyword{internal}

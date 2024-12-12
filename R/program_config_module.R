@@ -9,7 +9,8 @@
 #' @returns Shows an error message when the reference data is not NULL and is
 #' does not have the right content.
 #'
-#' @export
+#' @keywords internal
+#'
 program_config_ui <- function(id) {
   ns <- NS(id)
   tagList(
@@ -50,7 +51,9 @@ program_config_ui <- function(id) {
 #'  \item dynamo_path: Path to the DYNAMO executable.
 #'  \item working_path: Working directory for the DYNAMO program.
 #' }
-#' @export
+#'
+#' @keywords internal
+#'
 program_config_server <- function(id) {
   moduleServer(
     id,

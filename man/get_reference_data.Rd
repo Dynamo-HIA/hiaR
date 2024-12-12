@@ -41,7 +41,6 @@ and "Relative_Risks_For_Disability".
 root_dir <- "../data/Tutorial_Data/Reference_Data"
 file_groups <- get_reference_data(root_dir)
 }
+
 }
-\seealso{
-\code{\link{get_file_tree}}, \code{\link{get_relative_risk_source}}
-}
+\keyword{internal}

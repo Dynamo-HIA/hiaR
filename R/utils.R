@@ -13,9 +13,6 @@
 #'
 #' The function is designed to handle simple data frames where each cell contains atomic values (strings, numbers, etc.). It does not handle complex or nested structures.
 #'
-#' @seealso
-#' \code{\link[xml2]{xml_add_child}} for adding child elements to XML nodes, \code{\link[xml2]{xml_new_root}} for creating new XML root nodes.
-#'
 #' @examples
 #' \dontrun{
 #' # Example for disease prevalence across age and sex groups
@@ -24,7 +21,8 @@
 #' root <- add_df_to_xml(root, df, 'prevalence')
 #' }
 #'
-#' @export
+#' @keywords internal
+#'
 add_df_to_xml <- function(root, df, row_name) {
   # Iterate over each row in the data frame
   for (i in seq_len(nrow(df))) {
@@ -54,16 +52,14 @@ add_df_to_xml <- function(root, df, row_name) {
 #' @details
 #' The function locates the specified XML schema file within the `extdata/schemas` directory, optionally appends the `.xsd` extension to the filename, and reads the schema file using `xml2::read_xml`. This is useful for working with pre-defined schemas within the package's directory structure.
 #'
-#' @seealso
-#' \code{\link[xml2]{read_xml}} for reading and parsing XML documents.
-#'
 #' @examples
 #' \dontrun{
 #' # Read an XML schema file named 'example_schema' from the package
 #' schema <- read_xml_schema('populationsize')
 #' }
 #'
-#' @export
+#' @keywords internal
+#'
 read_xml_schema <- function(filename) {
   full_filepath <- fs::path_package(
     "extdata/schemas", fs::path_ext_set(filename, "xsd"),
@@ -97,9 +93,6 @@ create_xml_schema_error <- function(schema_name, errors) {
 #' @details
 #' The function reads the specified XML schema using `read_xml_schema` and validates the `root` XML document against it using \code{\link[xml2]{xml_validate}}.
 #'
-#' @seealso
-#' \code{\link[xml2]{xml_validate}} for XML validation, \code{\link{read_xml_schema}} for reading the schema.
-#'
 #' @examples
 #' \dontrun{
 #' # Validate an XML document against the 'example_schema' schema
@@ -107,7 +100,8 @@ create_xml_schema_error <- function(schema_name, errors) {
 #' validate_xml_schema(root, 'example_schema')
 #' }
 #'
-#' @export
+#' @keywords internal
+#'
 validate_xml_schema <- function(root, schema_name) {
   is_valid <- xml2::xml_validate(root, read_xml_schema(schema_name))
   if (!is_valid) {
@@ -129,6 +123,9 @@ validate_xml_schema <- function(root, schema_name) {
 #' validate_n_substrings("hello-world", "-", 1) # passes
 #' validate_n_substrings("hello-world", "!", 1) # fails
 #' }
+#'
+#' @keywords internal
+#'
 validate_n_substrings <- function(s, pattern, count) {
   if (length(gregexpr(pattern, s)) != count){
     msg <- paste0("Invalid filename:", s, ". Expected to have ", count, "occurences of ", pattern, ".")
@@ -149,6 +146,9 @@ validate_n_substrings <- function(s, pattern, count) {
 #' validate_file_ending("hello.txt", ".xml") # error
 #' validate_file_ending("hello.py", ".py") # success
 #' }
+#'
+#' @keywords internal
+#'
 validate_file_ending <- function(file_name, ending) {
 
   if (!is.character(file_name)) {
@@ -178,6 +178,9 @@ validate_file_ending <- function(file_name, ending) {
 #' these can be the names of diseases or risk factors.
 #'
 #' @returns A named list of non-NULL server values.
+#'
+#' @keywords internal
+#'
 fetch_server_data <- function(server_name_prefix, server_list, item_names) {
   stopifnot(length(server_list) == length(item_names))
 

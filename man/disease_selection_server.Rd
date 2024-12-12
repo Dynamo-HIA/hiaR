@@ -33,6 +33,4 @@ reference data. It responds to changes in the reference data, updating the avail
 accordingly. The function collects and processes user selections for each disease, returning
 a reactive expression with the compiled data.
 }
-\seealso{
-\code{\link{disease_selection_ui}}, \code{\link{single_disease_server}}
-}
+\keyword{internal}

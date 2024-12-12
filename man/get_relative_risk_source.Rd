@@ -32,4 +32,6 @@ keywords_rf <- c("Relative_Risks_For_Death", "Relative_Risks_For_Disability")
 get_relative_risk_source(groups$diseases, keywords_disease)
 get_relative_risk_source(groups$risk_factors, keywords_rf, FALSE)
 }
+
 }
+\keyword{internal}

@@ -18,6 +18,8 @@
 #' If the checkbox is clicked, the user sees the card content: `selectInput`
 #' fields for prevalence, incidence, excess mortality and disability.
 #'
+#' @keywords internal
+#'
 single_disease_ui <- function(id, disease_name, disease_files) {
   ns <- NS(id)
 
@@ -61,8 +63,7 @@ single_disease_ui <- function(id, disease_name, disease_files) {
 #' }
 #' Each of the items contain the xml file the user chose in the UI.
 #'
-#' @export
-#'
+#' @keywords internal
 single_disease_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     reactive({
@@ -97,10 +98,7 @@ single_disease_server <- function(id) {
 #'   reference data. For each disease in the reference data, it creates a `single_disease_ui`
 #'   component, allowing users to select specific XML files for various disease parameters.
 #'
-#' @seealso \code{\link{single_disease_ui}}
-#'
-#'
-#' @export
+#' @keywords internal
 disease_selection_ui <- function(id, reference_data) {
   ns <- NS(id)
 
@@ -143,9 +141,8 @@ disease_selection_ui <- function(id, reference_data) {
 #' accordingly. The function collects and processes user selections for each disease, returning
 #' a reactive expression with the compiled data.
 #'
-#' @seealso \code{\link{disease_selection_ui}}, \code{\link{single_disease_server}}
+#' @keywords internal
 #'
-#' @export
 disease_selection_server <- function(id, reference_data) {
   moduleServer(id, function(input, output, session) {
 

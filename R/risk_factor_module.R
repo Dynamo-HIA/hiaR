@@ -20,7 +20,7 @@
 #' transitions. The options for these inputs are populated
 #' from the provided risk_factor_files list.
 #'
-#' @seealso \code{\link{single_risk_factor_server}} for the corresponding server logic.
+#' @keywords internal
 #'
 single_risk_factor_ui <- function(id, risk_factor_name, risk_factor_files) {
   ns <- NS(id)
@@ -61,7 +61,7 @@ single_risk_factor_ui <- function(id, risk_factor_name, risk_factor_files) {
 #' The returned reactive expression can be used by parent modules to collect data
 #' from multiple risk factors.
 #'
-#' @seealso \code{\link{single_risk_factor_ui}} for the corresponding UI component.
+#' @keywords internal
 #'
 single_risk_factor_server <- function(id) {
   moduleServer(id, function(input, output, session) {
@@ -90,9 +90,7 @@ single_risk_factor_server <- function(id) {
 #'
 #' @returns A tagList containing UI components for each risk factor.
 #'
-#' @seealso
-#' \code{\link{single_risk_factor_ui}} for the individual risk factor UI component.
-#' \code{\link{risk_factor_server}} for the corresponding server-side logic.
+#' @keywords internal
 #'
 risk_factor_ui <- function(id, reference_data) {
   ns <- NS(id)
@@ -125,10 +123,7 @@ risk_factor_ui <- function(id, reference_data) {
 #' Each element in the list corresponds to an active risk factor and contains a nested list with
 #' `prevalence' and 'transitions'.
 #'
-#' @seealso
-#' \code{\link{risk_factor_ui}} for the corresponding UI component.
-#' \code{\link{single_risk_factor_server}} for the individual risk factor server logic.
-#' \code{\link{fetch_server_data}} for the helper function that collects data from multiple servers.
+#' @keywords internal
 #'
 risk_factor_server <- function(id, reference_data) {
   moduleServer(id, function(input, output, session) {
@@ -161,10 +156,3 @@ risk_factor_server <- function(id, reference_data) {
 
   })
 }
-
-
-
-
-
-
-

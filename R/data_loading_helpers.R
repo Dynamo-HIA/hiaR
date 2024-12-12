@@ -7,6 +7,9 @@
 #' @param tree_root  Path to the root of the tree.
 #'
 #' @return A nested list. The leaf nodes are either empty directories or (xml) file names.
+#'
+#' @keywords internal
+#'
 get_file_tree <- function(tree_root) {
   contents <- list.files(
     tree_root,
@@ -46,6 +49,9 @@ get_file_tree <- function(tree_root) {
 #' \dontrun{
 #' extract_relative_risk_source("RR_to_BreatCa-Smoking_dur.xml")
 #' }
+#'
+#' @keywords internal
+#'
 extract_relative_risk_source <-
   function(file_name) {
     validate_file_ending(file_name, ".xml")
@@ -79,6 +85,9 @@ extract_relative_risk_source <-
 #' get_relative_risk_source(groups$diseases, keywords_disease)
 #' get_relative_risk_source(groups$risk_factors, keywords_rf, FALSE)
 #' }
+#'
+#' @keywords internal
+#'
 get_relative_risk_source <- function(input_list, lookup_items, extract = TRUE) {
   stopifnot(
     is.list(input_list),
@@ -130,6 +139,8 @@ get_relative_risk_source <- function(input_list, lookup_items, extract = TRUE) {
 #' the name of the file that contains the relative risks for going from risk factors
 #' to diseases, between diseases, or from diseases to death/disability. If for any
 #' type of relative risk there is no file present, the list is empty.
+#'
+#' @keywords internal
 #'
 collect_relative_risks <- function(in_list, keyword_map) {
   sapply(names(keyword_map), function(keyword) {

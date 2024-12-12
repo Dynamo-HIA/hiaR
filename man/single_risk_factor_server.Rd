@@ -21,6 +21,4 @@ This function defines the server-side logic for a single risk factor in a Shiny 
 It processes user inputs for a specific risk factor and returns the selected values when the
 risk factor is active.
 }
-\seealso{
-\code{\link{single_risk_factor_ui}} for the corresponding UI component.
-}
+\keyword{internal}

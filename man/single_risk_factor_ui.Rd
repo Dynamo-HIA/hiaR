@@ -31,6 +31,4 @@ When the checkbox is checked, it reveals select inputs for prevalence and
 transitions. The options for these inputs are populated
 from the provided risk_factor_files list.
 }
-\seealso{
-\code{\link{single_risk_factor_server}} for the corresponding server logic.
-}
+\keyword{internal}

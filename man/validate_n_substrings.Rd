@@ -24,4 +24,6 @@ Validate that a string has N substrings of a given pattern
 validate_n_substrings("hello-world", "-", 1) # passes
 validate_n_substrings("hello-world", "!", 1) # fails
 }
+
 }
+\keyword{internal}

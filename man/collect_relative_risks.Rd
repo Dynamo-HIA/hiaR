@@ -29,3 +29,4 @@ over the elements in \code{in_list}, extracts the element named by the key and
 binds the dataframes into one, using rbind.
 It requires that all keys in \code{keyword_map} are present as list names the lists of \code{in_list}.
 }
+\keyword{internal}
