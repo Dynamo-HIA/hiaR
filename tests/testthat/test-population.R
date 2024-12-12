@@ -12,7 +12,7 @@ test_that("create_population_dir creates correct directory structure and files",
     mortality_df <- generate_diseaseprevalences_test_data(incidence = TRUE)
     disability_df <- generate_diseaseprevalences_test_data(incidence = FALSE)
 
-    result <- create_population_dir(
+    result <- write_population_dir(
       population_name,
       sex_ratio,
       starting_year,

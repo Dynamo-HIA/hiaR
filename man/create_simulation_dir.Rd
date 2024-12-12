@@ -91,6 +91,7 @@ Logical TRUE if directory creation and configuration was successful.
 Creates a new directory for a simulation and generates a configuration XML file.
 The configuration is read by the DYNAMO-HIA model to run the configured simulation. Simulation
 results will be stored in the same directory.
+The function overwrites existing configuration files.
 }
 \details{
 The function creates a directory with the specified simulation name and generates

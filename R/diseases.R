@@ -88,31 +88,51 @@ create_disease_disability_xml <- function(disease_disability_df) {
 }
 
 
-#' Create directory with XML files for a disease
+#' Write XML files for a disease to a directory
 #'
-#' This function creates a directory structure for a specified disease and generates XML files for relative risks from risk factors and other diseases, as well as for disease prevalences, incidences, excess mortalities, and disability data. The directories and XML files are named and organized according to the input lists provided for each category.
+#' This function creates a directory structure for a specified disease and generates XML files for
+#' relative risks from risk factors and other diseases, as well as for disease prevalences,
+#' incidences, excess mortalities, and disability data. The directories and XML files are named and
+#' organized according to the input lists provided for each category. The function only creates
+#' files for provided arguments and leaves other files as they are.
 #'
-#' @param disease_name A character string representing the name of the disease. A directory will be created with this name if it does not already exist.
-#' @param risk_factor_list A named list where each element is a list containing two components: `'data'` (the risk factor data) and `'type'` (the type of risk factor). XML files will be generated for each risk factor.
-#' @param diseases_list A named list where each element is a list containing disease data under the key `'data'`. XML files will be generated for relative risks from other diseases.
-#' @param prevalences_list A named list where each element is a list containing prevalence data under the key `'data'`. XML files will be generated for each prevalence.
-#' @param incidences_list A named list where each element is a list containing incidence data under the key `'data'`. XML files will be generated for each incidence.
-#' @param excess_mortalities_list A named list where each element is a list containing three components: `'unit_type'` (the unit of the data), `'parameter_type'` (the type of parameter), and `'data'` (the excess mortality data). XML files will be generated for each excess mortality.
-#' @param disability_list A named list where each element is a list containing disability data under the key `'data'`. XML files will be generated for each disability dataset.
+#' @param disease_name A character string representing the name of the disease.
+#' A directory will be created with this name if it does not already exist.
+#' @param risk_factor_list A named list where each element is a list containing two components:
+#' `'data'` (the risk factor data) and `'type'` (the type of risk factor).
+#' XML files will be generated for each risk factor.
+#' @param diseases_list A named list where each element is a list containing disease data under
+#' the key `'data'`. XML files will be generated for relative risks from other diseases.
+#' @param prevalences_list A named list where each element is a list containing prevalence data
+#' under the key `'data'`. XML files will be generated for each prevalence.
+#' @param incidences_list A named list where each element is a list containing incidence data under
+#'  the key `'data'`. XML files will be generated for each incidence.
+#' @param excess_mortalities_list A named list where each element is a list containing
+#' three components: `'unit_type'` (the unit of the data),
+#' `'parameter_type'` (the type of parameter), and
+#' `'data'` (the excess mortality data). XML files will be generated for each excess mortality.
+#' @param disability_list A named list where each element is a list containing disability data
+#' under the key `'data'`. XML files will be generated for each disability dataset.
 #'
 #' @return Returns `TRUE` if the directory structure and XML files were created successfully.
 #'
 #' @details The function creates a directory named after the disease and subdirectories for:
-#' - Relative_Risks_From_Risk_Factor
-#' - Relative_Risks_From_Diseases
-#' - Prevalences
-#' - Incidences
-#' - Excess_Mortalities
-#' - Disabilities
+#' containing:
+#' \itemize{
+#'   \item{Relative_Risks_From_Risk_Factor}
+#'   \item{Relative_Risks_From_Diseases}
+#'   \item{Prevalences}
+#'   \item{Incidences}
+#'   \item{Excess_Mortalities}
+#'   \item{Disabilities}
+#' }
 #'
-#' For each category, the function generates XML files based on the data provided in the corresponding input list. Each XML file is saved in the appropriate subdirectory.
+#' For each category, the function generates XML files based on the data provided in the
+#' corresponding input list. Each XML file is saved in the appropriate subdirectory.
 #'
-#' The risk factor `'type'` can be `'continuous'`, `'continuous4p'`, `'categorical'`, `'categorical4p'`, `'compound'`, or `'compound4p'`. The excess mortality `'parameter_type'` can be `'Acutely Fatal'` or `'Cured Fraction'`.
+#' The risk factor `'type'` can be `'continuous'`, `'continuous4p'`, `'categorical'`,
+#' `'categorical4p'`, `'compound'`, or `'compound4p'`.
+#' The excess mortality `'parameter_type'` can be `'Acutely Fatal'` or `'Cured Fraction'`.
 #'
 #' @seealso
 #' \code{\link{create_population_dir}}
@@ -143,7 +163,7 @@ create_disease_disability_xml <- function(disease_disability_df) {
 #'
 #' @export
 
-create_disease_dir <- function(
+write_disease_dir <- function(
     disease_name, risk_factor_list, diseases_list, prevalences_list, incidences_list,
     excess_mortalities_list, disability_list) {
   if (!dir.exists(disease_name)) {

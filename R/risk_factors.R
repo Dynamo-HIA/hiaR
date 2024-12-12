@@ -148,7 +148,7 @@ create_risk_factor_configuration <- function(
 }
 
 
-#' Create directory with XML files for a risk factor
+#' Write XML files for a risk factor to a directory
 #'
 #' This function creates a directory structure for a risk factor and populates it with
 #' various XML files containing risk factor data.
@@ -174,15 +174,17 @@ create_risk_factor_configuration <- function(
 #'
 #' @details
 #' The function creates a directory named after the disease and subdirectories for:
-#' - Transitions
-#' - Relative_Risks_For_Disability
-#' - Relative_Risks_For_Death
-#' - Prevalences
-#' - DurationDistributions
-#' - configuration.xml
+#' \itemize{
+#'   \item{Transitions}
+#'   \item{Relative_Risks_For_Disability}
+#'   \item{Relative_Risks_For_Death}
+#'   \item{Prevalences}
+#'   \item{DurationDistributions}
+#'   \item{configuration.xml}
+#' }
 #'
-#' For each category, the function generates XML files based on the data provided in the corresponding input list.
-#' Each XML file is saved in the appropriate subdirectory.
+#' For each category, the function generates XML files based on the data provided in the
+#'  corresponding input list. Each XML file is saved in the appropriate subdirectory.
 #'
 #' The transition matrix and drift type can be `'zero'` or `'netto'`.
 #' The risk factor `'type'` can be `'continuous'`, `'categorical'`, or `'compound'`.
@@ -217,7 +219,7 @@ create_risk_factor_configuration <- function(
 #' }
 #'
 #' @export
-create_risk_factor_dir <- function(
+write_risk_factor_dir <- function(
     risk_factor_name, transition_matrix_list, transition_drift_list,
     relative_risks_death_list, prevalences_list,
     prevalences_duration_list, relative_risks_disability_list,

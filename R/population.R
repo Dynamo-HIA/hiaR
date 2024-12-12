@@ -57,27 +57,40 @@ create_overall_disability_xml <- function(disability_df) {
 }
 
 
-#' Create directory with XML files for a population
+#' Write XML files for a population to a directory
 #'
-#' This function creates a directory structure for a specified population and generates XML files containing data for newborns, population size, overall mortality, and disability. The files are saved in the population directory.
+#' This function creates a directory structure for a specified population and generates XML files
+#' containing data for newborns, population size, overall mortality, and disability.
+#' The files are saved in the population directory. The function only creates
+#' files for provided arguments and leaves other files as they are.
 #'
-#' @param population_name A character string representing the name of the population. A directory will be created with this name if it does not already exist.
+#' @param population_name A character string representing the name of the population.
+#' A directory will be created with this name if it does not already exist.
 #' @param sex_ratio A numeric value representing the sex ratio of newborns (male to female ratio).
 #' @param starting_year An integer representing the starting year of the newborns data.
-#' @param newborns_df A data frame containing data for newborns, typically with columns for the year and the number of newborns.
-#' @param size_df A data frame containing population size data, typically with columns for the year and population size.
-#' @param mortality_df A data frame containing overall mortality data, typically with columns for the year and mortality rate.
-#' @param disability_df A data frame containing overall disability data, typically with columns for the year and disability rate.
+#' @param newborns_df A data frame containing data for newborns, typically with columns for the
+#' year and the number of newborns.
+#' @param size_df A data frame containing population size data, typically with columns for the
+#' year and population size.
+#' @param mortality_df A data frame containing overall mortality data, typically with columns for
+#' the year and mortality rate.
+#' @param disability_df A data frame containing overall disability data, typically with columns for
+#'  the year and disability rate.
 #'
 #' @return Returns `TRUE` if the directory and XML files were created successfully.
 #'
-#' @details The function creates a directory named after the population and generates the following XML files within it:
-#' - `newborns.xml`: Contains data for newborns, including the sex ratio and number of newborns per year.
-#' - `size.xml`: Contains data for population size per year.
-#' - `overallmortality.xml`: Contains overall mortality rates per year.
-#' - `overalldisability.xml`: Contains overall disability rates per year.
+#' @details The function creates a directory named after the population and generates the following
+#'  XML files within it:
+#'  \itemize{
+#'    \item{`newborns.xml`: Contains data for newborns, including the sex ratio and number of newborns
+#' per year.}
+#'    \item{`size.xml`: Contains data for population size per year.}
+#'    \item{`overallmortality.xml`: Contains overall mortality rates per year.}
+#'    \item{`overalldisability.xml`: Contains overall disability rates per year.}
+#'  }
 #'
-#' The function uses helper functions to create XML documents for each type of data. These functions are expected to handle the formatting and structuring of the data into valid XML.
+#' The function uses helper functions to create XML documents for each type of data.
+#' These functions are expected to handle the formatting and structuring of the data into valid XML.
 #'
 #' @seealso
 #' \code{\link{create_disease_dir}}
@@ -93,7 +106,7 @@ create_overall_disability_xml <- function(disability_df) {
 #' }
 #'
 #' @export
-create_population_dir <- function(
+write_population_dir <- function(
   population_name, sex_ratio, starting_year, newborns_df, size_df, mortality_df,
   disability_df
 ) {
