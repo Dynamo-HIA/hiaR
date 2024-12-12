@@ -6,3 +6,5 @@
 ^docs$
 ^pkgdown$
 ^\.github$
+^hiaR\.Rproj$
+^codecov\.yml$

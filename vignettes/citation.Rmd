@@ -1,0 +1,31 @@
+---
+title: "Citation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Citation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+To cite the `hiaR` package in publications, please use:
+
+Boshuizen, H., Lüken, M., Hafner, F., & Bogaardt, L. Dynamic Modeling of Health Impact Assessment in R (Version 1.0.0) [Computer software]. https://github.com/Dynamo-HIA/hiaR
+
+or use the bibtex entry:
+
+```bibtex
+@software{Boshuizen_Dynamic_Modeling_of,
+  author = {Boshuizen, Hendriek and Lüken, Malte and Hafner, Flavio and Bogaardt, Laurens},
+  license = {GPL-3.0-or-later},
+  title = {{Dynamic Modeling of Health Impact Assessment in R}},
+  url = {https://github.com/Dynamo-HIA/hiaR},
+  version = {1.0.0}
+}
+```
+
+The `hiaR` package is a wrapper for the DYNAMO-HIA software tool.
+To cite the `DYNAMO-HIA` software in publications, please use:
+
+- Boshuizen, H. C., Lhachimi, S. K., van Baal, P. H. M., Hoogenveen, R. T., Smit, H. A., Mackenbach, J. P., & Nusselder, W. J. (2012). The DYNAMO-HIA Model: An Efficient Implementation of a Risk Factor/Chronic Disease Markov Model for Use in Health Impact Assessment (HIA). *Demography, 49*(4), 1259–1283. <https://doi.org/10.1007/s13524-012-0122-z>
+
+- Lhachimi, S. K., Nusselder, W. J., Boshuizen, H. C., & Mackenbach, J. P. (2010). Standard Tool for Quantification in Health Impact Assessment: A Review. *American Journal of Preventive Medicine, 38*(1), 78–84. <https://doi.org/10.1016/j.amepre.2009.08.030>

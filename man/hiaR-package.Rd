@@ -4,12 +4,27 @@
 \name{hiaR-package}
 \alias{hiaR}
 \alias{hiaR-package}
-\title{hiaR: Dynamic Modeling for Health Impact Assessment}
+\title{hiaR: Dynamic Modeling of Health Impact Assessment in R}
 \description{
-DYNAMO-HIA (DYNamic MOdeling for Health Impact Assessment) is a generic software tool specially designed to aid the quantification step in health impact assessment. DYNAMO-HIA is generic in the sense that it allows arbitrary chronic diseases or risk-factors that fit the standard causal pathway of the health impact assessment framework to be modeled. The user can import and use his or her own data to add and analyze diseases or populations that are of interest to him or her.
+The hiaR package provides a user-friendly interface to the DYNAMO-HIA software tool. It contains R functions to configure and run DYNAMO-HIA, and to visualize the results. The package also contains a Shiny app to interactively run DYNAMO-HIA. DYNAMO-HIA (DYNamic MOdeling for Health Impact Assessment) is a generic software tool specially designed to aid the quantification step in health impact assessment. DYNAMO-HIA is generic in the sense that it allows arbitrary chronic diseases or risk-factors that fit the standard causal pathway of the health impact assessment framework to be modeled. Users can import and use their own data to add and analyze diseases or populations of interest.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://dynamo-hia.github.io/hiaR/}
+  \item Report bugs at \url{https://dynamo-hia.github.io/hiaR/issues}
+}
+
 }
 \author{
 \strong{Maintainer}: Hendriek Boshuizen \email{hendriek.boshuizen@rivm.nl}
+
+Authors:
+\itemize{
+  \item Malte Lüken \email{m.luken@esciencecenter.nl}
+  \item Flavio Hafner \email{f.hafner@esciencecenter.nl}
+  \item Laurens Bogaardt \email{laurens.bogaardt@rivm.nl}
+}
 
 }
 \keyword{internal}
