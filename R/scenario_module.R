@@ -2,7 +2,7 @@
 # understand logic for prevalence and transition
 # (TODO: why does it work without tagList? is tagList not always necessary?)
 # TODO: "remove" the tab with a button?
-
+# TODO: the reactivity is not working. what to do with the ns's?
 single_scenario_ui <- function(id, prevalence_and_transition_choices) {
   ns <- NS(id)
 
@@ -62,30 +62,37 @@ single_scenario_server <- function(id, reference_data) {
           prevalence = input$prevalence,
           transition = input$transition
         )
-        return(current_inputs)
       }
+      return(current_inputs)
     })
+
   })
 }
+
+
+
 
 scenario_ui <- function(id, reference_data) {
   ns <- NS(id)
 
-  tagList(
-    actionButton(ns("add_scenario"), "Add Scenario"),
-    actionButton(ns("remove_scenario"), "Remove last scenario"),
-    tabsetPanel(id = ns("tabs"), type = "tabs")
+  fluidPage(
+    shinyjs::useShinyjs(),
+    tags$head(
+      tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
+      tags$script(src = "script.js", type="text/javascript")
+    ),
+    br(),
+    fluidRow(
+      column(8, uiOutput(ns("ui_tabs"))),
+    )
   )
 }
 
 
 scenario_server <- function(id, reference_data) {
   moduleServer(id, function(input, output, session) {
-    ns <- session$ns
+    ns <- session$NS
 
-    scenario_count <- reactiveVal(0)
-    scenario_servers <- reactiveValues(servers = list())
-    server_name_prefix <- "scenario_"
     prevalence_and_incidence_choices <- reactiveVal(NULL)
 
     observeEvent(reference_data(), {
@@ -97,53 +104,91 @@ scenario_server <- function(id, reference_data) {
       ))
     })
 
-    observeEvent(input$add_scenario, {
-      new_count <- scenario_count() + 1
-      scenario_count(new_count)
+    rv <- reactiveValues(
+      scenario_count = 0,
+      scenario_names = list(),
+      trigger_add_scenario_button = FALSE,
+      return_data = list()
+    )
 
-      appendTab(
-        inputId = "tabs",
-        tabPanel(
-          title = paste("Scenario", new_count),
-          single_scenario_ui(ns(paste0(server_name_prefix, new_count)), prevalence_and_incidence_choices)
-        ),
-        select = TRUE
+    add_scenario <- function() {
+      rv$scenario_count <- rv$scenario_count + 1
+      scenario_name <- paste0("scenario_", rv$scenario_count)
+      rv$scenario_names[[length(rv$scenario_names) + 1]] <- scenario_name
+      rv$return_data[[scenario_name]] <<- single_scenario_server(
+        id = ns(scenario_name), reference_data
       )
+      appendTab(inputId = "tab_scenario",
+                tabPanel(
+                  title = tab_title(scenario_name),
+                  value = scenario_name,
+                  single_scenario_ui(ns(scenario_name), prevalence_and_transition_choices)
+                ))
+    }
 
-      server_name <- paste0(server_name_prefix, new_count)
-      scenario_servers$servers[[server_name]] <- single_scenario_server(
-        server_name, reference_data
+    # tab title with close button
+    tab_title <- function(name, type = "scenario") {
+      tags$span(
+        name,
+        tags$span(icon("times"),
+                  style = "margin-left: 5px;",
+                  onclick = paste0("Shiny.setInputValue(\"", paste0("remove_", type, "_tab"), "\", \"", name, "\", {priority: \"event\"})"))
       )
+    }
+
+    ## tabs
+    output$ui_tabs <- renderUI({
+      isolate({
+        rv$scenario_count <- rv$scenario_count + 1
+        scenario_name <- paste0("scenario_", rv$scenario_count)
+        rv$scenario_names[[length(rv$scenario_names) + 1]] <- scenario_name
+        rv$return_data[[scenario_name]] <<- single_scenario_server(
+          id = scenario_name, reference_data
+        )
+        rv$trigger_add_scenario_button <- TRUE
+      })
+      tabsetPanel(id = "tab_scenario",
+                  tabPanel(title = tab_title(scenario_name),
+                           value = scenario_name,
+                           single_scenario_ui(scenario_name, prevalence_and_incidence_choices))
+                  )
     })
 
-    observeEvent(input$remove_scenario, {
-
-      old_count <- scenario_count()
-      server_name <- paste0(server_name_prefix, old_count)
-      removeTab(
-        inputId = "tabs",
-        target = paste("Scenario", old_count)
-      )
-      new_count <- max(old_count - 1, 0)
-      if (new_count > 0) {
-        current_server_names <- names(scenario_servers$servers)
-        new_server_names <- current_server_names[c(1:new_count)]
-        new_server_set <- sapply(new_server_names, function(x) {
-          scenario_servers$servers[[x]]
-        }, simplify = FALSE, USE.NAMES = TRUE)
-      } else {
-        new_server_set <- NULL
+    ## add a button to the tabPanel
+    observeEvent(rv$trigger_add_scenario_button, {
+      if (rv$trigger_add_scenario_button) {
+        rv$trigger_add_scenario_button <- FALSE
+        shinyjs::delay(100, session$sendCustomMessage(type = "addbutton", list(id = "tab_scenario", trigger = "add_scenario")))
+        tryCatch(o_data$destroy(),
+                 error = function(e) NULL)
+        o_data <<- observeEvent(input$add_scenario, {
+          add_scenario()
+        }, ignoreInit = TRUE)
       }
-      scenario_servers$servers <- new_server_set
-      scenario_count(new_count)
+    }, once = FALSE)
+
+
+    ## remove a scenario
+    observeEvent(input$remove_scenario_tab, {
+      removeTab(inputId = "tab_scenario", target = input$remove_scenario_tab)
+      isolate({rv$scenario_names <- rv$scenario_names[!rv$scenario_names == input$remove_scenario_tab]})
     })
 
     user_data <- reactive({
-      fetch_server_data(
-        server_name_prefix = server_name_prefix,
-        server_list = scenario_servers$servers,
-        item_names = names(scenario_servers$servers)
-      )
+      message("user_data updated")
+      use_data <- rv$return_data[unlist(rv$scenario_names)]
+      l_data <- list()
+      if (length(use_data) > 0) {
+        l_data <- lapply(seq_along(use_data), function(i) {
+          data <- use_data[[i]]
+          if (length(data()) > 0) {
+            data()
+          } else {
+            list()
+          }
+        })
+      }
+      l_data
     })
 
     return(user_data)
