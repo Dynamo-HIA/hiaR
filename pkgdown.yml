@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   citation: citation.html
   hiaR: hiaR.html
-last_built: 2024-12-12T14:36Z
+last_built: 2024-12-17T08:55Z
 urls:
   reference: https://dynamo-hia.github.io/hiaR/reference
   article: https://dynamo-hia.github.io/hiaR/articles

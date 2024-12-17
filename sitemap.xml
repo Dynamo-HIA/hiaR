@@ -14,9 +14,6 @@
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/configure_scenario.html</loc></url>
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/create_choice_list.html</loc></url>
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/create_choices_from_relative_risks.html</loc></url>
-<url><loc>https://dynamo-hia.github.io/hiaR/reference/create_disease_dir.html</loc></url>
-<url><loc>https://dynamo-hia.github.io/hiaR/reference/create_population_dir.html</loc></url>
-<url><loc>https://dynamo-hia.github.io/hiaR/reference/create_risk_factor_dir.html</loc></url>
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/create_simulation_dir.html</loc></url>
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/disease_selection_server.html</loc></url>
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/disease_selection_ui.html</loc></url>
@@ -56,5 +53,8 @@
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/validate_file_ending.html</loc></url>
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/validate_n_substrings.html</loc></url>
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/validate_xml_schema.html</loc></url>
+<url><loc>https://dynamo-hia.github.io/hiaR/reference/write_disease_dir.html</loc></url>
+<url><loc>https://dynamo-hia.github.io/hiaR/reference/write_population_dir.html</loc></url>
+<url><loc>https://dynamo-hia.github.io/hiaR/reference/write_risk_factor_dir.html</loc></url>
 </urlset>
 
