@@ -1,6 +1,4 @@
-
 test_that("fetch_server_data functions correctly", {
-
   # Setup mock servers
   mock_server1 <- function() list(prevalence = "prev1", transitions = "trans1")
   mock_server2 <- function() NULL
@@ -45,7 +43,6 @@ test_that("fetch_server_data functions correctly", {
     fetch_server_data("risk_factor_", list(), character(0)),
     NA
   )
-
 })
 
 test_that("create_choices_from_relative_risks has the right return values", {
@@ -55,8 +52,10 @@ test_that("create_choices_from_relative_risks has the right return values", {
 
   expect_length(output, 4)
   expect_type(output, "list")
-  expected_names <- c("from_diseases", "from_risk_factors",
-                      "to_death", "to_disability")
+  expected_names <- c(
+    "from_diseases", "from_risk_factors",
+    "to_death", "to_disability"
+  )
   expect_equal(names(output), expected_names)
 
   lapply(seq_along(output), function(i) {
@@ -83,7 +82,8 @@ test_that("create_choice_list works correctly", {
 
   expect_error(
     create_choice_list("a"),
-    "is.data.frame\\(input_df\\) is not TRUE")
+    "is.data.frame\\(input_df\\) is not TRUE"
+  )
 
   output <- create_choice_list(rr_from_diseases, caller = "server")
   expected <- list(
@@ -92,14 +92,17 @@ test_that("create_choice_list works correctly", {
     "RR_to_disease1-disease2.xml" = 3
   )
   expect_equal(output, expected)
-
 })
 
 
 test_that("filter_df_from_server_data works correctly", {
-  mock_server_list = list(
-    a = function() {c("RR_to_disease4-disease1.xml")},
-    b = function() {c("RR_to_disease1-risk_factor1.xml", "RR_to_disease2-risk_factor2.xml")}
+  mock_server_list <- list(
+    a = function() {
+      c("RR_to_disease4-disease1.xml")
+    },
+    b = function() {
+      c("RR_to_disease1-risk_factor1.xml", "RR_to_disease2-risk_factor2.xml")
+    }
   )
   relative_risks <- do.call(rbind, generate_filtered_relative_risk_data())
   rownames(relative_risks) <- NULL
@@ -114,9 +117,13 @@ test_that("filter_df_from_server_data works correctly", {
   empty_result <- filter_df_from_server_data(empty_relative_risks, mock_server_list)
   expect_equal(empty_result, data.frame())
 
-  empty_mock_server_list = list(
-    a = function() {NULL},
-    b = function() {NULL}
+  empty_mock_server_list <- list(
+    a = function() {
+      NULL
+    },
+    b = function() {
+      NULL
+    }
   )
   empty_result <- filter_df_from_server_data(relative_risks, empty_mock_server_list)
   expect_equal(empty_result, data.frame())
@@ -151,12 +158,7 @@ test_that("filter_relative_risks handles NULL inputs", {
 })
 
 test_that("filter_relative_risks handles wrong arguments correctly", {
-
   relative_risks <- generate_raw_relative_risk_data()
   output <- filter_relative_risks(relative_risks, list(), list())
   expect_equal(output, list())
-
 })
-
-
-

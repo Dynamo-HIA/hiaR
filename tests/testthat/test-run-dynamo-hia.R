@@ -38,7 +38,7 @@ test_that("run_dynamo_hia runs without error", {
           mortality_df <- generate_diseaseprevalences_test_data(incidence = TRUE)
           disability_df <- generate_diseaseprevalences_test_data(incidence = FALSE)
 
-          result <- create_population_dir(
+          result <- write_population_dir(
             population,
             sex_ratio,
             starting_year,
@@ -125,7 +125,7 @@ test_that("run_dynamo_hia runs without error", {
 
           risk_factor_configuration <- generate_riskfactorconfiguration_test_data(mode = risk_factor_type, num_cat = 3)
 
-          result <- create_risk_factor_dir(
+          result <- write_risk_factor_dir(
             risk_factor_name = risk_factor,
             transition_matrix_list = transition_matrix_list,
             transition_drift_list = transition_drift_list,
@@ -188,7 +188,7 @@ test_that("run_dynamo_hia runs without error", {
 
           names(excess_mortalities_list) <- populations
 
-          result <- create_disease_dir(
+          result <- write_disease_dir(
             disease_name = disease,
             risk_factor_list = risk_factor_list,
             diseases_list = diseases_list,
@@ -264,7 +264,6 @@ test_that("run_dynamo_hia runs without error", {
             time_step = 1,
             ref_scenario_name = paste0(population, "_Reference_Scenario"),
             random_seed = 42,
-            result_type = "Emptyness2BFilled",
             population_name = population,
             scenarios = scenario_configs,
             diseases = disease_configs,

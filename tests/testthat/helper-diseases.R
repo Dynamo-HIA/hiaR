@@ -19,8 +19,7 @@ generate_relriskfromriskfactor_test_data <- function(mode = "continuous", num_ca
     df$begin <- runif(n)
     df$alfa <- runif(n)
     df$end <- runif(n)
-
-  } else {  # categorical mode
+  } else { # categorical mode
 
     df <- merge(df, data.frame(cat = cat), by = NULL)
 
@@ -64,11 +63,11 @@ generate_excessmortality_test_data <- function(parameter_type = "acutely_fatal")
   df$unit <- runif(n, min = 0.8, max = 1.5)
 
   if (parameter_type == "accutely_fatal") {
-    df$acutelyfatal <- runif(n, min = 0.05, max = 0.1)  # Assuming a proportion between 0 and 1
+    df$acutelyfatal <- runif(n, min = 0.05, max = 0.1) # Assuming a proportion between 0 and 1
     df$curedfraction <- 0
   } else {
     df$acutelyfatal <- 0
-    df$curedfraction <- runif(n, min = 0.05, max = 0.1)  # Assuming a proportion between 0 and 1
+    df$curedfraction <- runif(n, min = 0.05, max = 0.1) # Assuming a proportion between 0 and 1
   }
 
   return(df)

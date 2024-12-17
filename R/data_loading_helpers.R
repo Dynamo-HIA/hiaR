@@ -102,8 +102,7 @@ get_relative_risk_source <- function(input_list, lookup_items, extract = TRUE) {
       if (length(indicators) > 0) {
         if (isTRUE(extract)) {
           from <- sapply(indicators, extract_relative_risk_source, USE.NAMES = FALSE)
-        }
-        else {
+        } else {
           from <- rep(item_name, length(indicators))
         }
         data.frame(
@@ -145,16 +144,16 @@ get_relative_risk_source <- function(input_list, lookup_items, extract = TRUE) {
 collect_relative_risks <- function(in_list, keyword_map) {
   sapply(names(keyword_map), function(keyword) {
     short_keyword <- keyword_map[[keyword]]
-    out <- lapply(in_list, function(x)
-      x[[keyword]])
+    out <- lapply(in_list, function(x) {
+      x[[keyword]]
+    })
     out <- do.call(rbind, out)
     if (is.null(out)) {
       return(out)
-    } else{
+    } else {
       if (!is.null(short_keyword)) {
         out$to <- short_keyword
-      }
-      else {
+      } else {
         out$to <- row.names(out)
         out$to <- sub("\\.[0-9]+$", "", out$to)
       }
@@ -417,13 +416,15 @@ configure_relative_risk <- function(index, from, to, relative_risk_filename) {
 #' @description Creates a configuration list for an intervention scenario in the simulation.
 #'
 #' @param name A character string which specifies the unique name of the scenario.
-#' @param success_rate A numeric which specifies the intervention success rate (0-100).
-#' @param min_age A numeric which specifies the minimum target age (0-95).
-#' @param max_age A numeric which specifies the maximum target age (0-95).
-#' @param gender A numeric which specifies the target gender (0=both, 1=male, 2=female).
 #' @param transition_filename A character string which specifies the path to the
 #' transition rates file.
 #' @param prevalence_filename A character string which specifies the path to the prevalence file.
+#' @param success_rate A numeric which specifies the intervention success rate (0-100).
+#' Default is 100.
+#' @param min_age A numeric which specifies the minimum target age (0-95). Default is 0.
+#' @param max_age A numeric which specifies the maximum target age (0-95). Default is 95.
+#' @param gender A numeric which specifies the target gender (0=female, 1=male, 2=both).
+#' Default is 2 (both).
 #'
 #' @return A list containing the scenario configuration parameters.
 #'
@@ -441,12 +442,12 @@ configure_relative_risk <- function(index, from, to, relative_risk_filename) {
 #' )
 #'
 configure_scenario <- function(name,
-                               success_rate,
-                               min_age,
-                               max_age,
-                               gender,
                                transition_filename,
-                               prevalence_filename) {
+                               prevalence_filename,
+                               success_rate = 100,
+                               min_age = 0,
+                               max_age = 95,
+                               gender = 2) {
   return(list(
     uniquename = name,
     successRate = success_rate,

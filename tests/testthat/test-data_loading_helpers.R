@@ -1,8 +1,5 @@
-
-
 test_that("get_file_tree returns correct structure", {
   withr::with_tempdir({
-
     dir.create("dir1")
     dir.create("dir2")
     dir.create("dir3")
@@ -27,7 +24,8 @@ test_that("get_file_tree returns correct structure", {
       dir3 = list(
         subdir2 = list(
           "file3.txt" = NULL
-        )),
+        )
+      ),
       dir4 = NULL
     )
 
@@ -53,24 +51,29 @@ test_that("get_relative_risk_source extracts sources correctly", {
   expect_type(result, "list")
   expect_named(result, c("Disease1", "Disease2"))
 
-  expect_equal(result$Disease1$Relative_Risks_From_Risk_Factor,
-               data.frame(
-                 from = c("Risk1", "Risk2"),
-                 filename = c("RR_to_Disease1-Risk1.xml", "RR_to_Disease1-Risk2.xml")
-               ))
+  expect_equal(
+    result$Disease1$Relative_Risks_From_Risk_Factor,
+    data.frame(
+      from = c("Risk1", "Risk2"),
+      filename = c("RR_to_Disease1-Risk1.xml", "RR_to_Disease1-Risk2.xml")
+    )
+  )
 
-  expect_equal(result$Disease1$Relative_Risks_From_Diseases,
-               data.frame(
-                 from = c("Disease2"),
-                 filename = c("RR_to_Disease1-Disease2.xml")
-               ))
+  expect_equal(
+    result$Disease1$Relative_Risks_From_Diseases,
+    data.frame(
+      from = c("Disease2"),
+      filename = c("RR_to_Disease1-Disease2.xml")
+    )
+  )
 
-  expect_equal(result$Disease2$Relative_Risks_From_Risk_Factor,
-               data.frame(
-                 from = c("Risk3"),
-                 filename = c("RR_to_Disease2-Risk3.xml")
-               ))
-
+  expect_equal(
+    result$Disease2$Relative_Risks_From_Risk_Factor,
+    data.frame(
+      from = c("Risk3"),
+      filename = c("RR_to_Disease2-Risk3.xml")
+    )
+  )
 })
 
 test_that("get_relative_risk_source returns item names when extract is FALSE", {
@@ -80,27 +83,34 @@ test_that("get_relative_risk_source returns item names when extract is FALSE", {
   expect_type(result, "list")
   expect_named(result, c("Factor1", "Factor2")) # TODO: replace with names(mock_data[["inputs"]])?
 
-  expect_equal(result$Factor1$Relative_Risks_For_Death,
-               data.frame(
-                 from = c("Factor1", "Factor1"),
-                 filename = c("some_file.xml", "another_file.xml")
-               ))
+  expect_equal(
+    result$Factor1$Relative_Risks_For_Death,
+    data.frame(
+      from = c("Factor1", "Factor1"),
+      filename = c("some_file.xml", "another_file.xml")
+    )
+  )
 
-  expect_equal(result$Factor2$Relative_Risks_For_Death,
-               data.frame(
-                 from = c("Factor2", "Factor2"),
-                 filename = c("file2.xml", "file4.xml")
-               ))
+  expect_equal(
+    result$Factor2$Relative_Risks_For_Death,
+    data.frame(
+      from = c("Factor2", "Factor2"),
+      filename = c("file2.xml", "file4.xml")
+    )
+  )
 
-  expect_equal(result$Factor1$Relative_Risks_For_Disability,
-                NULL
-               )
+  expect_equal(
+    result$Factor1$Relative_Risks_For_Disability,
+    NULL
+  )
 
-  expect_equal(result$Factor2$Relative_Risks_For_Disability,
-               data.frame(
-                 from = c("Factor2"),
-                 filename = c("file10.xml")
-               ))
+  expect_equal(
+    result$Factor2$Relative_Risks_For_Disability,
+    data.frame(
+      from = c("Factor2"),
+      filename = c("file10.xml")
+    )
+  )
 })
 
 test_that("get_relative_risk_source handles empty input correctly", {
@@ -128,7 +138,6 @@ test_that("get_relative_risk_source throws error for invalid input", {
 })
 
 test_that("collect_relative_risks works on correct input", {
-
   data <- generate_relative_risk_data()
   actual <- collect_relative_risks(
     in_list = data[["input_list"]],
@@ -140,11 +149,10 @@ test_that("collect_relative_risks works on correct input", {
   expect_type(actual, "list")
   expect_equal(
     actual$key_a[c("to", "filename", "from")],
-    expected$key_a[c("to", "filename", "from")])
+    expected$key_a[c("to", "filename", "from")]
+  )
   expect_equal(
     actual$key_b[c("to", "filename", "from")],
     expected$key_b[c("to", "filename", "from")]
-    )
+  )
 })
-
-

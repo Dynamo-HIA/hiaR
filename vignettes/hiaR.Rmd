@@ -120,12 +120,8 @@ Besides risk factors and diseases, we also need to configure the scenario that w
 We create a scenario that intervenes on the risk factor smoking and assumes that the targeted population never smoked. We choose this intervention by specifying a prevalence file that only contains never smokers.
 
 ```{r}
-smoking_intervention = configure_scenario(
+smoking_intervention <- configure_scenario(
   name = "All_Never_Smokers",
-  success_rate = 80,
-  min_age = 18,
-  max_age = 65,
-  gender = 2, # Both female and male
   transition_filename = "NL_RF_smoking_Transitions_Netto", # Same as in reference scenario
   prevalence_filename = "RF_smoking_cat_All_Never_Smokers_Prev" # Different from reference scenario
 )
@@ -148,7 +144,6 @@ create_simulation_dir(
   time_step = 1,
   ref_scenario_name = "Netherlands_Reference_Scenario",
   random_seed = 42,
-  result_type = "Emptyness2BFilled",
   scenarios = list(smoking_intervention), # Wrap in list because we could have multiple scenarios
   diseases = list(lung_cancer_config), # Wrap in list because we could have multiple diseases
   risk_factors = smoking_config, # No list because we only have one risk factor

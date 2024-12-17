@@ -1,4 +1,3 @@
-
 generate_test_file_groups <- function(file_group) {
   if (file_group == "disease") {
     lookup_items <- c("Relative_Risks_From_Risk_Factor", "Relative_Risks_From_Diseases")
@@ -23,8 +22,7 @@ generate_test_file_groups <- function(file_group) {
         empty_item = NULL
       )
     )
-  }
-  else if (file_group == "risk_factor"){
+  } else if (file_group == "risk_factor") {
     lookup_items <- c("Relative_Risks_For_Death", "Relative_Risks_For_Disability")
     input_list <- list(
       Factor1 = list(
@@ -56,25 +54,25 @@ generate_test_file_groups <- function(file_group) {
 }
 
 generate_relative_risk_data <- function() {
-  df_a1 = data.frame(
-      filename = c("file1", "file2"),
-      from = c("source1", "source2") ,
-      to = c("disease1", "disease1")
+  df_a1 <- data.frame(
+    filename = c("file1", "file2"),
+    from = c("source1", "source2"),
+    to = c("disease1", "disease1")
   )
-  df_b1 = data.frame(
-      filename = c("file3", "file4"),
-      from = c("source3", "source4"),
-      to = c("disease1", "disease1")
+  df_b1 <- data.frame(
+    filename = c("file3", "file4"),
+    from = c("source3", "source4"),
+    to = c("disease1", "disease1")
   )
-  df_a2 = data.frame(
-      filename = c("file11", "file12"),
-      from = c("source11", "source12"),
-      to = c("disease2", "disease2")
+  df_a2 <- data.frame(
+    filename = c("file11", "file12"),
+    from = c("source11", "source12"),
+    to = c("disease2", "disease2")
   )
-  df_b2 = data.frame(
-      filename = c("file13", "file14"),
-      from = c("source13", "source14"),
-      to = c("disease2", "disease2")
+  df_b2 <- data.frame(
+    filename = c("file13", "file14"),
+    from = c("source13", "source14"),
+    to = c("disease2", "disease2")
   )
   cols_input <- c("filename", "from")
 
@@ -92,7 +90,7 @@ generate_relative_risk_data <- function() {
 
   return(list(
     input_list = input_list,
-    kw_map =  list(
+    kw_map = list(
       key_a = NULL,
       key_b = NULL
     ),
@@ -100,6 +98,5 @@ generate_relative_risk_data <- function() {
       key_a = rbind(df_a1, df_a2),
       key_b = rbind(df_b1, df_b2)
     )
-    )
-  )
+  ))
 }

@@ -36,9 +36,11 @@
 #' @keywords internal
 #'
 get_reference_data <- function(root_dir) {
-  groups <- list(diseases = "Diseases",
-                 populations = "Populations",
-                 risk_factors = "Risk_Factors")
+  groups <- list(
+    diseases = "Diseases",
+    populations = "Populations",
+    risk_factors = "Risk_Factors"
+  )
 
   groups <- sapply(groups, function(x) {
     get_file_tree(file.path(root_dir, x))
@@ -51,8 +53,10 @@ get_reference_data <- function(root_dir) {
   rr_diseases <- get_relative_risk_source(groups$diseases, names(kw_map_diseases))
   rr_diseases <- collect_relative_risks(rr_diseases, kw_map_diseases)
 
-  kw_map_risk_factors <- list(Relative_Risks_For_Death = "death",
-                              Relative_Risks_For_Disability = "disability")
+  kw_map_risk_factors <- list(
+    Relative_Risks_For_Death = "death",
+    Relative_Risks_For_Disability = "disability"
+  )
   rr_risk_factors <- get_relative_risk_source(groups$risk_factors, names(kw_map_risk_factors), FALSE)
   rr_risk_factors <- collect_relative_risks(rr_risk_factors, kw_map_risk_factors)
 
@@ -60,5 +64,3 @@ get_reference_data <- function(root_dir) {
 
   return(groups)
 }
-
-

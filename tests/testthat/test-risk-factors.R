@@ -1,4 +1,3 @@
-
 test_that("create_risk_factor_dir creates correct directory structure and files", {
   withr::with_tempdir({
     risk_factor_name <- "TestRiskFactor"
@@ -68,7 +67,7 @@ test_that("create_risk_factor_dir creates correct directory structure and files"
 
     risk_factor_configuration <- generate_riskfactorconfiguration_test_data(mode = "continuous")
 
-    result <- create_risk_factor_dir(
+    result <- write_risk_factor_dir(
       risk_factor_name = risk_factor_name,
       transition_matrix_list = transition_matrix_list,
       transition_drift_list = transition_drift_list,

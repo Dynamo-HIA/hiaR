@@ -1,5 +1,3 @@
-
-
 test_that("single_relative_risk_server works correctly", {
   # Mock choices
   mock_choices <- reactiveVal(list(
@@ -9,7 +7,6 @@ test_that("single_relative_risk_server works correctly", {
   ))
 
   testServer(single_relative_risk_server, args = list(choices = mock_choices), {
-
     expect_equal(session$returned(), list())
 
     session$setInputs(check_group = c("1", "3"))

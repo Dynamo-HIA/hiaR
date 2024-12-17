@@ -6,29 +6,31 @@
 \usage{
 configure_scenario(
   name,
-  success_rate,
-  min_age,
-  max_age,
-  gender,
   transition_filename,
-  prevalence_filename
+  prevalence_filename,
+  success_rate = 100,
+  min_age = 0,
+  max_age = 95,
+  gender = 2
 )
 }
 \arguments{
 \item{name}{A character string which specifies the unique name of the scenario.}
 
-\item{success_rate}{A numeric which specifies the intervention success rate (0-100).}
-
-\item{min_age}{A numeric which specifies the minimum target age (0-95).}
-
-\item{max_age}{A numeric which specifies the maximum target age (0-95).}
-
-\item{gender}{A numeric which specifies the target gender (0=both, 1=male, 2=female).}
-
 \item{transition_filename}{A character string which specifies the path to the
 transition rates file.}
 
 \item{prevalence_filename}{A character string which specifies the path to the prevalence file.}
+
+\item{success_rate}{A numeric which specifies the intervention success rate (0-100).
+Default is 100.}
+
+\item{min_age}{A numeric which specifies the minimum target age (0-95). Default is 0.}
+
+\item{max_age}{A numeric which specifies the maximum target age (0-95). Default is 95.}
+
+\item{gender}{A numeric which specifies the target gender (0=female, 1=male, 2=both).
+Default is 2 (both).}
 }
 \value{
 A list containing the scenario configuration parameters.

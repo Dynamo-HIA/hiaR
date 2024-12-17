@@ -1,4 +1,3 @@
-
 #' UI part for program config
 #'
 #' Creates two panels for the user to choose the paths to the DYNAMO executable
@@ -22,7 +21,8 @@ program_config_ui <- function(id) {
         title = "Set the path to the working directory",
         label = "Set directory",
         multiple = FALSE
-      )),
+      )
+    ),
     wellPanel(
       textInput(ns("dynamo_path"), label = "Dynamo executable:"),
       shinyFiles::shinyFilesButton(
@@ -32,7 +32,7 @@ program_config_ui <- function(id) {
         multiple = FALSE
       )
     )
-    )
+  )
 }
 
 
@@ -57,7 +57,7 @@ program_config_ui <- function(id) {
 program_config_server <- function(id) {
   moduleServer(
     id,
-    function(input, output, session){
+    function(input, output, session) {
       reference_data <- reactiveVal(NULL)
       working_path <- reactiveVal(NULL)
       dynamo_path <- reactiveVal(NULL)
@@ -75,20 +75,25 @@ program_config_server <- function(id) {
       })
 
       observeEvent(
-        input$working_button, {
+        input$working_button,
+        {
           volumes <- c(
             Home = fs::path_home(),
             shinyFiles::getVolumes()()
           )
 
           shinyFiles::shinyDirChoose(
-            input, "working_button", roots = volumes, session = session)
+            input, "working_button",
+            roots = volumes, session = session
+          )
 
           if (!is.null(input$working_button)) {
             selected_path <- parse_dirpath_wrapper(volumes, input$working_button)
             if (length(selected_path) > 0) {
               updateTextInput(
-                session, "working_path", value = selected_path)
+                session, "working_path",
+                value = selected_path
+              )
               working_path(selected_path)
               new_reference_data <- get_reference_data(file.path(selected_path, "Reference_Data"))
               reference_data(new_reference_data)
@@ -98,14 +103,16 @@ program_config_server <- function(id) {
       )
 
       observeEvent(
-        input$dynamo_button, {
+        input$dynamo_button,
+        {
           volumes <- c(
             Home = fs::path_home(),
             shinyFiles::getVolumes()()
           )
 
           shinyFiles::shinyFileChoose(
-            input, "dynamo_button", roots = volumes, session = session
+            input, "dynamo_button",
+            roots = volumes, session = session
           )
 
           if (!is.null(input$dynamo_button)) {
@@ -114,12 +121,12 @@ program_config_server <- function(id) {
             if (n_rows > 0) {
               selected_path <- selected_path_df$datapath[[1]]
               updateTextInput(
-                session, "dynamo_path", value = selected_path
+                session, "dynamo_path",
+                value = selected_path
               )
               dynamo_path(selected_path)
             }
           }
-
         }
       )
 
@@ -130,5 +137,4 @@ program_config_server <- function(id) {
       ))
     }
   )
-
 }

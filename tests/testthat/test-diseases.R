@@ -1,4 +1,3 @@
-
 test_that("create_disease_dir creates correct directory structure and files", {
   withr::with_tempdir({
     disease_name <- "TestDisease"
@@ -52,7 +51,7 @@ test_that("create_disease_dir creates correct directory structure and files", {
 
     names(excess_mortalities_list) <- populations
 
-    result <- create_disease_dir(
+    result <- write_disease_dir(
       disease_name = disease_name,
       risk_factor_list = risk_factor_list,
       diseases_list = diseases_list,
