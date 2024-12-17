@@ -27,9 +27,9 @@ The function is designed to handle simple data frames where each cell contains a
 \examples{
 \dontrun{
 # Example for disease prevalence across age and sex groups
-root <- xml2::xml_new_root('prevalences')
+root <- xml2::xml_new_root("prevalences")
 df <- data.frame(age = c(21, 21, 22, 22), sex = c(0, 1, 0, 1), value = c(1000, 2000, 1500, 3000))
-root <- add_df_to_xml(root, df, 'prevalence')
+root <- add_df_to_xml(root, df, "prevalence")
 }
 
 }

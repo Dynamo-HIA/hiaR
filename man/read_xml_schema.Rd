@@ -21,7 +21,7 @@ The function locates the specified XML schema file within the \code{extdata/sche
 \examples{
 \dontrun{
 # Read an XML schema file named 'example_schema' from the package
-schema <- read_xml_schema('populationsize')
+schema <- read_xml_schema("populationsize")
 }
 
 }

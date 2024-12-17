@@ -64,7 +64,7 @@ size <- data.frame(...)
 mortality <- data.frame(...)
 disability <- data.frame(...)
 
-create_population_dir('ExamplePopulation', 1.05, 2009, newborns, size, mortality, disability)
+create_population_dir("ExamplePopulation", 1.05, 2009, newborns, size, mortality, disability)
 }
 
 }
