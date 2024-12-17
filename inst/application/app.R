@@ -1,4 +1,4 @@
-
+# TODO: add functionality for debugging? -> only if debugging is true, then show the outputs of each UI (see end of this script)
 ui <- fluidPage(
   navbarPage("DYNAMO-HIA",
              tabPanel("Configuration",
@@ -25,7 +25,10 @@ ui <- fluidPage(
                       ),
              tabPanel("Relative Risks",
                       uiOutput("relative_risk_ui"),
-                      verbatimTextOutput("selected_relative_risk_display"))
+                      verbatimTextOutput("selected_relative_risk_display")),
+             tabPanel("Scenarios",
+                      uiOutput("scenario_ui"),
+                      verbatimTextOutput("selected_scenarios_display"))
   )
 )
 
@@ -77,6 +80,12 @@ server <- function(input, output, session) {
   selected_relative_risks <- relative_risk_server(
     "relative_risks", available_relative_risks)
 
+  output$scenario_ui <- renderUI({
+    req(reference_data())
+    scenario_ui("scenarios", reference_data)
+  })
+  selected_scenarios <- scenario_server("scenarios", reference_data)
+
   # Update the choice options for relative risks ratios into diseases
   # depending on user input from selected risk factors and diseases
   observe({ # https://groups.google.com/g/shiny-discuss/c/vd_nB-BH8sw
@@ -107,6 +116,9 @@ server <- function(input, output, session) {
     output$selected_relative_risk_display <- renderPrint({ selected_relative_risks() })
   })
 
+  observeEvent(selected_scenarios(), {
+    output$selected_scenarios_display <- renderPrint({ selected_scenarios() })
+  })
 
 }
 
