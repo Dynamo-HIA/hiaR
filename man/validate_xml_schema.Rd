@@ -23,8 +23,8 @@ The function reads the specified XML schema using \code{read_xml_schema} and val
 \examples{
 \dontrun{
 # Validate an XML document against the 'example_schema' schema
-root <- xml2::read_xml('<root><child>Example</child></root>')
-validate_xml_schema(root, 'example_schema')
+root <- xml2::read_xml("<root><child>Example</child></root>")
+validate_xml_schema(root, "example_schema")
 }
 
 }

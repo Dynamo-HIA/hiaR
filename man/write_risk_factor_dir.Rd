@@ -68,21 +68,21 @@ For \code{prevalences_list}, only \code{'continuous'} and \code{'categorical'} a
 \examples{
 \dontrun{
 # A list element corresponds to a population
-transition_matrix_list <- list('NL' = list(data = data.frame(...), type = 'zero'))
-transition_drift_list <- list('NL' = list(data = data.frame(...), type = 'zero'))
+transition_matrix_list <- list("NL" = list(data = data.frame(...), type = "zero"))
+transition_drift_list <- list("NL" = list(data = data.frame(...), type = "zero"))
 
-prevalences_list <- list('NL' = list(data = data.frame(...), type = 'continuous', distribution = 'normal')
-prevalences_duration_list <-  list('NL' = list(data = data.frame(...)))
+prevalences_list <- list("NL" = list(data = data.frame(...), type = "continuous", distribution = "normal"))
+prevalences_duration_list <- list("NL" = list(data = data.frame(...)))
 
 # A list element corresponds to a risk factor
-relative_risks_death_list <- list('continuous' = list(data = data.frame(...), type = 'continuous')
-relative_risks_disability_list <-  list('continuous' = list(data = data.frame(...), type = 'continuous')
+relative_risks_death_list <- list("continuous" = list(data = data.frame(...), type = "continuous"))
+relative_risks_disability_list <- list("continuous" = list(data = data.frame(...), type = "continuous"))
 
 # Configuration for which risk factor element to use
-list(data = data.frame(...), reference = list(referencevalue = 0.5), type = 'continuous')
+risk_factor_configuration <- list(data = data.frame(...), reference = list(referencevalue = 0.5), type = "continuous")
 
 create_risk_factor_dir(
-  'smoking',
+  "smoking",
   transition_matrix_list = transition_matrix_list,
   transition_drift_list = transition_drift_list,
   relative_risks_death_list = relative_risks_death_list,

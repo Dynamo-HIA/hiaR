@@ -64,6 +64,7 @@ single_relative_risk_server <- function(id, choices) {
 #' @returns A tagList containing UI components for selecting relative risks from
 #' diseases and risk factors.
 #'
+#' @export
 #' @keywords internal
 relative_risk_ui <- function(id, relative_risks) {
   ns <- NS(id)
@@ -111,6 +112,7 @@ relative_risk_ui <- function(id, relative_risks) {
 #' containing the names of the xml files corresponding to the selected
 #' diseases and risk factors.
 #'
+#' @export
 #' @keywords internal
 relative_risk_server <- function(id, relative_risks) {
   moduleServer(id, function(input, output, session) {

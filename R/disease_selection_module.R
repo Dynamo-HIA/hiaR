@@ -99,6 +99,7 @@ single_disease_server <- function(id) {
 #'   reference data. For each disease in the reference data, it creates a `single_disease_ui`
 #'   component, allowing users to select specific XML files for various disease parameters.
 #'
+#' @export
 #' @keywords internal
 disease_selection_ui <- function(id, reference_data) {
   ns <- NS(id)
@@ -142,6 +143,7 @@ disease_selection_ui <- function(id, reference_data) {
 #' accordingly. The function collects and processes user selections for each disease, returning
 #' a reactive expression with the compiled data.
 #'
+#' @export
 #' @keywords internal
 #'
 disease_selection_server <- function(id, reference_data) {
