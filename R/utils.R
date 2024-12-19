@@ -537,4 +537,22 @@ download_github_release <- function(repo_url = "https://github.com/Dynamo-HIA/dy
       return(invisible(dest_path))
     }
   })
+#' Wrap around a bslib tooltip
+#'
+#' Specify a UI element together with a description.
+#'
+#' @param element An arbitrary, fully specified UI element.
+#' @param description The description to show as a tooltip.
+#' @param placement The position of the description. Passed as argument
+#' with the same name to `tooltip`. Default is "auto".
+#'
+#' @returns A \code{\link[bslib]{tooltip}} expression to be used in an UI element.
+#'
+#' @keywords internal
+wrap_tooltip <- function(element, description = "", placement = "auto") {
+  bslib::tooltip(
+    element,
+    description,
+    placement = placement
+  )
 }

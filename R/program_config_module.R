@@ -16,7 +16,12 @@ program_config_ui <- function(id) {
   tagList(
     uiOutput(ns("validation_msg")),
     wellPanel(
-      textInput(ns("working_path"), label = "Working directory:"),
+      wrap_tooltip(
+        textInput(ns("working_path"), label = "Working directory:"),
+        "Set the path to the working directory. The working directory should
+         contain two folders, one named 'Reference_Data' and the other
+         'Simulations'. "
+      ),
       shinyFiles::shinyDirButton(
         id = ns("working_button"),
         title = "Set the path to the working directory",
@@ -25,7 +30,10 @@ program_config_ui <- function(id) {
       )
     ),
     wellPanel(
-      textInput(ns("dynamo_path"), label = "Dynamo executable:"),
+      wrap_tooltip(
+        textInput(ns("dynamo_path"), label = "Dynamo executable:"),
+        "The Dynamo executable is the Java program that runs the simulations."
+      ),
       shinyFiles::shinyFilesButton(
         id = ns("dynamo_button"),
         title = "Set the file to the Dynamo executable",

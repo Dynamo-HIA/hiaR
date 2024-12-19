@@ -20,35 +20,60 @@ single_scenario_ui <- function(id, prevalence_and_transition_choices) {
   transition_choices <- prevalence_and_transition_choices$transitions
 
   fluidRow(column(4,
-                  textInput(ns("scenario_name"),
-                            "Scenario name:",
-                            value = ""),
-                  numericInput(ns("percent_population"),
-                               "% of Population Reached:",
-                               value = 100, min = 0, max = 100),
-                  radioButtons(ns("gender"), "Gender:",
-                               choiceNames=c("male", "female", "male and female"),
-                               choiceValues=c(0, 1, 2),
-                               selected = 2)
-           ),
-           column(8,
-                  numericInput(ns("min_age"),
-                               "Min. Age:",
-                               value = ui_min_age,
-                               min = ui_min_age,
-                               max = ui_max_age),
-                  numericInput(ns("max_age"),
-                               "Max. Age:",
-                               value = ui_max_age,
-                               min = ui_min_age,
-                               max = ui_max_age),
-                  selectInput(ns("prevalence"),
-                              "Prevalence:",
-                              choices = prevalence_choices),
-                  selectInput(ns("transition"),
-                              "Transition:",
-                              choices = transition_choices)
-           )
+                  wrap_tooltip(
+                    textInput(ns("scenario_name"),
+                              "Scenario name:",
+                              value = ""),
+                    "Give this scenario a name."
+                  ),
+                  wrap_tooltip(
+                    numericInput(ns("percent_population"),
+                                 value = 100, min = 0, max = 100,
+                                 "% of Population Reached:"),
+                  "Define the percent the population that is reached by the
+                  intervention."
+                  ),
+                  wrap_tooltip(
+                    radioButtons(ns("gender"), "Gender:",
+                                 choiceNames=c("male", "female", "male and female"),
+                                 choiceValues=c(0, 1, 2),
+                                 selected = 2),
+                    "Define the gender targeted by the intervention."
+                  )
+
+  ),
+  column(8,
+         wrap_tooltip(
+           numericInput(ns("min_age"),
+                        "Min. Age:",
+                        value = ui_min_age,
+                        min = ui_min_age,
+                        max = ui_max_age),
+           "Define the minimum age of people targeted by the intervention."
+         ),
+         wrap_tooltip(
+           numericInput(ns("max_age"),
+                        "Max. Age:",
+                        value = ui_max_age,
+                        min = ui_min_age,
+                        max = ui_max_age),
+           "Define the maximum age of people targeted by the intervention."
+         ),
+         wrap_tooltip(
+           selectInput(ns("prevalence"),
+                       "Prevalence:",
+                       choices = prevalence_choices),
+           "The prevalence resulting from the intervention.",
+           placement = "right"
+         ),
+         wrap_tooltip(
+           selectInput(ns("transition"),
+                       "Transition:",
+                       choices = transition_choices),
+           "The transitions resulting from the intervention.",
+           placement = "right"
+         )
+  )
   )
 }
 
@@ -99,6 +124,18 @@ scenario_ui <- function(id) {
   ns <- NS(id)
 
   tagList(
+    p("Configure the alternative scenarios to be simulated.
+      The reference scenario is fully specified by the chosen risk factors,
+      the diseases, and the relative risks.
+      You can add multiple alternative scenarios by clicking on the
+      'Add scenario' button, and remove the latest scenario by clicking on the
+      'Remove latest scenario' button.
+      You must choose either a different transition dataset, or a different
+      risk factor prevalence dataset from that chosen on the risk factor tab."
+      # TODO: I think this we have not yet implemented -- see the `setdiff` call
+      # in the old app
+      # TODO: this probably needs more explanation.
+      ),
     actionButton(ns("add_scenario"), "Add scenario"),
     actionButton(ns("remove_scenario"), "Remove last scenario"),
     tabsetPanel(id = ns("tabs"), type = "tabs")

@@ -10,15 +10,52 @@
 simulation_config_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    textInput(ns("simulation_name"), "Simulation name:", ""),
-    selectInput(ns("population"), "Population:", c("")),
-    radioButtons(ns("newborns"), "Newborns:", c("yes", "no")),
-    numericInput(ns("population_size"), "Simulated population size:", value = 50),
-    numericInput(ns("starting_year"), "Starting year:", value = 2010),
-    numericInput(ns("years"), "Number of years:", value = 25),
-    numericInput(ns("time_step"), "Calculation time step:", value = 1),
-    numericInput(ns("random_seed"), "Random seed:", value = 1),
-    actionButton(ns("save"), "Save and Run", class = "btn-lg btn-success")
+    wrap_tooltip(
+     textInput(ns("simulation_name"), "Simulation name:", ""),
+     "The name of the simulation run." # TODO: is this correct?
+    ),
+    wrap_tooltip(
+      selectInput(ns("population"), "Population:", c("")),
+      "Select the population to be simulated.",
+      placement = "right"
+    ),
+    wrap_tooltip(
+      radioButtons(ns("newborns"), "Newborns:", c("yes", "no")),
+      "Should newborns be included in the simulation? Doing so is only possible
+      when the minimum age of the scenario is set to zero."
+    ),
+    wrap_tooltip(
+      numericInput(ns("population_size"), "Simulated population size:", value = 50),
+      "The number of persons to simulate. The number entered here is the number
+      simulated for each age/gener combination. A large number yields a lower
+      stochastic variation in the risk factor histories. The upper practical limits
+      depends on a number of factors, such as computer memory and the complexity
+      of the simulated scenario."
+    ),
+    wrap_tooltip(
+      numericInput(ns("starting_year"), "Starting year:", value = 2010),
+      "The year in which the simulation starts. When newborns are used, the data
+      should provide newborns for all years after this starting year."
+    ),
+    wrap_tooltip(
+      numericInput(ns("years"), "Number of years:", value = 25),
+      "The number of years DYNAMO projects the scenarios into the future."
+    ),
+    wrap_tooltip(
+      numericInput(ns("time_step"), "Calculation time step:", value = 1),
+      "??" # TODO: what's this?
+    ),
+    wrap_tooltip(
+      numericInput(ns("random_seed"), "Random seed:", value = 1),
+      "The value used to initialize the random number generator during the simulation.
+      Any number will do, but when running two different simulations with exactly
+      the same data, choosing the same random number ensures identical results.
+      Otherwise, random variation slightly alters the simulation outcomes."
+    ),
+    wrap_tooltip(
+      actionButton(ns("save"), "Save and Run", class = "btn-lg btn-success"),
+      "Start the simulation."
+    )
   )
 }
 
