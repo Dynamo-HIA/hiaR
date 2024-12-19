@@ -5,12 +5,12 @@ ui <- fluidPage(
                         bslib::card(
                           h2("Program configuration"),
                           p("Settings for the program. ADD MORE DESCRIPTION"),
-                          program_config_ui("program_config")
+                          hiaR::program_config_ui("program_config")
                         ),
                         bslib::card(
                           h2("Simulation configuration"),
                           p("Settings for the simulation"),
-                          simulation_config_ui("simulation_config")
+                          hiaR::simulation_config_ui("simulation_config")
                         )
                       )
              ),
@@ -39,8 +39,8 @@ server <- function(input, output, session) {
   )
   available_relative_risks <- reactiveVal(NULL)
 
-  user_program_config <- program_config_server("program_config")
-  user_simulation_config <- simulation_config_server("simulation_config", reference_data)
+  user_program_config <- hiaR::program_config_server("program_config")
+  user_simulation_config <- hiaR::simulation_config_server("simulation_config", reference_data)
 
   observeEvent(user_program_config$reference_data(), {
     new_reference_data <- user_program_config$reference_data()
@@ -59,31 +59,31 @@ server <- function(input, output, session) {
 
   output$disease_selection_ui <- renderUI({
     req(reference_data())
-    disease_selection_ui("selection1", reference_data)
+    hiaR::disease_selection_ui("selection1", reference_data)
   })
 
-  selected_diseases <- disease_selection_server("selection1", reference_data)
+  selected_diseases <- hiaR::disease_selection_server("selection1", reference_data)
 
   output$risk_factor_ui <- renderUI({
     req(reference_data())
-    risk_factor_ui("risk_factors", reference_data)
+    hiaR::risk_factor_ui("risk_factors", reference_data)
   })
 
-  selected_risk_factors <- risk_factor_server("risk_factors", reference_data)
+  selected_risk_factors <- hiaR::risk_factor_server("risk_factors", reference_data)
 
   output$relative_risk_ui <- renderUI({
     req(available_relative_risks())
-    relative_risk_ui("relative_risks", available_relative_risks)
+    hiaR::relative_risk_ui("relative_risks", available_relative_risks)
   })
 
-  selected_relative_risks <- relative_risk_server(
+  selected_relative_risks <- hiaR::relative_risk_server(
     "relative_risks", available_relative_risks)
 
   output$scenario_ui <- renderUI({
     req(reference_data())
-    scenario_ui("scenarios")
+    hiaR::scenario_ui("scenarios")
   })
-  selected_scenarios <- scenario_server("scenarios", reference_data)
+  selected_scenarios <- hiaR::scenario_server("scenarios", reference_data)
 
   # Update the choice options for relative risks ratios into diseases
   # depending on user input from selected risk factors and diseases
@@ -97,7 +97,7 @@ server <- function(input, output, session) {
       diseases <- names(selected_diseases())
       risk_factors <- names(selected_risk_factors())
       available_relative_risks(
-        filter_relative_risks(relative_risks, diseases, risk_factors)
+        hiaR::filter_relative_risks(relative_risks, diseases, risk_factors)
       )
     }
   })

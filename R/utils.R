@@ -217,6 +217,7 @@ fetch_server_data <- function(server_name_prefix, server_list, item_names) {
 #' the specified diseases and risk factors. If there are no relative risk for a
 #' given category, it returns an empty data frame in that category.
 #'
+#' @export
 #' @keywords internal
 filter_relative_risks <- function(relative_risks, diseases, risk_factors) {
   stopifnot(is.list(relative_risks))

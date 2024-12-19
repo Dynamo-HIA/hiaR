@@ -92,6 +92,7 @@ single_scenario_server <- function(id, reference_data) {
 #' @returns A UI with 3 elements: an `actionButton` for adding and removing
 #' scenarios, and a `tabsetPanel`. The panel can be populated with multiple
 #' tabs, as handled by the server.
+#' @export
 #' @keywords internal
 #'
 scenario_ui <- function(id) {
@@ -126,6 +127,7 @@ scenario_ui <- function(id) {
 #'  \item Keeps track of active servers and their counts
 #' }
 #'
+#' @export
 #' @keywords internal
 #'
 scenario_server <- function(id, reference_data) {

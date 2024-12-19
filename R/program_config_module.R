@@ -8,6 +8,7 @@
 #' @returns Shows an error message when the reference data is not NULL and is
 #' does not have the right content.
 #'
+#' @export
 #' @keywords internal
 #'
 program_config_ui <- function(id) {
@@ -52,6 +53,7 @@ program_config_ui <- function(id) {
 #'  \item working_path: Working directory for the DYNAMO program.
 #' }
 #'
+#' @export
 #' @keywords internal
 #'
 program_config_server <- function(id) {
