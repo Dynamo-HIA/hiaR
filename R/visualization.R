@@ -265,9 +265,6 @@ plot_life_expectancy <- function(df,
     age <- min(df$age)
   }
 
-  # Validate inputs
-  validate_inputs(df, age = age, disease = disease)
-
   # Validate alpha
   stopifnot(
     is.numeric(alpha),
@@ -392,7 +389,7 @@ plot_time_series <- function(df,
 
   # Create base plot
   ggplot(df_filtered, aes_string(x = x_axis, y = y_axis, fill = split_by)) +
-    geom_col() +
+    geom_col(position = "dodge") +
     scale_fill_viridis_d(name = tools::toTitleCase(split_by)) +
     xlab(x_label) +
     theme_classic()

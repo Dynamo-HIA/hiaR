@@ -10,13 +10,17 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.dim = c(7, 5)
 )
 ```
 
-This example shows how to use the `hiaR` package on a realistic dataset. The `hiaR`
-package is a wrapper for a Java application which implements the DYNAMO-HIA model.
-(TODO: Add model explanation).
+This introduction shows how to use the `hiaR` package in a simple example. The `hiaR`
+package is a wrapper for a Java application which implements the DYNAMO-HIA model. 
+For details on the DYNAMO-HIA model, see the [DYNAMO-HIA documentation](https://dynamo-hia.github.io/). 
+The DYNAMO-HIA model simulates the health impact of interventions on risk factors on 
+disease outcomes and life expectancy in a population. In this example, we simulate the effect of an
+intervention on smoking on the development of lung cancer in the Dutch population.
 
 We start by loading the `hiar` package:
 
@@ -24,9 +28,11 @@ We start by loading the `hiar` package:
 library(hiaR)
 ```
 
-We apply the model to a dataset from the Netherlands. The model requires reference data. 
-The reference data for the Netherlands is included in the package. We move the reference data into
-a temporary local directory with:
+## Reference data
+
+To run simulations, the DYNAMO-HIA model requires reference data. The reference data for 
+the Netherlands is included in the package. We move the reference data into
+a temporary local directory using the [`withr`](https://withr.r-lib.org/) package:
 
 ```{r}
 # Create local temporary directory; the directory will be deleted when the R session is finished
@@ -36,7 +42,10 @@ fs::dir_copy(system.file("extdata", "example-nl", package = "hiaR"), temp_dir, o
 ```
 
 The `Reference_Data` folder in our directory now contains the reference data for 
-the Netherlands. The reference data contains information about the Dutch population, diseases, and risk factors. These will be used in the simulations. We can get an overview of the available populations, diseases, and risk factors with helper functions from the `hiaR` package:
+the Netherlands including information about the Dutch population, diseases, and risk factors. 
+These will be used mainly as the *reference scenario* in the simulations. 
+We can get an overview of the available populations, 
+diseases, and risk factors with helper functions from the `hiaR` package:
 
 ```{r}
 # Define path to reference data
@@ -52,17 +61,28 @@ cat("\nAvailable risk factors:\n")
 risk_factor_names <- get_risk_factor_names(reference_data_path)
 ```
 
-We will now configure a simulation to assess the effect of the risk factor smoking on the health of the Dutch population. We will use a risk factor configuration with three categories (never smoked, former smoker, current smoker). To configure the risk factor, we need to provide a unique name, the name of the file with the risk factor transition type, and the name of the file with the risk factor prevalence. We can get the names of the files from the reference data with the `get_risk_factor_filenames` function:
+## Configuration
+
+We will now configure a simulation to assess the effect of the risk factor smoking on the health 
+of the Dutch population. We will use a risk factor configuration with three categories 
+(never smoked, former smoker, current smoker). To configure the risk factor, we need to provide a 
+unique name, the name of the file with the risk factor transition type, and the name of the file 
+with the risk factor prevalence. We can get the names of the files from the reference data with 
+the `get_risk_factor_filenames` function:
 
 
 ```{r}
 get_risk_factor_filenames(reference_data_path, "Smoking_cat3")
 ```
-The files in the different sub directories are briefly described here (for details the DYNAMO-HIA documentation):
+The files in the different sub directories are briefly described here 
+(for details, see the [DYNAMO-HIA documentation](https://dynamo-hia.github.io/)):
 
-- `Prevalence`: Files with data on which part of the population is in which risk factor category (split by age and gender)
-- `Relative_Risks_For_Death`: Files with the relative risks for death for each risk factor category (split by age and gender)
-- `Relative_Risks_For_Disability` Files with the relative risks for disability for each risk factor category (split by age and gender)
+- `Prevalence`: Files with data on which part of the population is in which risk factor category 
+(split by age and gender)
+- `Relative_Risks_For_Death`: Files with the relative risks for death for each risk factor category 
+(split by age and gender)
+- `Relative_Risks_For_Disability` Files with the relative risks for disability for each risk factor 
+category (split by age and gender)
 - `Transitions`: Files with the transition probabilities between the risk factor categories
 
 With the file names we can configure the risk factor:
@@ -75,9 +95,14 @@ smoking_config <- configure_risk_factor(
 )
 ```
 
-We chose a "Netto" transition file which indicates that the risk factor prevalence for each age and gender group will remain the same during the simulation.
+We chose a "Netto" transition file which indicates that the risk factor prevalence for each age and 
+gender group will remain the same during the simulation.
 
-The DYNAMO-HIA model also takes different diseases within the population into account. While the reference data provides information about several diseases we will only look at lung cancer in this example. The disease configuration requires a unique name for the disease, names of files with the disease prevalence, incidence, excess mortality, and disability weights. We can get the names of the files from the reference data with the `get_disease_filenames` function:
+The DYNAMO-HIA model also takes different diseases within the population into account. While the 
+reference data provides information about several diseases we will only look at lung cancer in 
+this example. The disease configuration requires a unique name for the disease, names of files with
+the disease prevalence, incidence, excess mortality, and disability weights. We can get the names 
+of the files from the reference data with the `get_disease_filenames` function:
 
 ```{r}
 get_disease_filenames(reference_data_path, "Lung_Cancer")
@@ -85,12 +110,16 @@ get_disease_filenames(reference_data_path, "Lung_Cancer")
 
 A brief description of the sub directories:
 
-- `Disability`: Files with the disability (disability-adjusted life years) weights for the disease (split by age and gender)
-- `Excess_Mortalities`: Files with the additional mortality when carrying the disease (split by age and gender)
+- `Disability`: Files with the disability (disability-adjusted life years) weights for the disease 
+(split by age and gender)
+- `Excess_Mortalities`: Files with the additional mortality when carrying the disease 
+(split by age and gender)
 - `Incidence`: Files with the incidence of the disease (split by age and gender)
 - `Prevalence`: Files with the prevalence of the disease (split by age and gender)
-- `Relative_Risks_From_Diseases`: Files with the relative risks of carrying the disease when having another disease (split by age and gender; not used in this example)
-- `Relative_Risks_From_Risk_Factor`: Files with the relative risks of carrying the disease when being exposed to a risk factor (split by age and gender)
+- `Relative_Risks_From_Diseases`: Files with the relative risks of carrying the disease when having 
+another disease (split by age and gender; not used in this example)
+- `Relative_Risks_From_Risk_Factor`: Files with the relative risks of carrying the disease when 
+being exposed to a risk factor (split by age and gender)
 
 With the file names we can configure the disease:
 
@@ -104,7 +133,9 @@ lung_cancer_config <- configure_disease(
 )
 ```
 
-We can also configure a relative risk of having lung cancer due to smoking. The relative risk configuration requires an index, the name of the risk factor, the name of the disease, and the name of the file with the relative risk data:
+We can also configure a relative risk of having lung cancer due to smoking. The relative risk 
+configuration requires an index, the name of the risk factor, the name of the disease, and the name
+of the file with the relative risk data:
 
 ```{r}
 lung_cancer_smoking_rr_config <- configure_relative_risk(
@@ -115,9 +146,15 @@ lung_cancer_smoking_rr_config <- configure_relative_risk(
 )
 ```
 
-Besides risk factors and diseases, we also need to configure the scenario that we want to simulate. Scenarios require a unique name, a success rate for an intervention, the minimum and maximum age as well as the targeted gender for the intervention. Most importantly, they need names of files with the transition type and prevalence of the risk factor which is changed due to the intervention.
+Besides risk factors and diseases, we also need to configure the intervention scenario that we want
+to simulate. Scenarios require a unique name, a success rate for an intervention, the minimum and 
+maximum age as well as the targeted gender for the intervention. Most importantly, they need names 
+of files with the transition type and prevalence of the risk factor which is changed due to the 
+intervention.
 
-We create a scenario that intervenes on the risk factor smoking and assumes that the targeted population never smoked. We choose this intervention by specifying a prevalence file that only contains never smokers.
+We create a scenario that intervenes on the risk factor smoking and assumes that the targeted 
+population never smoked. We choose this intervention by specifying a prevalence file that only 
+contains "never smokers".
 
 ```{r}
 smoking_intervention <- configure_scenario(
@@ -127,7 +164,11 @@ smoking_intervention <- configure_scenario(
 )
 ```
 
-Now that we have configured a risk factor, disease, and scenario, we write them to an XML file in a new subfolder in the `Simulations` folder using the `create_simulation_dir` function. The function requires the name of the simulation and additional parameters to configure the simulation. We will simulate the effect of the smoking intervention on the Dutch population for 10 years starting in 2010. We will use a random seed of 42 to ensure reproducibility.
+Now that we have configured a risk factor, disease, and scenario, we write them to an XML file in 
+a new subfolder in the `Simulations` folder using the `create_simulation_dir` function. 
+The function requires the name of the simulation and additional parameters to configure the 
+simulation. We will simulate the effect of the smoking intervention on the Dutch population 
+for 10 years starting in 2010. We will use a random seed of 42 to ensure reproducibility.
 
 ```{r}
 simulation_name <- "Netherlands_Smoking_Intervention"
@@ -150,7 +191,9 @@ create_simulation_dir(
   relative_risks = list(lung_cancer_smoking_rr_config) # Wrap in list because we could have multiple relative risks
 )
 ```
-The function returns `TRUE` indicating that our configurations are valid and the subfolder was successfully created. We can look at all the available simulations with the `get_simulation_names` function:
+The function returns `TRUE` indicating that our configurations are valid and the subfolder was 
+successfully created. We can look at all the available simulations with 
+the `get_simulation_names` function:
 
 ```{r}
 get_simulation_names(temp_dir)
@@ -158,7 +201,8 @@ get_simulation_names(temp_dir)
 
 The subfolder will also contain the results from the simulation.
 
-Before we can run the simulation, we need to add the simulation name to a batch file which we will use as input for the DYNAMO-HIA Java application.
+We need to add the simulation name to a batch file which we 
+will use as input for the DYNAMO-HIA Java application.
 
 ```{r}
 batch_file_name <- "simulation_names.txt"
@@ -166,14 +210,100 @@ batch_file_name <- "simulation_names.txt"
 write(simulation_name, fs::path(temp_dir, batch_file_name))
 ```
 
-We can now run the simulation using the `run_dynamo_hia` function. The function takes the path to the simulation folder as an argument.
+## Running DYNAMO-HIA
 
-```{r, eval=FALSE}
-# TODO: Add dynamo path and download
+Before we can run the simulation, we need to download the DYNAMO-HIA Java application. We can do
+this automatically with the `download_github_release` function. The function will automatically
+download the correct version for our operating system and place it into our temporary directory.
+
+```{r}
+download_github_release(
+  repo_url = "https://github.com/Dynamo-HIA/dynamo-hia",
+  release_tag = "v3.0.0-beta.1",
+  dest_dir = temp_dir
+)
+```
+
+We can now run the simulation using the `run_dynamo_hia` function. The function takes the path 
+to the batch file and the path to the DYNAMO-HIA executable as arguments. The latter is set 
+automatically by the function `download_github_release` and stored in the 
+environment variable `DYNAMO_HIA_PATH`.
+
+```{r}
 withr::with_dir(temp_dir, {
-  run_dynamo_hia(batch_file_name, Sys.getenv("DYNAMO_HIA_PATH"))
+  run_dynamo_hia(batch_file_name, fs::path(temp_dir, Sys.getenv("DYNAMO_HIA_PATH")))
 })
 ```
-The function returns `TRUE` indicating that the simulation was successful. The results of the simulation are stored in the folder of the simulation.
 
-(TODO: Explanation of the results and how to visualize them).
+The function returns `TRUE` indicating that the simulation was successful. The results of the 
+simulation are stored in the simulation folder.
+
+## Loading and visualizing results
+
+We can load the results with the `load_simulation_results` function. The function requires the name
+of the simulation and the path to the working directory. We start by loading the population results
+(using `type = batchoutput`):
+
+```{r}
+df_population <- load_simulation_results(temp_dir, simulation_name, type = "batchoutput")
+
+# Get an overview of the data frame
+head(df_population)
+
+```
+
+With the population results, we can plot the population pyramid for the starting year of our 
+simulation showing the difference between our smoking intervention scenario and the 
+reference scenario:
+
+```{r}
+plot_population_pyramid(df_population, year = 2010, scenario = 1, difference = TRUE)
+
+```
+
+We can see that disability is more prevalent in older age groups and lung cancer only occurs in 
+age groups above 50 and is generally a rare disease.
+
+We can also plot the prevalence of lung cancer at a specific age (75) over time:
+
+```{r}
+plot_prevalence(df_population, disease = "Lung_Cancer", age = 75)
+
+```
+
+The plot shows that the prevalence of lung cancer decreases over the years in our intervention 
+scenario.
+
+We can also compare the mortality across scenarios over time:
+
+```{r}
+plot_mortality(df_population, age = 75)
+
+```
+
+It seems like our intervention has a positive effect on mortality rates in this specific age group.
+
+Finally, we can plot the simulated life expectancy. This requires the life expectancy results which
+we can load using `type = cohortLE`:
+
+```{r}
+df_life_expectancy <- load_simulation_results(temp_dir, simulation_name, type = "cohortLE")
+
+# Get an overview of the data frame
+head(df_life_expectancy)
+
+```
+
+We can now plot the life expecaancy for the different scenarios and genders at a specific age group:
+
+```{r}
+plot_life_expectancy(df_life_expectancy, age = 75)
+
+```
+
+We can see that our intervention increases life expectancy in this age group.
+
+## Conclusion
+
+In this example, we showed how to use the `hiaR` package to configure and run a simulation of the
+DYNAMO-HIA model using the effect of smoking on lung cancer in the Dutch population as an example.

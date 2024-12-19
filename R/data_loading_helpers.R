@@ -472,12 +472,11 @@ configure_scenario <- function(name,
 #' @export
 #'
 load_simulation_results <- function(root_dir, simulation_name, type = "batchoutput") {
-  stopifnot(type %in% c("batchoutput", "cohortLE", "sullivan"),
-            "'type' must be one of 'batchoutput', 'cohortLE', or 'sullivan'")
-
-  stopifnot(fs::dir_exists(root_dir), "Working directory does not exist")
-  stopifnot(fs::dir_exists(file.path(root_dir, "Simulations", simulation_name)),
-            "Simulation does not exist")
+  stopifnot(
+    "'type' must be one of 'batchoutput', 'cohortLE', or 'sullivan'" = type %in% c("batchoutput", "cohortLE", "sullivan"),
+    "Working directory does not exist" = fs::dir_exists(root_dir),
+    "Simulation does not exist" = fs::dir_exists(file.path(root_dir, "Simulations", simulation_name))
+  )
 
   return(read.csv(file.path(root_dir, "Simulations", simulation_name, "results", paste0(type, ".csv"))))
 }
