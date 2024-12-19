@@ -404,6 +404,8 @@ set_env_path <- function(os) {
 #' to detect the OS automatically.
 #' @param dest_dir Character string of the destination directory for extraction
 #' (default: `tempdir()`).
+#' @param make_executable Logical indicating whether to set execute permissions. Default is `TRUE`.
+#'
 #' @return An invisible `fs::path` object pointing to the extracted contents.
 #'
 #' @export
@@ -423,7 +425,8 @@ set_env_path <- function(os) {
 download_github_release <- function(repo_url = "https://github.com/Dynamo-HIA/dynamo-hia",
                                     release_tag = "v3.0.0-beta.1",
                                     os = NULL,
-                                    dest_dir = tempdir()) {
+                                    dest_dir = tempdir(),
+                                    make_executable = TRUE) {
   if (is.null(os)) {
     os <- get_os()
   }
@@ -493,11 +496,24 @@ download_github_release <- function(repo_url = "https://github.com/Dynamo-HIA/dy
     # Extract if it's a zip file
     if (fs::path_ext(asset$name) == "zip") {
       unzip(temp_path, exdir = dest_dir)
+
+      # Set execute permissions on all files if requested
+      if (make_executable) {
+        files <- fs::dir_ls(dest_dir, recurse = TRUE, type = "file")
+        fs::file_chmod(files, "u+x")
+      }
+
       return(invisible(dest_dir))
     } else {
       # If not a zip, just copy the file to destination
       dest_path <- fs::path(dest_dir, asset$name)
       fs::file_copy(temp_path, dest_path)
+
+      # Set execute permission if requested
+      if (make_executable) {
+        fs::file_chmod(dest_path, "u+x")
+      }
+
       return(invisible(dest_path))
     }
   })
