@@ -2,17 +2,19 @@
 debug <- getShinyOption("debug")
 
 ui <- fluidPage(
+  theme = bslib::bs_theme(version = 5),
   navbarPage("DYNAMO-HIA",
              tabPanel("Configuration",
                       bslib::layout_columns(
                         bslib::card(
                           h2("Program configuration"),
-                          p("Settings for the program. ADD MORE DESCRIPTION"),
+                          p("Set the path to the working directory and to the
+                            Dynamo executable."),
                           hiaR::program_config_ui("program_config")
                         ),
                         bslib::card(
                           h2("Simulation configuration"),
-                          p("Settings for the simulation"),
+                          p("Define simulation properties."),
                           hiaR::simulation_config_ui("simulation_config")
                         )
                       )

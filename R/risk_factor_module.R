@@ -99,6 +99,12 @@ risk_factor_ui <- function(id, reference_data) {
   risk_factors <- reference_data()$risk_factors
 
   tagList(
+    p("Choose the risk factors to include in the simulation.
+    You can choose multiple risk factors. When selecting any of them,
+    choose a file for the prevalence of the risk factor and the transitions
+    from the risk factor.
+    The risk factor prevalences chosen here are the risk factor exposure in
+    the baseline year in the reference scenario."),
     lapply(seq_along(risk_factors), function(i) {
       single_risk_factor_ui(
         ns(paste0("risk_factor_", i)),
