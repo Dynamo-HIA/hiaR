@@ -405,6 +405,8 @@ set_env_path <- function(os) {
 #' @param dest_dir Character string of the destination directory for extraction
 #' (default: `tempdir()`).
 #' @param make_executable Logical indicating whether to set execute permissions. Default is `TRUE`.
+#' @param github_pat Optional GitHub Access Token. Default is `NULL` which will try to use the
+#' token from the environment variable `GITHUB_PAT`.
 #'
 #' @return An invisible `fs::path` object pointing to the extracted contents.
 #'
@@ -426,9 +428,14 @@ download_github_release <- function(repo_url = "https://github.com/Dynamo-HIA/dy
                                     release_tag = "v3.0.0-beta.1",
                                     os = NULL,
                                     dest_dir = tempdir(),
-                                    make_executable = TRUE) {
+                                    make_executable = TRUE,
+                                    github_pat = NULL) {
   if (is.null(os)) {
     os <- get_os()
+  }
+
+  if (is.null(github_pat)) {
+    github_pat <- Sys.getenv("GITHUB_PAT")
   }
 
   asset_pattern <- switch(os,
@@ -476,18 +483,28 @@ download_github_release <- function(repo_url = "https://github.com/Dynamo-HIA/dy
     # Create temp file path with correct extension
     temp_path <- fs::path(download, ext = fs::path_ext(asset$name))
 
-    # Download asset
-    download_response <- httr::GET(
-      asset$url,
-      httr::add_headers(
-        "Accept" = "application/octet-stream",
-        "Authorization" = sprintf("token %s", Sys.getenv("GITHUB_PAT"))
-      ),
-      httr::write_disk(temp_path)
-    )
+    if (github_pat != "") {
+      # Download asset
+      download_response <- httr::GET(
+        asset$url,
+        httr::add_headers(
+          "Accept" = "application/octet-stream",
+          "Authorization" = sprintf("token %s", github_pat)
+        ),
+        httr::write_disk(temp_path)
+      )
+    } else {
+      download_response <- httr::GET(
+        asset$url,
+        httr::add_headers(
+          "Accept" = "application/octet-stream"
+        ),
+        httr::write_disk(temp_path)
+      )
+    }
 
     if (httr::status_code(download_response) != 200) {
-      stop("Failed to download asset")
+      stop("Failed to download asset; have you set the 'GITHUB_PAT' environment variable?")
     }
 
     # Create destination directory if it doesn't exist
