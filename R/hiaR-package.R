@@ -1,5 +1,6 @@
 #' @keywords internal
 #'
+#' @import ggplot2
 #' @import shiny
 #' @import shinyFiles
 "_PACKAGE"
