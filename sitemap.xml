@@ -42,6 +42,8 @@
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/risk_factor_server.html</loc></url>
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/risk_factor_ui.html</loc></url>
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/run_dynamo_hia.html</loc></url>
+<url><loc>https://dynamo-hia.github.io/hiaR/reference/scenario_server.html</loc></url>
+<url><loc>https://dynamo-hia.github.io/hiaR/reference/scenario_ui.html</loc></url>
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/simulation_config_server.html</loc></url>
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/simulation_config_ui.html</loc></url>
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/single_disease_server.html</loc></url>
@@ -50,6 +52,8 @@
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/single_relative_risk_ui.html</loc></url>
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/single_risk_factor_server.html</loc></url>
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/single_risk_factor_ui.html</loc></url>
+<url><loc>https://dynamo-hia.github.io/hiaR/reference/single_scenario_server.html</loc></url>
+<url><loc>https://dynamo-hia.github.io/hiaR/reference/single_scenario_ui.html</loc></url>
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/validate_file_ending.html</loc></url>
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/validate_n_substrings.html</loc></url>
 <url><loc>https://dynamo-hia.github.io/hiaR/reference/validate_xml_schema.html</loc></url>
