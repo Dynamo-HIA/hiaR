@@ -431,8 +431,8 @@ download_github_release <- function(repo_url = "https://github.com/Dynamo-HIA/dy
   asset_pattern <- switch(os,
                           "windows" = "windows-latest-package.zip",
                           "macos" = "macos-latest-package.zip",
-                          "ubuntu" = "ubuntu-latest-package.zip",
-                          stop("Argument 'os' must be one of 'windows', 'macos', or 'ubuntu'"))
+                          "linux" = "ubuntu-latest-package.zip",
+                          stop("Argument 'os' must be one of 'windows', 'macos', or 'linux'"))
 
   set_env_path(os)
 
@@ -453,7 +453,7 @@ download_github_release <- function(repo_url = "https://github.com/Dynamo-HIA/dy
                             httr::add_headers("Accept" = "application/vnd.github.v3+json"))
 
   if (httr::status_code(release_info) != 200) {
-    stop("Failed to fetch release information")
+    stop(paste("Failed to fetch release information:\n", release_info))
   }
 
   # Parse response
@@ -478,7 +478,7 @@ download_github_release <- function(repo_url = "https://github.com/Dynamo-HIA/dy
       asset$url,
       httr::add_headers(
         "Accept" = "application/octet-stream",
-        "Authorization" = sprintf("token %s", Sys.getenv("GITHUB_TOKEN"))
+        "Authorization" = sprintf("token %s", Sys.getenv("GITHUB_PAT"))
       ),
       httr::write_disk(temp_path)
     )
