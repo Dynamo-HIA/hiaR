@@ -90,6 +90,7 @@ single_risk_factor_server <- function(id) {
 #'
 #' @returns A tagList containing UI components for each risk factor.
 #'
+#' @export
 #' @keywords internal
 #'
 risk_factor_ui <- function(id, reference_data) {
@@ -123,6 +124,7 @@ risk_factor_ui <- function(id, reference_data) {
 #' Each element in the list corresponds to an active risk factor and contains a nested list with
 #' `prevalence' and 'transitions'.
 #'
+#' @export
 #' @keywords internal
 #'
 risk_factor_server <- function(id, reference_data) {
