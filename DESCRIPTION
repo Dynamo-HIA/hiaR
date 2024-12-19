@@ -34,6 +34,7 @@ Imports:
     bslib,
     fs,
     ggplot2,
+    httr,
     shiny,
     shinyFiles,
     stats,
