@@ -384,13 +384,16 @@ plot_time_series <- function(df,
     x_label <- "Age (in years)"
   }
 
+  df_filtered <- aggregate(df_filtered, as.formula(paste(y_axis, "~", split_by, "+", x_axis)), sum)
+
   # Convert scenario to character
   df_filtered$scenario <- as.character(df_filtered$scenario)
 
   # Create base plot
-  ggplot(df_filtered, aes_string(x = x_axis, y = y_axis, fill = split_by)) +
-    geom_col(position = "dodge") +
-    scale_fill_viridis_d(name = tools::toTitleCase(split_by)) +
+  ggplot(df_filtered, aes_string(x = x_axis, y = y_axis, color = split_by)) +
+    geom_point() +
+    geom_line() +
+    scale_color_viridis_d(name = tools::toTitleCase(split_by)) +
     xlab(x_label) +
     theme_classic()
 }
