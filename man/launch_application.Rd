@@ -4,7 +4,12 @@
 \alias{launch_application}
 \title{Starts the R shiny app to define the settings and then run the HIA Java app.}
 \usage{
-launch_application()
+launch_application(debug = FALSE)
+}
+\arguments{
+\item{debug}{A boolean. The default is \code{FALSE}. If \code{TRUE}, the elements in
+app show the reactive values they return. This is useful for interactively
+debugging the app.}
 }
 \value{
 A graphical user interface with the Shiny app.

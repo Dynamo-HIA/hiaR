@@ -1,3 +1,6 @@
+
+debug <- getShinyOption("debug")
+
 ui <- fluidPage(
   navbarPage("DYNAMO-HIA",
              tabPanel("Configuration",
@@ -102,22 +105,15 @@ server <- function(input, output, session) {
     }
   })
 
-  # this is for debugging at the moment
-  observeEvent(selected_diseases(), {
-    output$selected_diseases_display <- renderPrint({ selected_diseases() })
-  })
-
-  observeEvent(selected_risk_factors(), {
-    output$selected_risk_factors_display <- renderPrint({ selected_risk_factors() })
-  })
-
-  observeEvent(selected_relative_risks(), {
-    output$selected_relative_risk_display <- renderPrint({ selected_relative_risks() })
-  })
-
-  observeEvent(selected_scenarios(), {
-    output$selected_scenarios_display <- renderPrint({ selected_scenarios() })
-  })
+  # Display the reactive values returned by each element
+  if (debug) {
+    observe({
+      output$selected_diseases_display <- renderPrint({ selected_diseases() })
+      output$selected_risk_factors_display <- renderPrint({ selected_risk_factors() })
+      output$selected_relative_risk_display <- renderPrint({ selected_relative_risks() })
+      output$selected_scenarios_display <- renderPrint({ selected_scenarios() })
+    })
+  }
 
 }
 
