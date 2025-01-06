@@ -215,14 +215,12 @@ write(simulation_name, fs::path(temp_dir, batch_file_name))
 Before we can run the simulation, we need to download the DYNAMO-HIA Java application. We can do
 this automatically with the `download_github_release` function. The function will automatically
 download the correct version for our operating system and place it into our temporary directory.
-Note that this requires a GitHub Access Token saved in the environment variable `GITHUB_PAT`.
 
 ```{r}
 download_github_release(
   repo_url = "https://github.com/Dynamo-HIA/dynamo-hia",
   release_tag = "v3.0.0-beta.1",
-  dest_dir = temp_dir,
-  github_pat = Sys.getenv("GITHUB_PAT")
+  dest_dir = temp_dir
 )
 ```
 
