@@ -101,6 +101,12 @@ For R Shiny modules, use the following naming pattern:
   functionality is more complex to test and we decided to test this
   manually for now.
 
+#### Before Making a Release
+
+Before making a release, please change the default value for the
+`release_tag` argument in the `download_github_release` function to the
+tag of the new release.
+
 #### Imports
 
 Any functions from `shiny` and `shinyFiles` can be used directly without

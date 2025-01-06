@@ -98,6 +98,10 @@ For R Shiny modules, use the following naming pattern:
 Any functions from `shiny` and `shinyFiles` can be used directly without the `shiny::` prefix.
 For any other packages, be explicit and use `mypackage::myfunction()`.
 
+#### Before Making a Release
+
+Before making a release, please change the default value for the `release_tag` argument in the `download_github_release` function to the tag of the new release.
+
 ## Credits
 
 The `hiaR` package is developed by the Netherlands eScience Center and the Rijksinstituut voor Volksgezondheid en Milieu (RIVM; National Institute for Public Health and the Environment).
