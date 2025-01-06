@@ -205,6 +205,8 @@ test_that("run_dynamo_hia runs without error", {
     # Create a simulations directory
     fs::dir_create("Simulations")
 
+    download_github_release(dest_dir = ".")
+
     withr::with_dir("Simulations", {
       for (risk_factor in names(risk_factors)) {
         for (population in populations) {
@@ -275,8 +277,6 @@ test_that("run_dynamo_hia runs without error", {
     })
 
     write(paste(populations, collapse = "\n"), "simulationnames.txt")
-
-    skip_on_ci() # TODO: Cannot run on CI because it requires Dynamo-HIA
 
     result <- run_dynamo_hia("simulationnames.txt", Sys.getenv("DYNAMO_HIA_PATH"))
 
