@@ -385,10 +385,13 @@ get_os <- function(){
 
 
 set_env_path <- function(os) {
-  exec_path <- fs::path("DYNAMO-HIA", switch(os,
-                                             windows = "DYNAMO-HIA.exe",
-                                             macos = fs::path("MacOS", "DYNAMO-HIA"),
-                                             linux = fs::path("bin", "DYNAMO-HIA"))
+  exec_path <- fs::path(switch(os,
+                               macos = "DYNAMO-HIA.app",
+                               "DYNAMO-HIA"), switch(os,
+                                                     windows = "DYNAMO-HIA.exe",
+                                                     macos = fs::path("Contents", "MacOS",
+                                                                      "DYNAMO-HIA"),
+                                                     linux = fs::path("bin", "DYNAMO-HIA"))
   )
 
   Sys.setenv(DYNAMO_HIA_PATH = exec_path)
