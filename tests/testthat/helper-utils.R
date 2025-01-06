@@ -70,3 +70,57 @@ generate_raw_relative_risk_data <- function() {
     )
   ))
 }
+
+generate_dummy_prevalence_and_transition_data <- function() {
+  # Define a simple naming function for generating dummy file names
+  create_dummy_files <- function(prefix, category, count) {
+    paste0(prefix, "_", category, "_File", seq_len(count), ".xml")
+  }
+
+  # Create a list structure matching your example
+  dummy_data <- list(
+    transitions = list(
+      Alcohol_cat5 = create_dummy_files("T", "Alcohol_cat5", 4),
+      BMI_cat3 = create_dummy_files("T", "BMI_cat3", 3),
+      BMI_cont = create_dummy_files("T", "BMI_cont", 2),
+      Smoking_cat3 = create_dummy_files("T", "Smoking_cat3", 5),
+      Smoking_dur = create_dummy_files("T", "Smoking_dur", 2)
+    ),
+    prevalences = list(
+      Alcohol_cat5 = create_dummy_files("P", "Alcohol_cat5", 3),
+      BMI_cat3 = create_dummy_files("P", "BMI_cat3", 3),
+      BMI_cont = create_dummy_files("P", "BMI_cont", 1),
+      Smoking_cat3 = create_dummy_files("P", "Smoking_cat3", 3),
+      Smoking_dur = create_dummy_files("P", "Smoking_dur", 1)
+    )
+  )
+
+  return(dummy_data)
+}
+
+generate_dummy_selected_risk_factors <- function() {
+  # Define a simple naming function for generating dummy file names
+  create_dummy_files <- function(prefix, category, type, count) {
+    paste0(prefix, "_", category, "_", type, "_File", seq_len(count), ".xml")
+  }
+
+  # Create the dummy data structure
+  dummy_data <- list(
+    Alcohol_cat5 = list(
+      prevalence = create_dummy_files("P", "Alcohol_cat5", "Prev", 1),
+      transitions = create_dummy_files("T", "Alcohol_cat5", "Transition", 1)
+    ),
+    BMI_cat3 = list(
+      prevalence = create_dummy_files("P", "BMI_cat3", "Prev", 1),
+      transitions = create_dummy_files("T", "BMI_cat3", "Transition", 1)
+    )
+  )
+
+  return(dummy_data)
+}
+
+
+
+
+
+

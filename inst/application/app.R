@@ -88,7 +88,7 @@ server <- function(input, output, session) {
     req(reference_data())
     hiaR::scenario_ui("scenarios")
   })
-  selected_scenarios <- hiaR::scenario_server("scenarios", reference_data)
+  selected_scenarios <- hiaR::scenario_server("scenarios", reference_data, selected_risk_factors, debug)
 
   # Update the choice options for relative risks ratios into diseases
   # depending on user input from selected risk factors and diseases
