@@ -26,15 +26,19 @@ RoxygenNote: 7.3.2
 Suggests: 
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    vdiffr
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Imports:
     bslib,
     fs,
+    ggplot2,
+    httr,
     shiny,
     shinyFiles,
     stats,
+    sys,
     withr,
     xml2
 URL: https://dynamo-hia.github.io/hiaR/

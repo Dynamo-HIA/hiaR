@@ -156,3 +156,11 @@ test_that("collect_relative_risks works on correct input", {
     expected$key_b[c("to", "filename", "from")]
   )
 })
+
+test_that("load_simulation_results validates input correctly", {
+  expect_error(load_simulation_results("test", ""))
+
+  tempdir <- withr::local_tempdir()
+
+  expect_error(load_simulation_results(tempdir, ""))
+})

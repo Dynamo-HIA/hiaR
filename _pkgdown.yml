@@ -36,6 +36,16 @@ reference:
     Run one or multiple simulations using the DYNAMO-HIA Java program.
   contents:
   - run_dynamo_hia
+- title: "Load simulation results"
+  desc: >
+    Load the results of a DYNAMO-HIA simulation.
+  contents:
+  - load_simulation_results
+- title: "Plotting"
+  desc: >
+    Functions for plotting DYNAMO-HIA results.
+  contents:
+  - starts_with("plot_")
 - title: "Run DYNAMO-HIA interactively"
   desc: >
     Launch the Shiny app to run DYNAMO-HIA interactively.

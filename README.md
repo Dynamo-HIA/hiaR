@@ -107,6 +107,13 @@ Any functions from `shiny` and `shinyFiles` can be used directly without
 the `shiny::` prefix. For any other packages, be explicit and use
 `mypackage::myfunction()`.
 
+#### Before Making a Release
+
+Before making a release, please change the default value for the
+`release_tag` argument in the `download_github_release` function to the
+tag of the latest release of
+[DYNAMO-HIA](https://github.com/Dynamo-HIA/dynamo-hia) if necessary.
+
 ## Credits
 
 The `hiaR` package is developed by the Netherlands eScience Center and

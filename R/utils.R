@@ -224,8 +224,8 @@ filter_relative_risks <- function(relative_risks, diseases, risk_factors) {
 
   if (
     length(relative_risks) > 0 &&
-      length(diseases) > 0 &&
-      length(risk_factors) > 0) {
+    length(diseases) > 0 &&
+    length(risk_factors) > 0) {
     # into diseases
     rr_from_diseases <- relative_risks$diseases$Relative_Risks_From_Diseases
     if (!is.null(rr_from_diseases)) {
@@ -364,4 +364,177 @@ filter_df_from_server_data <- function(
   } else {
     return(data.frame())
   }
+}
+
+
+get_os <- function(){
+  sysinf <- Sys.info()
+  if (!is.null(sysinf)){
+    os <- sysinf['sysname']
+    if (os == 'Darwin')
+      os <- "macos"
+  } else { ## mystery machine
+    os <- .Platform$OS.type
+    if (grepl("^darwin", R.version$os))
+      os <- "macos"
+    if (grepl("linux-gnu", R.version$os))
+      os <- "linux"
+  }
+  tolower(os)
+}
+
+
+set_env_path <- function(os) {
+  exec_path <- fs::path(switch(os,
+                               macos = "DYNAMO-HIA.app",
+                               "DYNAMO-HIA"), switch(os,
+                                                     windows = "DYNAMO-HIA.exe",
+                                                     macos = fs::path("Contents", "MacOS",
+                                                                      "DYNAMO-HIA"),
+                                                     linux = fs::path("bin", "DYNAMO-HIA"))
+  )
+
+  Sys.setenv(DYNAMO_HIA_PATH = exec_path)
+}
+
+
+#' Download and extract GitHub release asset
+#'
+#' @param repo_url Character string of the repository URL.
+#' Default is `"https://github.com/Dynamo-HIA/dynamo-hia"`.
+#' @param release_tag Character string of the release tag. Default is `"v3.0.0-beta.1"`.
+#' @param os Optional character string of the operating system. Default is `NULL` which tries
+#' to detect the OS automatically.
+#' @param dest_dir Character string of the destination directory for extraction
+#' (default: `tempdir()`).
+#' @param make_executable Logical indicating whether to set execute permissions. Default is `TRUE`.
+#' @param github_pat Optional GitHub Access Token. Default is `NULL` which will try to use the
+#' token from the environment variable `GITHUB_PAT`.
+#'
+#' @return An invisible `fs::path` object pointing to the extracted contents.
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # With default arguments
+#' download_github_release()
+#'
+#' # From specific repository and release tag
+#' download_github_release(
+#'   repo_url = "https://github.com/Dynamo-HIA/dynamo-hia",
+#'   release_tag = "v3.0.0-beta.1"
+#' )
+#' }
+#'
+download_github_release <- function(repo_url = "https://github.com/Dynamo-HIA/dynamo-hia",
+                                    release_tag = "v3.0.0-beta.1",
+                                    os = NULL,
+                                    dest_dir = tempdir(),
+                                    make_executable = TRUE,
+                                    github_pat = NULL) {
+  if (is.null(os)) {
+    os <- get_os()
+  }
+
+  if (is.null(github_pat)) {
+    github_pat <- Sys.getenv("GITHUB_PAT")
+  }
+
+  asset_pattern <- switch(os,
+                          "windows" = "windows-latest-package.zip",
+                          "macos" = "macos-latest-package.zip",
+                          "linux" = "ubuntu-latest-package.zip",
+                          stop("Argument 'os' must be one of 'windows', 'macos', or 'linux'"))
+
+  set_env_path(os)
+
+  # Convert dest_dir to fs::path
+  dest_dir <- fs::path(dest_dir)
+
+  # Extract owner and repo from URL
+  repo_parts <- strsplit(gsub("https://github.com/", "", repo_url), "/")[[1]]
+  owner <- repo_parts[1]
+  repo <- repo_parts[2]
+
+  # Construct API URL
+  api_url <- sprintf("https://api.github.com/repos/%s/%s/releases/tags/%s",
+                     owner, repo, release_tag)
+
+  # Get release information
+  release_info <- httr::GET(api_url,
+                            httr::add_headers("Accept" = "application/vnd.github.v3+json"))
+
+  if (httr::status_code(release_info) != 200) {
+    stop(paste("Failed to fetch release information:\n", release_info))
+  }
+
+  # Parse response
+  release_data <- httr::content(release_info)
+
+  # Find matching asset
+  matching_assets <- Filter(function(x) grepl(asset_pattern, x$name), release_data$assets)
+
+  if (length(matching_assets) == 0) {
+    stop("No matching asset found")
+  }
+
+  asset <- matching_assets[[1]]
+
+  # Create temporary directory that will be cleaned up automatically
+  withr::with_tempfile("download", {
+    # Create temp file path with correct extension
+    temp_path <- fs::path(download, ext = fs::path_ext(asset$name))
+
+    if (github_pat != "") {
+      # Download asset
+      download_response <- httr::GET(
+        asset$url,
+        httr::add_headers(
+          "Accept" = "application/octet-stream",
+          "Authorization" = sprintf("token %s", github_pat)
+        ),
+        httr::write_disk(temp_path)
+      )
+    } else {
+      download_response <- httr::GET(
+        asset$url,
+        httr::add_headers(
+          "Accept" = "application/octet-stream"
+        ),
+        httr::write_disk(temp_path)
+      )
+    }
+
+    if (httr::status_code(download_response) != 200) {
+      stop("Failed to download asset; have you set the 'GITHUB_PAT' environment variable?")
+    }
+
+    # Create destination directory if it doesn't exist
+    fs::dir_create(dest_dir)
+
+    # Extract if it's a zip file
+    if (fs::path_ext(asset$name) == "zip") {
+      unzip(temp_path, exdir = dest_dir)
+
+      # Set execute permissions on all files if requested
+      if (make_executable) {
+        files <- fs::dir_ls(dest_dir, recurse = TRUE, type = "file")
+        fs::file_chmod(files, "u+x")
+      }
+
+      return(invisible(dest_dir))
+    } else {
+      # If not a zip, just copy the file to destination
+      dest_path <- fs::path(dest_dir, asset$name)
+      fs::file_copy(temp_path, dest_path)
+
+      # Set execute permission if requested
+      if (make_executable) {
+        fs::file_chmod(dest_path, "u+x")
+      }
+
+      return(invisible(dest_path))
+    }
+  })
 }
