@@ -537,6 +537,8 @@ download_github_release <- function(repo_url = "https://github.com/Dynamo-HIA/dy
       return(invisible(dest_path))
     }
   })
+}
+
 #' Wrap around a bslib tooltip
 #'
 #' Specify a UI element together with a description.

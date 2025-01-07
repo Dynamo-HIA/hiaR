@@ -12,7 +12,7 @@ simulation_config_ui <- function(id) {
   tagList(
     wrap_tooltip(
      textInput(ns("simulation_name"), "Simulation name:", ""),
-     "The name of the simulation run." # TODO: is this correct?
+     "The name of the simulation run."
     ),
     wrap_tooltip(
       selectInput(ns("population"), "Population:", c("")),
@@ -27,7 +27,7 @@ simulation_config_ui <- function(id) {
     wrap_tooltip(
       numericInput(ns("population_size"), "Simulated population size:", value = 50),
       "The number of persons to simulate. The number entered here is the number
-      simulated for each age/gener combination. A large number yields a lower
+      simulated for each age/gender combination. A large number yields a lower
       stochastic variation in the risk factor histories. The upper practical limits
       depends on a number of factors, such as computer memory and the complexity
       of the simulated scenario."
@@ -43,7 +43,7 @@ simulation_config_ui <- function(id) {
     ),
     wrap_tooltip(
       numericInput(ns("time_step"), "Calculation time step:", value = 1),
-      "??" # TODO: what's this?
+      "Define the interval at which outcome measures are calculated."
     ),
     wrap_tooltip(
       numericInput(ns("random_seed"), "Random seed:", value = 1),

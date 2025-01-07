@@ -198,9 +198,6 @@ scenario_ui <- function(id) {
       'Remove latest scenario' button.
       You must choose either a different transition dataset, or a different
       risk factor prevalence dataset from that chosen on the risk factor tab."
-      # TODO: I think this we have not yet implemented -- see the `setdiff` call
-      # in the old app
-      # TODO: this probably needs more explanation.
       ),
     actionButton(ns("add_scenario"), "Add scenario"),
     actionButton(ns("remove_scenario"), "Remove last scenario"),
