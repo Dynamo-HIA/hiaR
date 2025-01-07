@@ -107,6 +107,12 @@ disease_selection_ui <- function(id, reference_data) {
   diseases <- reference_data()$diseases
 
   tagList(
+    p("Choose the disease to be included in the simulation.
+    For every chosen disease, four files can be specified:
+    The prevalence of the disease, the incidence of the disease,
+    the excess mortality, and the DALY weights.
+    The pull-down menus show all the files contained in the respective
+    sub-directory of the chosen disease."),
     lapply(seq_along(diseases), function(i) {
       single_disease_ui(
         ns(paste0("disease_", i)),

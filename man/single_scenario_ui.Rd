@@ -4,14 +4,10 @@
 \alias{single_scenario_ui}
 \title{Create UI for single scenario}
 \usage{
-single_scenario_ui(id, prevalence_and_transition_choices)
+single_scenario_ui(id)
 }
 \arguments{
 \item{id}{A character string. The ID used to namespace the UI elements.}
-
-\item{prevalence_and_transition_choices}{A reactive value that returns a list
-of two character vector of choices. The names should be \code{prevalences} and
-\code{transitions}.}
 }
 \value{
 A Shiny UI component for defining a scenario.

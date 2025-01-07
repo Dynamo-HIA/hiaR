@@ -1,15 +1,20 @@
+
+debug <- getShinyOption("debug")
+
 ui <- fluidPage(
+  theme = bslib::bs_theme(version = 5),
   navbarPage("DYNAMO-HIA",
              tabPanel("Configuration",
                       bslib::layout_columns(
                         bslib::card(
                           h2("Program configuration"),
-                          p("Settings for the program. ADD MORE DESCRIPTION"),
+                          p("Set the path to the working directory and to the
+                            Dynamo executable."),
                           hiaR::program_config_ui("program_config")
                         ),
                         bslib::card(
                           h2("Simulation configuration"),
-                          p("Settings for the simulation"),
+                          p("Define simulation properties."),
                           hiaR::simulation_config_ui("simulation_config")
                         )
                       )
@@ -83,7 +88,7 @@ server <- function(input, output, session) {
     req(reference_data())
     hiaR::scenario_ui("scenarios")
   })
-  selected_scenarios <- hiaR::scenario_server("scenarios", reference_data)
+  selected_scenarios <- hiaR::scenario_server("scenarios", reference_data, selected_risk_factors, debug)
 
   # Update the choice options for relative risks ratios into diseases
   # depending on user input from selected risk factors and diseases
@@ -102,22 +107,15 @@ server <- function(input, output, session) {
     }
   })
 
-  # this is for debugging at the moment
-  observeEvent(selected_diseases(), {
-    output$selected_diseases_display <- renderPrint({ selected_diseases() })
-  })
-
-  observeEvent(selected_risk_factors(), {
-    output$selected_risk_factors_display <- renderPrint({ selected_risk_factors() })
-  })
-
-  observeEvent(selected_relative_risks(), {
-    output$selected_relative_risk_display <- renderPrint({ selected_relative_risks() })
-  })
-
-  observeEvent(selected_scenarios(), {
-    output$selected_scenarios_display <- renderPrint({ selected_scenarios() })
-  })
+  # Display the reactive values returned by each element
+  if (debug) {
+    observe({
+      output$selected_diseases_display <- renderPrint({ selected_diseases() })
+      output$selected_risk_factors_display <- renderPrint({ selected_risk_factors() })
+      output$selected_relative_risk_display <- renderPrint({ selected_relative_risks() })
+      output$selected_scenarios_display <- renderPrint({ selected_scenarios() })
+    })
+  }
 
 }
 

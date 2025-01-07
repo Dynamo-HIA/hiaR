@@ -162,3 +162,53 @@ test_that("filter_relative_risks handles wrong arguments correctly", {
   output <- filter_relative_risks(relative_risks, list(), list())
   expect_equal(output, list())
 })
+
+test_that("filter_items returns correct types", {
+  current_choices <- generate_dummy_prevalence_and_transition_data()
+  selected_risk_factors <- generate_dummy_selected_risk_factors()
+
+  user_input <- selected_risk_factors$Alcohol_cat5$prevalence[[1]]
+  output <- filter_items(
+    user_input, selected_risk_factors, "prevalence", current_choices$transitions, FALSE
+  )
+  expect_type(output, "list")
+  expect_type(output$default_value, "character")
+  expect_type(output$keep_items, "list")
+  expect_in(names(current_choices$transitions), names(output$keep_items))
+})
+
+
+test_that("filter_items returns correct values", {
+  current_choices <- generate_dummy_prevalence_and_transition_data()
+  selected_risk_factors <- generate_dummy_selected_risk_factors()
+
+  # test for prevalences
+  user_input <- selected_risk_factors$Alcohol_cat5$prevalence[[1]]
+  output <- filter_items(
+    user_input, selected_risk_factors, "prevalence", current_choices$transitions, FALSE
+  )
+  expected_missing <- lapply(selected_risk_factors, function(x) x[["transitions"]]) |>
+    unlist()
+  expect_true(all(!(expected_missing %in% unlist(output$keep_items))))
+  expect_true(all(!(output$default_value %in% expected_missing)))
+
+
+  # test for transitions
+  user_input <- selected_risk_factors$Alcohol_cat5$transitions[[1]]
+  output <- filter_items(
+    user_input, selected_risk_factors, "transitions", current_choices$prevalences, FALSE
+  )
+  expected_missing <- lapply(selected_risk_factors, function(x) x[["prevalence"]]) |>
+    unlist()
+  expect_true(all(!(expected_missing %in% unlist(output$keep_items))))
+  expect_true(all(!(output$default_value %in% expected_missing)))
+
+  # test that full choices are returned when user input does not match with selected risk factors
+  user_input <- current_choices$transitions$Smoking_dur[[1]]
+  output <- filter_items(
+    user_input, selected_risk_factors, "transitions", current_choices$prevalences, FALSE
+  )
+  expect_in(unlist(current_choices$prevalences), unlist(output$keep_items))
+})
+
+

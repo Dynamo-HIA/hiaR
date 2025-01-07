@@ -4,7 +4,13 @@
 \alias{single_scenario_server}
 \title{Server logic for defining a single scenario}
 \usage{
-single_scenario_server(id, reference_data)
+single_scenario_server(
+  id,
+  reference_data,
+  prevalence_and_transition_choices,
+  selected_risk_factors,
+  debug
+)
 }
 \arguments{
 \item{id}{A character string. The ID used to namespace the server-side logic.
@@ -12,6 +18,19 @@ It should match the id of the corresponding UI elements.}
 
 \item{reference_data}{A reactive expression. The expression determines the return
 value of the server.}
+
+\item{prevalence_and_transition_choices}{A reactive value that returns a list
+of two character vector of choices. The names should be \code{prevalences} and
+\code{transitions}. The choices are the baseline choices for the scenario, but
+they can be narrowed down depending on \code{selected_risk_factors}
+and each other's value.}
+
+\item{selected_risk_factors}{A reactive value that returns a list of two
+character vectors, named \code{prevalences} and \code{transitions}. The reactive value
+is the output from a \link{risk_factor_server}.}
+
+\item{debug}{A boolean indicating debug mode. If TRUE, some messages
+are printed to the console.}
 }
 \value{
 If \code{reference_data} returns \code{NULL}, the server returns an empty list.
@@ -19,5 +38,27 @@ Otherwise, it returns a list where each element is taken from the UI inputs.
 }
 \description{
 Server logic for defining a single scenario
+}
+\details{
+The argument \code{prevalence_and_transition_choices} is the universe of possible
+values that the user can select in the scenario. However, depending on what
+risk factors the user chose in the risk factor tab, the choice of transitions
+or prevalences for the scenario may be limited:
+
+\emph{In a scenario you must chose either a different transition dataset or a different
+risk factor prevalence dataset from that chosen on the risk factor tab. Therefore, if the
+risk factor prevalence is the same as that on the risk factor tab, the transition dataset
+from the risk factor tab will not be visible, and visa versa. It can occur that the list of
+choices is not refreshed correctly after changing the other choice. In that case the dataset
+does not reappear in the list after changing the other choice. Clicking on the risk factor
+tab and back to the scenario tab will solve this.}
+
+(source: https://www.dynamo-hia.eu/sites/default/files/2018-04/DYNAMO_USERMANUAL_2.0.8.pdf, p. 39)
+
+For this reason, the \code{selected_risk_factors} argument is also necessary for the server.
+The filtering logic is implemented in \link{filter_items}.
+}
+\seealso{
+\code{\link[=filter_items]{filter_items()}}
 }
 \keyword{internal}

@@ -538,3 +538,85 @@ download_github_release <- function(repo_url = "https://github.com/Dynamo-HIA/dy
     }
   })
 }
+
+#' Wrap around a bslib tooltip
+#'
+#' Specify a UI element together with a description.
+#'
+#' @param element An arbitrary, fully specified UI element.
+#' @param description The description to show as a tooltip.
+#' @param placement The position of the description. Passed as argument
+#' with the same name to `tooltip`. Default is "auto".
+#'
+#' @returns A \code{\link[bslib]{tooltip}} expression to be used in an UI element.
+#'
+#' @keywords internal
+wrap_tooltip <- function(element, description = "", placement = "auto") {
+  bslib::tooltip(
+    element,
+    description,
+    placement = placement
+  )
+}
+
+
+#' Filter a list of items
+#'
+#' For a list of lists, returns for each element in the list the `setdiff` to
+#' some input.
+#'
+#' @param input_item A string with a chosen file name.
+#' @param selected_risk_factors A list of two character vectors, named "transitions"
+#' and "prevalence". The list is obtained from evaluating the output of
+#' \link{risk_factor_server}.
+#' @param risk_factor_feature A string of either "transitions" or "prevalence".
+#' @param items_to_filter A list of lists to be filtered.
+#' @param debug A boolean indicating debug mode. If TRUE, the function prints
+#' some information messages to the console.
+#'
+#' @details
+#' The function checks if the `input_item` is in the `selected_risk_factors` of
+#' the respective `risk_factor_feature` (prevalences or transitions). If so,
+#' it drops the selected risk factor files of *the other* risk factor feature
+#' from the list.
+#'
+#' @returns A list of two: `keep_items` holds the reduced `items_to_filter`, and
+#' `default_value` holds the value that can be passsed to the `selected` argument
+#' in \link[shiny]{selectInput}. The `default_value` are defined
+#' such that they do not cause an infinite loop if two `selectInput` fields
+#' reactively depend on each other.
+#'
+#' @keywords internal
+filter_items <- function(input_item, selected_risk_factors, risk_factor_feature, items_to_filter, debug) {
+  possible_features <- c("transitions", "prevalence")
+  stopifnot(risk_factor_feature %in% possible_features)
+  if (debug) {
+    message("running filter_transitions on ", risk_factor_feature)
+  }
+  selected_rf_feature_files <- lapply(selected_risk_factors, function(x) {
+    x[[risk_factor_feature]]
+  })
+  keep_items <- items_to_filter
+  feature_to_filter <- possible_features[possible_features != risk_factor_feature]
+  if (!is.null(input_item) && input_item %in% unlist(selected_rf_feature_files)) {
+    for (x in names(selected_risk_factors)) {
+      keep_items[[x]] <- setdiff(items_to_filter[[x]],
+                                 selected_risk_factors[[x]][[feature_to_filter]])
+    }
+    if (debug) {
+      message("filtered items with input item as: ", input_item)
+      message("len items_to_filter:", length(unlist(items_to_filter)))
+      message("len keep_items:", length(unlist(keep_items)))
+    }
+  } else{
+    if (debug) {
+      message("no modifications")
+    }
+  }
+  possible_defaults <- setdiff(unlist(keep_items), unlist(selected_risk_factors))
+  stopifnot(length(possible_defaults) > 0)
+  default_value <- possible_defaults[1]
+  return(list(keep_items = keep_items, default_value = default_value))
+}
+
+

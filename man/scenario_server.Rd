@@ -4,7 +4,7 @@
 \alias{scenario_server}
 \title{Server-side logic for defining multiple scenarios}
 \usage{
-scenario_server(id, reference_data)
+scenario_server(id, reference_data, selected_risk_factors, debug = FALSE)
 }
 \arguments{
 \item{id}{A character string. The ID used to namespace the server-side logic.
@@ -14,6 +14,12 @@ It should match the id of the corresponding UI element.}
 list must be named \code{risk_factors} and contain elements named \code{Transitions} and
 \code{Prevalences}. The names of the values of these elements are passed on as
 choice options to \link{single_scenario_server}.}
+
+\item{selected_risk_factors}{A reactive value that returns a list of two
+character vectors, named \code{prevalences} and \code{transitions}. The reactive value
+is the output from a \link{risk_factor_server}.}
+
+\item{debug}{A boolean indicating debug mode, default is FALSE.}
 }
 \value{
 A reactive expression. The expression returns a list with the user inputs
@@ -30,5 +36,8 @@ The server handles the following things:
 buttons in the UI.
 \item Keeps track of active servers and their counts
 }
+}
+\seealso{
+\code{\link[=single_scenario_server]{single_scenario_server()}}
 }
 \keyword{internal}

@@ -86,6 +86,15 @@ relative_risk_ui <- function(id, relative_risks) {
   disability_choices(choices$to_disability)
 
   tagList(
+    p("Define which relative risks or odds ratios (in case of disability) to
+      include. The options depend on the risk factors and diseases chosen
+      in the previous tabs. Specifically, you can specify relative risks
+      from risk factors to diseases, from risk factor to death, from risk factor
+      to disability, and between included diseases.
+      The relative risks are shown as 'Source -> Destination', and they can be
+      included by ticking the corresponding boxes.
+      Multiple relative risks/odds ratios can be specified."
+      ),
     single_relative_risk_ui(
       ns("from_diseases"), "From Diseases to Diseases", disease_choices
     ),
