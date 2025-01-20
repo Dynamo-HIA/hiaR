@@ -11,6 +11,7 @@
 #'     \item Prevalences: A named list of prevalence file options.
 #'     \item Transitions: A named list of transition file options.
 #'   }
+#' @param parent_ns A function that returns the namespace of the parent module.
 #'
 #' @returns A Shiny UI component (bslib::card) for the specified risk factor.
 #'
@@ -21,26 +22,19 @@
 #'
 #' @keywords internal
 #'
-single_risk_factor_ui <- function(id, risk_factor_name, risk_factor_files) {
+single_risk_factor_ui <- function(id, risk_factor_name, risk_factor_files, parent_ns) {
   ns <- NS(id)
 
-  bslib::card(
-    class = "mb-3", # Add spacing between cards if multiple cards are stacked
-    bslib::card_header(
-      checkboxInput(ns("check"), risk_factor_name) # Checkbox input as the card title
-    ),
+  conditionalPanel(
+    condition = paste0("input['", parent_ns("risk_factor"), "'] == '", risk_factor_name, "'"),
     bslib::card_body(
-      conditionalPanel(
-        condition = paste0("input['", ns("check"), "']"),
-        div(
-          style = "margin-left: 20px;",
-          selectInput(ns("prevalence"), "Prevalence",
-            choices = names(risk_factor_files$Prevalences)
-          ),
-          selectInput(ns("transitions"), "Transitions",
-            choices = names(risk_factor_files$Transitions)
-          )
-        )
+        selectInput(ns("prevalence"), "Prevalence",
+                    choices = names(risk_factor_files$Prevalences),
+                    width = "100%"
+        ),
+        selectInput(ns("transitions"), "Transitions",
+                    choices = names(risk_factor_files$Transitions),
+                    width = "100%"
       )
     )
   )
@@ -66,9 +60,6 @@ single_risk_factor_ui <- function(id, risk_factor_name, risk_factor_files) {
 single_risk_factor_server <- function(id) {
   moduleServer(id, function(input, output, session) {
     reactive({
-      if (!input$check) {
-        return(NULL)
-      }
       list(
         prevalence = input$prevalence,
         transitions = input$transitions
@@ -99,19 +90,24 @@ risk_factor_ui <- function(id, reference_data) {
   risk_factors <- reference_data()$risk_factors
 
   tagList(
-    p("Choose the risk factors to include in the simulation.
-    You can choose multiple risk factors. When selecting any of them,
-    choose a file for the prevalence of the risk factor and the transitions
-    from the risk factor.
-    The risk factor prevalences chosen here are the risk factor exposure in
+    p("Choose the risk factor to include in the simulation. Select a file for the prevalence
+    of the risk factor and the transitions from the risk factor.
+    The risk factor prevalence chosen here is the risk factor exposure in
     the baseline year in the reference scenario."),
-    lapply(seq_along(risk_factors), function(i) {
-      single_risk_factor_ui(
-        ns(paste0("risk_factor_", i)),
-        risk_factor_name = names(risk_factors)[i],
-        risk_factor_files = risk_factors[[i]]
-      )
-    })
+    bslib::card(
+      class = "mb-3", # Add spacing between cards if multiple cards are stacked
+      radioButtons(ns("risk_factor"), "Risk Factor",
+                   choices = names(risk_factors)
+      ),
+      lapply(seq_along(risk_factors), function(i) {
+        single_risk_factor_ui(
+          id = ns(paste0("risk_factor_", i)),
+          risk_factor_name = names(risk_factors)[i],
+          risk_factor_files = risk_factors[[i]],
+          ns
+        )
+      })
+    )
   )
 }
 
@@ -139,13 +135,23 @@ risk_factor_server <- function(id, reference_data) {
     risk_factor_servers <- reactiveValues(servers = list())
     server_name_prefix <- "risk_factor_"
 
+    # Create a proper reactive for the selected risk factor
+    selected_risk_factor <- reactive({
+      req(input$risk_factor)
+      input$risk_factor
+    })
+
     observeEvent(reference_data(), {
       new_data <- reference_data()$risk_factors
       risk_factor_names(names(new_data))
-
+      # Reset servers list
       risk_factor_servers$servers <- NULL
+
+      # Create servers for each risk factor
       lapply(seq_along(names(new_data)), function(i) {
         server_name <- paste0(server_name_prefix, i)
+        current_risk_factor <- names(new_data)[i]
+
         risk_factor_servers$servers[[server_name]] <- single_risk_factor_server(server_name)
       })
     })
@@ -155,7 +161,7 @@ risk_factor_server <- function(id, reference_data) {
         server_name_prefix = server_name_prefix,
         server_list = risk_factor_servers$servers,
         item_names = risk_factor_names()
-      )
+      )[selected_risk_factor()]
     })
 
     return(user_data)

@@ -4,7 +4,7 @@
 \alias{single_risk_factor_ui}
 \title{Create UI for a Single Risk Factor}
 \usage{
-single_risk_factor_ui(id, risk_factor_name, risk_factor_files)
+single_risk_factor_ui(id, risk_factor_name, risk_factor_files, parent_ns)
 }
 \arguments{
 \item{id}{A character string. The ID used to namespace the UI elements.}
@@ -16,6 +16,8 @@ single_risk_factor_ui(id, risk_factor_name, risk_factor_files)
 \item Prevalences: A named list of prevalence file options.
 \item Transitions: A named list of transition file options.
 }}
+
+\item{parent_ns}{A function that returns the namespace of the parent module.}
 }
 \value{
 A Shiny UI component (bslib::card) for the specified risk factor.

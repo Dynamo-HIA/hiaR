@@ -17,7 +17,7 @@ test_that("simulation config returns the right values", {
       expected <- list(
         simulation_name = "my_simulation",
         population = "population1",
-        newborns = "yes",
+        has_newborns = TRUE,
         starting_year = 2004,
         population_size = 100,
         years = 10,
