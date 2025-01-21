@@ -11,7 +11,7 @@ simulation_config_ui <- function(id) {
   ns <- NS(id)
   tagList(
     wrap_tooltip(
-     textInput(ns("simulation_name"), "Simulation name:", ""),
+     textInput(ns("simulation_name"), "Simulation name:", "Simulation_1"),
      "The name of the simulation run."
     ),
     wrap_tooltip(
@@ -55,8 +55,8 @@ simulation_config_ui <- function(id) {
     wrap_tooltip(
       uiOutput(ns("save_button")),
       "Save the simulation configuration and start the simulation. This requires that paths to
-      the working directory the DYNAMO-HIA app are set in the program configuration and that a
-      simulation name has been provided."
+      the working directory the DYNAMO-HIA app are set in the program configuration and that at least
+      one risk factor and disease have been selected."
     )
   )
 }
@@ -97,7 +97,8 @@ simulation_config_server <- function(id,
       ready <- reactive({
         program_config$working_path != "" &&
           program_config$dynamo_path != "" &&
-          input$simulation_name != ""
+          input$simulation_name != "" &&
+          length(disease_configs()) > 0
       })
 
       output$save_button <- renderUI({
