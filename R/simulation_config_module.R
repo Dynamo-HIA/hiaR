@@ -56,7 +56,7 @@ simulation_config_ui <- function(id) {
       uiOutput(ns("save_button")),
       "Save the simulation configuration and start the simulation. This requires that paths to
       the working directory the DYNAMO-HIA app are set in the program configuration and that at least
-      one risk factor and disease have been selected."
+      one risk factor has been selected."
     )
   )
 }
@@ -97,8 +97,7 @@ simulation_config_server <- function(id,
       ready <- reactive({
         program_config$working_path != "" &&
           program_config$dynamo_path != "" &&
-          input$simulation_name != "" &&
-          length(disease_configs()) > 0
+          input$simulation_name != ""
       })
 
       output$save_button <- renderUI({
@@ -127,6 +126,59 @@ simulation_config_server <- function(id,
         input$save,
         {
           req(input$save)
+
+          if (length(scenario_configs()) > 0) {
+            scenarios <- lapply(names(scenario_configs()), function(name) {
+              return(configure_scenario(
+                name,
+                # The file names must not have extensions
+                fs::path_ext_remove(scenario_configs()[[name]]$transition),
+                fs::path_ext_remove(scenario_configs()[[name]]$prevalence),
+                scenario_configs()[[name]]$percent_population,
+                scenario_configs()[[name]]$min_age,
+                scenario_configs()[[name]]$max_age,
+                scenario_configs()[[name]]$gender
+              ))
+            })
+          } else {
+            scenarios = list()
+          }
+
+          if (length(disease_configs()) > 0) {
+            diseases <- lapply(names(disease_configs()), function(name) {
+              return(configure_disease(
+                name,
+                fs::path_ext_remove(disease_configs()[[name]]$prevalence),
+                fs::path_ext_remove(disease_configs()[[name]]$incidence),
+                fs::path_ext_remove(disease_configs()[[name]]$excess_mortality),
+                fs::path_ext_remove(disease_configs()[[name]]$disability)
+              ))
+            })
+          } else {
+            diseases = list()
+          }
+
+          risk_factors <- lapply(names(risk_factor_configs()), function(name) {
+              return(configure_risk_factor(
+                name,
+                fs::path_ext_remove(risk_factor_configs()[[name]]$transitions),
+                fs::path_ext_remove(risk_factor_configs()[[name]]$prevalence)
+              ))
+            })[[1]] # Can only have one risk factor!
+
+          if (nrow(relative_risk_configs()) > 0) {
+            relative_risks <- lapply(1:nrow(relative_risk_configs()), function(i) {
+                return(configure_relative_risk(
+                  i,
+                  relative_risk_configs()[i, "from"],
+                  relative_risk_configs()[i, "to"],
+                  fs::path_ext_remove(relative_risk_configs()[i, "filename"])
+                ))
+            })
+          } else {
+            relative_risks = list()
+          }
+
           create_simulation_dir(
             fs::path(program_config$working_path, "Simulations", user_data()$simulation_name),
             has_newborns = user_data()$has_newborns,
@@ -139,42 +191,10 @@ simulation_config_server <- function(id,
             ref_scenario_name = paste0(user_data()$simulation_name, "_Reference_Scenario"),
             random_seed = user_data()$random_seed,
             population_name = user_data()$population,
-            scenarios = lapply(names(scenario_configs()), function(name) {
-              return(configure_scenario(
-                name,
-                # The file names must not have extensions
-                fs::path_ext_remove(scenario_configs()[[name]]$transition),
-                fs::path_ext_remove(scenario_configs()[[name]]$prevalence),
-                scenario_configs()[[name]]$percent_population,
-                scenario_configs()[[name]]$min_age,
-                scenario_configs()[[name]]$max_age,
-                scenario_configs()[[name]]$gender
-              ))
-            }),
-            diseases = lapply(names(disease_configs()), function(name) {
-              return(configure_disease(
-                name,
-                fs::path_ext_remove(disease_configs()[[name]]$prevalence),
-                fs::path_ext_remove(disease_configs()[[name]]$incidence),
-                fs::path_ext_remove(disease_configs()[[name]]$excess_mortality),
-                fs::path_ext_remove(disease_configs()[[name]]$disability)
-              ))
-            }),
-            risk_factors = lapply(names(risk_factor_configs()), function(name) {
-              return(configure_risk_factor(
-                name,
-                fs::path_ext_remove(risk_factor_configs()[[name]]$transitions),
-                fs::path_ext_remove(risk_factor_configs()[[name]]$prevalence)
-              ))
-            })[[1]], # Can only have one risk factor!
-            relative_risks = lapply(1:nrow(relative_risk_configs()), function(i) {
-              return(configure_relative_risk(
-                i,
-                relative_risk_configs()[i, "from"],
-                relative_risk_configs()[i, "to"],
-                fs::path_ext_remove(relative_risk_configs()[i, "filename"])
-              ))
-            })
+            scenarios = scenarios,
+            diseases = diseases,
+            risk_factors = risk_factors,
+            relative_risks = relative_risks
           )
 
           batch_file_path <- fs::path(program_config$working_path, "simulationnames.txt")
