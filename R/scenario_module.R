@@ -139,7 +139,8 @@ single_scenario_server <- function(
       selectInput(ns("prevalence"),
                   "Prevalence:",
                   choices = filtered_prevalences[["keep_items"]],
-                  selected = filtered_prevalences[["default_value"]])
+                  selected = filtered_prevalences[["default_value"]],
+                  width = "100%")
     })
 
     # Render transition UI
@@ -155,7 +156,8 @@ single_scenario_server <- function(
       selectInput(ns("transition"),
                   "Transition:",
                   choices = filtered_transitions[["keep_items"]],
-                  selected = filtered_transitions[["default_value"]])
+                  selected = filtered_transitions[["default_value"]],
+                  width = "100%")
     })
 
     # Return reactive with all inputs

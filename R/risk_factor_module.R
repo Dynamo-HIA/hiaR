@@ -97,7 +97,8 @@ risk_factor_ui <- function(id, reference_data) {
     bslib::card(
       class = "mb-3", # Add spacing between cards if multiple cards are stacked
       radioButtons(ns("risk_factor"), "Risk Factor",
-                   choices = names(risk_factors)
+                   choices = names(risk_factors),
+                   selected = character(0)
       ),
       lapply(seq_along(risk_factors), function(i) {
         single_risk_factor_ui(
@@ -137,7 +138,6 @@ risk_factor_server <- function(id, reference_data) {
 
     # Create a proper reactive for the selected risk factor
     selected_risk_factor <- reactive({
-      req(input$risk_factor)
       input$risk_factor
     })
 

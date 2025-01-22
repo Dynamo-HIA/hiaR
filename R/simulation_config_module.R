@@ -11,8 +11,8 @@ simulation_config_ui <- function(id) {
   ns <- NS(id)
   tagList(
     wrap_tooltip(
-     textInput(ns("simulation_name"), "Simulation name:", "Simulation_1"),
-     "The name of the simulation run."
+      textInput(ns("simulation_name"), "Simulation name:", "Simulation_1"),
+      "The name of the simulation run."
     ),
     wrap_tooltip(
       selectInput(ns("population"), "Population:", c("")),
@@ -55,8 +55,13 @@ simulation_config_ui <- function(id) {
     wrap_tooltip(
       uiOutput(ns("save_button")),
       "Save the simulation configuration and start the simulation. This requires that paths to
-      the working directory the DYNAMO-HIA app are set in the program configuration and that at least
+      the working directory of the DYNAMO-HIA app are set in the program configuration and that at least
       one risk factor has been selected."
+    ),
+    wrap_tooltip(
+      textOutput(ns("status")),
+      "Status of the simulation. Shows whether the simulation was successful or has failed.
+      In case of failure, check the console for details."
     )
   )
 }
@@ -94,10 +99,14 @@ simulation_config_server <- function(id,
   moduleServer(
     id,
     function(input, output, session) {
+      status <- reactiveVal("Ready to run simulation")
+
       ready <- reactive({
         program_config$working_path != "" &&
           program_config$dynamo_path != "" &&
-          input$simulation_name != ""
+          input$simulation_name != "" &&
+          length(risk_factor_configs()) > 0 &&
+          status() != "Running simulation"
       })
 
       output$save_button <- renderUI({
@@ -126,6 +135,12 @@ simulation_config_server <- function(id,
         input$save,
         {
           req(input$save)
+
+          status("Running simulation")
+
+          output$status <- renderText({
+            status()
+          })
 
           if (length(scenario_configs()) > 0) {
             scenarios <- lapply(names(scenario_configs()), function(name) {
@@ -159,21 +174,21 @@ simulation_config_server <- function(id,
           }
 
           risk_factors <- lapply(names(risk_factor_configs()), function(name) {
-              return(configure_risk_factor(
-                name,
-                fs::path_ext_remove(risk_factor_configs()[[name]]$transitions),
-                fs::path_ext_remove(risk_factor_configs()[[name]]$prevalence)
-              ))
-            })[[1]] # Can only have one risk factor!
+            return(configure_risk_factor(
+              name,
+              fs::path_ext_remove(risk_factor_configs()[[name]]$transitions),
+              fs::path_ext_remove(risk_factor_configs()[[name]]$prevalence)
+            ))
+          })[[1]] # Can only have one risk factor!
 
           if (nrow(relative_risk_configs()) > 0) {
             relative_risks <- lapply(1:nrow(relative_risk_configs()), function(i) {
-                return(configure_relative_risk(
-                  i,
-                  relative_risk_configs()[i, "from"],
-                  relative_risk_configs()[i, "to"],
-                  fs::path_ext_remove(relative_risk_configs()[i, "filename"])
-                ))
+              return(configure_relative_risk(
+                i,
+                relative_risk_configs()[i, "from"],
+                relative_risk_configs()[i, "to"],
+                fs::path_ext_remove(relative_risk_configs()[i, "filename"])
+              ))
             })
           } else {
             relative_risks = list()
@@ -206,16 +221,22 @@ simulation_config_server <- function(id,
           errors <- hiaR::run_dynamo_hia(batch_file_path, program_config$dynamo_path)
           if (isTRUE(errors)) {
             message("Simulation successful!")
+            status("Simulation successful")
           } else {
             message(errors)
+            status("Simulation failed")
           }
         }
       )
 
+      output$status <- renderText({
+        status()
+      })
+
       observeEvent(reference_data(), {
         updateSelectInput(session, "population",
-          choices = names(reference_data()$population),
-          selected = NULL
+                          choices = names(reference_data()$population),
+                          selected = NULL
         )
       })
 
