@@ -99,7 +99,7 @@ simulation_config_server <- function(id,
   moduleServer(
     id,
     function(input, output, session) {
-      status <- reactiveVal("Ready to run simulation")
+      status <- reactiveVal("")
 
       ready <- reactive({
         program_config$working_path != "" &&
