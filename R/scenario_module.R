@@ -17,7 +17,7 @@ single_scenario_ui <- function(id) {
            wrap_tooltip(
              textInput(ns("scenario_name"),
                        "Scenario name:",
-                       value = ""),
+                       value = "Scenario_1"),
              "Give this scenario a name."
            ),
            wrap_tooltip(
@@ -139,7 +139,8 @@ single_scenario_server <- function(
       selectInput(ns("prevalence"),
                   "Prevalence:",
                   choices = filtered_prevalences[["keep_items"]],
-                  selected = filtered_prevalences[["default_value"]])
+                  selected = filtered_prevalences[["default_value"]],
+                  width = "100%")
     })
 
     # Render transition UI
@@ -155,7 +156,8 @@ single_scenario_server <- function(
       selectInput(ns("transition"),
                   "Transition:",
                   choices = filtered_transitions[["keep_items"]],
-                  selected = filtered_transitions[["default_value"]])
+                  selected = filtered_transitions[["default_value"]],
+                  width = "100%")
     })
 
     # Return reactive with all inputs
@@ -195,9 +197,7 @@ scenario_ui <- function(id) {
       the diseases, and the relative risks.
       You can add multiple alternative scenarios by clicking on the
       'Add scenario' button, and remove the latest scenario by clicking on the
-      'Remove latest scenario' button.
-      You must choose either a different transition dataset, or a different
-      risk factor prevalence dataset from that chosen on the risk factor tab."
+      'Remove latest scenario' button."
       ),
     actionButton(ns("add_scenario"), "Add scenario"),
     actionButton(ns("remove_scenario"), "Remove last scenario"),

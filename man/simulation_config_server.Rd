@@ -4,12 +4,30 @@
 \alias{simulation_config_server}
 \title{Server part for simulation config}
 \usage{
-simulation_config_server(id, reference_data)
+simulation_config_server(
+  id,
+  reference_data,
+  disease_configs,
+  risk_factor_configs,
+  relative_risk_configs,
+  scenario_configs,
+  program_config
+)
 }
 \arguments{
 \item{id}{The module namespace id, matching the \code{id} in the UI part.}
 
 \item{reference_data}{A reactive, containing the reference meta data.}
+
+\item{disease_configs}{A reactive, containing the disease configurations.}
+
+\item{risk_factor_configs}{A reactive, containing the risk factor configurations.}
+
+\item{relative_risk_configs}{A reactive, containing the relative risk configurations.}
+
+\item{scenario_configs}{A reactive, containing the scenario configurations.}
+
+\item{program_config}{A reactive, containing the program configurations.}
 }
 \value{
 A reactive list of key-value pairs read from the config UI, to be

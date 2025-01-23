@@ -45,7 +45,6 @@ server <- function(input, output, session) {
   available_relative_risks <- reactiveVal(NULL)
 
   user_program_config <- hiaR::program_config_server("program_config")
-  user_simulation_config <- hiaR::simulation_config_server("simulation_config", reference_data)
 
   observeEvent(user_program_config$reference_data(), {
     new_reference_data <- user_program_config$reference_data()
@@ -106,6 +105,16 @@ server <- function(input, output, session) {
       )
     }
   })
+
+  user_simulation_config <- hiaR::simulation_config_server(
+    "simulation_config",
+    reference_data,
+    selected_diseases,
+    selected_risk_factors,
+    selected_relative_risks,
+    selected_scenarios,
+    user_paths
+  )
 
   # Display the reactive values returned by each element
   if (debug) {

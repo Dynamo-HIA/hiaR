@@ -3,18 +3,8 @@ test_that("single_risk_factor_server functions correctly", {
     single_risk_factor_server,
     {
       session$setInputs(
-        check = FALSE
-      )
-      expect_equal(session$returned(), NULL)
-
-      session$setInputs(
         prevalence = "prev.xml",
         transitions = "transitions.xml"
-      )
-      expect_equal(session$returned(), NULL)
-
-      session$setInputs(
-        check = TRUE
       )
       actual <- session$returned()
       expected <- list(

@@ -32,16 +32,20 @@ single_disease_ui <- function(id, disease_name, disease_files) {
         div(
           style = "margin-left: 20px;",
           selectInput(ns("prevalence"), "Prevalence",
-            choices = names(disease_files$Prevalences)
+                      choices = names(disease_files$Prevalences),
+                      width = "100%"
           ),
           selectInput(ns("incidence"), "Incidence",
-            choices = names(disease_files$Incidences)
+                      choices = names(disease_files$Incidences),
+                      width = "100%"
           ),
           selectInput(ns("excess_mortality"), "Excess mortality",
-            choices = names(disease_files$Excess_Mortalities)
+                      choices = names(disease_files$Excess_Mortalities),
+                      width = "100%"
           ),
-          selectInput(ns("disability"), "Disabling Impact or DALYweight",
-            choices = names(disease_files$Disability)
+          selectInput(ns("disability"), "Disabling Impact or DALY weight",
+                      choices = names(disease_files$Disability),
+                      width = "100%"
           )
         )
       )

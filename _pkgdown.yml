@@ -36,6 +36,7 @@ reference:
     Run one or multiple simulations using the DYNAMO-HIA Java program.
   contents:
   - run_dynamo_hia
+  - download_github_release
 - title: "Load simulation results"
   desc: >
     Load the results of a DYNAMO-HIA simulation.

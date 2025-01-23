@@ -11,8 +11,8 @@ simulation_config_ui <- function(id) {
   ns <- NS(id)
   tagList(
     wrap_tooltip(
-     textInput(ns("simulation_name"), "Simulation name:", ""),
-     "The name of the simulation run."
+      textInput(ns("simulation_name"), "Simulation name:", "Simulation_1"),
+      "The name of the simulation run."
     ),
     wrap_tooltip(
       selectInput(ns("population"), "Population:", c("")),
@@ -53,8 +53,15 @@ simulation_config_ui <- function(id) {
       Otherwise, random variation slightly alters the simulation outcomes."
     ),
     wrap_tooltip(
-      actionButton(ns("save"), "Save and Run", class = "btn-lg btn-success"),
-      "Start the simulation."
+      uiOutput(ns("save_button")),
+      "Save the simulation configuration and start the simulation. This requires that paths to
+      the working directory of the DYNAMO-HIA app are set in the program configuration and that at least
+      one risk factor has been selected."
+    ),
+    wrap_tooltip(
+      textOutput(ns("status")),
+      "Status of the simulation. Shows whether the simulation was successful or has failed.
+      In case of failure, check the console for details."
     )
   )
 }
@@ -70,6 +77,11 @@ simulation_config_ui <- function(id) {
 #'
 #' @param id  The module namespace id, matching the `id` in the UI part.
 #' @param reference_data A reactive, containing the reference meta data.
+#' @param disease_configs A reactive, containing the disease configurations.
+#' @param risk_factor_configs A reactive, containing the risk factor configurations.
+#' @param relative_risk_configs A reactive, containing the relative risk configurations.
+#' @param scenario_configs A reactive, containing the scenario configurations.
+#' @param program_config A reactive, containing the program configurations.
 #'
 #' @returns A reactive list of key-value pairs read from the config UI, to be
 #' used in the app/by other modules.
@@ -77,15 +89,40 @@ simulation_config_ui <- function(id) {
 #' @export
 #' @keywords internal
 #'
-simulation_config_server <- function(id, reference_data) {
+simulation_config_server <- function(id,
+                                     reference_data,
+                                     disease_configs,
+                                     risk_factor_configs,
+                                     relative_risk_configs,
+                                     scenario_configs,
+                                     program_config) {
   moduleServer(
     id,
     function(input, output, session) {
+      status <- reactiveVal("")
+
+      ready <- reactive({
+        program_config$working_path != "" &&
+          program_config$dynamo_path != "" &&
+          input$simulation_name != "" &&
+          length(risk_factor_configs()) > 0 &&
+          status() != "Running simulation"
+      })
+
+      output$save_button <- renderUI({
+        actionButton(
+          session$ns("save"),
+          "Save and Run",
+          class = "btn-lg btn-success",
+          disabled = !ready()
+        )
+      })
+
       user_data <- reactive({
         list(
           simulation_name = input$simulation_name,
           population = input$population,
-          newborns = input$newborns,
+          has_newborns = input$newborns == "yes",
           population_size = input$population_size,
           starting_year = input$starting_year,
           years = input$years,
@@ -94,21 +131,112 @@ simulation_config_server <- function(id, reference_data) {
         )
       })
 
-      observeEvent( # TODO: send data to Java program from here
+      observeEvent(
         input$save,
         {
-          message("Running simulation now")
-          # message(paste0("user_data$population is now ", user_data()$population))
-          print("How much input checking to do?")
-          # if (input$dir_simulation == "")
-          #  showNotification("Select simulation directory first", type='warning')
+          req(input$save)
+
+          status("Running simulation")
+
+          output$status <- renderText({
+            status()
+          })
+
+          if (length(scenario_configs()) > 0) {
+            scenarios <- lapply(names(scenario_configs()), function(name) {
+              return(configure_scenario(
+                name,
+                # The file names must not have extensions
+                fs::path_ext_remove(scenario_configs()[[name]]$transition),
+                fs::path_ext_remove(scenario_configs()[[name]]$prevalence),
+                scenario_configs()[[name]]$percent_population,
+                scenario_configs()[[name]]$min_age,
+                scenario_configs()[[name]]$max_age,
+                scenario_configs()[[name]]$gender
+              ))
+            })
+          } else {
+            scenarios = list()
+          }
+
+          if (length(disease_configs()) > 0) {
+            diseases <- lapply(names(disease_configs()), function(name) {
+              return(configure_disease(
+                name,
+                fs::path_ext_remove(disease_configs()[[name]]$prevalence),
+                fs::path_ext_remove(disease_configs()[[name]]$incidence),
+                fs::path_ext_remove(disease_configs()[[name]]$excess_mortality),
+                fs::path_ext_remove(disease_configs()[[name]]$disability)
+              ))
+            })
+          } else {
+            diseases = list()
+          }
+
+          risk_factors <- lapply(names(risk_factor_configs()), function(name) {
+            return(configure_risk_factor(
+              name,
+              fs::path_ext_remove(risk_factor_configs()[[name]]$transitions),
+              fs::path_ext_remove(risk_factor_configs()[[name]]$prevalence)
+            ))
+          })[[1]] # Can only have one risk factor!
+
+          if (nrow(relative_risk_configs()) > 0) {
+            relative_risks <- lapply(1:nrow(relative_risk_configs()), function(i) {
+              return(configure_relative_risk(
+                i,
+                relative_risk_configs()[i, "from"],
+                relative_risk_configs()[i, "to"],
+                fs::path_ext_remove(relative_risk_configs()[i, "filename"])
+              ))
+            })
+          } else {
+            relative_risks = list()
+          }
+
+          create_simulation_dir(
+            fs::path(program_config$working_path, "Simulations", user_data()$simulation_name),
+            has_newborns = user_data()$has_newborns,
+            starting_year = user_data()$starting_year,
+            number_of_years = user_data()$years,
+            population_size = user_data()$population_size,
+            min_age = 0,
+            max_age = 95,
+            time_step = user_data()$time_step,
+            ref_scenario_name = paste0(user_data()$simulation_name, "_Reference_Scenario"),
+            random_seed = user_data()$random_seed,
+            population_name = user_data()$population,
+            scenarios = scenarios,
+            diseases = diseases,
+            risk_factors = risk_factors,
+            relative_risks = relative_risks
+          )
+
+          batch_file_path <- fs::path(program_config$working_path, "simulationnames.txt")
+
+          message(paste("Writing simulation to batch file:", batch_file_path))
+          write(user_data()$simulation_name, batch_file_path)
+
+          message(paste("Running dynamo_hia at: ", program_config$dynamo_path))
+          errors <- hiaR::run_dynamo_hia(batch_file_path, program_config$dynamo_path)
+          if (isTRUE(errors)) {
+            message("Simulation successful!")
+            status("Simulation successful")
+          } else {
+            message(errors)
+            status("Simulation failed")
+          }
         }
       )
 
+      output$status <- renderText({
+        status()
+      })
+
       observeEvent(reference_data(), {
         updateSelectInput(session, "population",
-          choices = names(reference_data()$population),
-          selected = NULL
+                          choices = names(reference_data()$population),
+                          selected = NULL
         )
       })
 
