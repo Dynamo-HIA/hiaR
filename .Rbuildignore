@@ -8,3 +8,4 @@
 ^\.github$
 ^hiaR\.Rproj$
 ^codecov\.yml$
+^data-raw$

@@ -11,6 +11,8 @@ navbar:
   left:
     - text: "Get started"
       href: articles/hiaR.html
+    - text: "Create reference data"
+      href: articles/reference_data.html
     - text: "Reference"
       href: reference/index.html
     - text: "Citation"  # Your new section

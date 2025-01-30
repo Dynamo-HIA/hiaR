@@ -43,3 +43,6 @@ Imports:
     xml2
 URL: https://dynamo-hia.github.io/hiaR/
 BugReports: https://dynamo-hia.github.io/hiaR/issues
+Depends: 
+    R (>= 2.10)
+LazyData: true

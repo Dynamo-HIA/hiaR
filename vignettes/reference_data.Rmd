@@ -1,0 +1,168 @@
+---
+title: "Creating reference data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Creating reference data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+This tutorial shows how to use the `hiaR` package to create reference data that can be used in the
+DYNAMO-HIA model. We use the Global Burden of Disease (GBD) data to create reference data for
+the mortality of COVID-19 in the Netherlands. The GBD data is available from the [IHME website](http://ghdx.healthdata.org/gbd-results-tool). 
+The data can be downloaded from the following
+[link](https://vizhub.healthdata.org/gbd-results?params=gbd-api-2021-permalink/e97296bbd66d629c3a05e9b309867160)
+after registering on the website and entering a user agreement. For simplicity, we include simulated
+data with identical format in the `hiaR` package that we will use in this tutorial. Please
+install the `dplyr` and `tidyr` packages to run this tutorial:
+
+```{r}
+install.packages(c("dplyr", "tidyr"))
+```
+
+We start by loading the `hiaR` package and the example data `covid19nl`. When using the real GBD data,
+the data can be loaded from CSV with `read.csv` or a similar function. For documentation on the 
+variables, see the [IHME Data and Tools Guide](https://www.healthdata.org/research-analysis/about-gbd/gbd-data-and-tools-guide).
+
+```{r setup}
+library(dplyr)
+library(tidyr)
+
+library(hiaR)
+
+disease <- "COVID-19"
+
+data(covid19nl)
+
+# Take a glimpse at the data
+head(covid19nl)
+```
+
+The DYNAMO-HIA model requires reference data to be in a specific format. We therefore need to 
+reshape and preprocess the raw GBD data. We start by creating data for age groups 0 to 95 years 
+that are required by DYNAMO-HIA (under default settings). The GBD data contains 5-year age groups, 
+so we need to interpolate these to 1-year age groups by imputing the 5-year rows for each 1-year 
+group. We first look at the age groups present in the GBD data.
+
+```{r}
+unique_age_groups <- unique(covid19nl$Age)
+
+print(unique_age_groups)
+
+```
+
+We see 19 5-year age groups and one "95+ years" age group that we will treat as the 95-year age group.
+We extract the range of each group from the character string and create additional rows for each 1-year age group.
+We also recode character values in the `Sex` column as numeric values.
+
+```{r}
+preprocessed_df <- covid19nl |>
+  mutate(Age = ifelse(Age == "< 5 years",
+                      "0-4 years",
+                      ifelse(Age == "95+ years",
+                             "95 years",
+                             Age)),
+         sex_num = ifelse(Sex == "Males", 0, 1),
+         age_num = gregexpr("\\d+", Age) |> 
+           regmatches(Age, m = _) |> 
+           sapply(function(x) list(c(x[1]:x[length(x)])))) |>
+  unnest(age_num)
+
+```
+
+Now, we can create a data frame that contains the prevalence of COVID-19 for the Dutch population.
+We wrap the data frame in a list with the name of the target population. NB: We could also include
+lists with data frames for multiple populations. The name of the prevalence column must be `percent`.
+
+```{r}
+prevalence_df <- preprocessed_df |>
+  filter(Measure == "Prevalence" & Metric == "Percent") |>
+  select(age = age_num, sex = sex_num, percent = Value)
+
+prevalence_list <- list(NL = list(data = prevalence_df))
+
+```
+
+Similarly, we create a data frame and list for the incidence. Note that the column name in the data
+frame must be `value` instead of `percent`.
+
+```{r}
+incidence_df <- preprocessed_df |>
+  filter(Measure == "Incidence" & Metric == "Percent") |>
+  select(age = age_num, sex = sex_num, value = Value)
+
+incidence_list <- list(NL = list(data = incidence_df))
+
+```
+
+We also create a data frame and for the disease excess mortality. Since people can be cured from
+COVID-19, we use the `curedfraction` column to store the faction of the population that is cured 
+from the disease. We estimate the cured fraction from the deaths but we could also obtain this data 
+from other GBD data sources.
+The column `acutelyfatal` is set to 0 for all rows because DYNAMO-HIA only allow either acutely 
+fatal or cured fractions to be non-zero. We add two additional values to the list: `unit_type`
+which indicates that we are using rates, and `parameter_type` which indicates that we supply the
+cured fraction.
+
+```{r}
+mortality_df <- preprocessed_df |>
+  mutate(acutelyfatal = 0,
+         curedfraction = Value * 100000) |>
+  filter(Measure == "Deaths" & Metric == "Rate") |>
+  select(age = age_num, sex = sex_num, unit = Value, acutelyfatal, curedfraction) 
+
+mortality_list <- list(NL = list(data = mortality_df,
+                                 unit_type = "Rate",
+                                 parameter_type = "Cured Fraction"))
+
+```
+
+Finally, we create a data frame and list for disease-adjusted life years (DALYs).
+
+```{r}
+daly_df <- preprocessed_df |>
+  filter(Measure == "DALYs (Disability-Adjusted Life Years)" & Metric == "Percent") |>
+  select(age = age_num, sex = sex_num, percent = Value) 
+
+daly_list <- list(NL = list(data = daly_df))
+
+```
+
+With the prevalence, incidence, mortality, and DALY lists, we can now write the XML configuration 
+files for the DYNAMO-HIA model that contain the reference data. 
+We use the `write_disease_dir` function inside a temporary directory:
+
+```{r}
+withr::with_tempdir({
+  fs::dir_create("Reference_Data")
+  
+  withr::with_dir("Reference_Data", {
+    fs::dir_create("Diseases")
+    
+    withr::with_dir("Diseases", {
+      write_disease_dir(disease_name = disease,
+                        prevalences_list = prevalence_list,
+                        incidences_list = incidence_list,
+                        excess_mortalities_list = mortality_list, 
+                        disability_list = daly_list,
+                        risk_factor_list = list(),
+                        diseases_list = list())
+    })
+  })
+})
+
+```
+
+The function writes the XML files in the `Reference_Data/Diseases/` subdirectory where the
+DYNAMO-HIA Java application can find them. It also validates the XML schemata of the files so that 
+they correspond to the expected format. Note that we did not include relative risks from risk
+factors or other diseases (they go in the `risk_factor_list` and `diseases_list` arguments, 
+respectively).
