@@ -22,6 +22,7 @@ When the save button is clicked, it will start and run the Java app
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/hiaR.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/reference_data.html">Create reference data</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/citation.html">Citation</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -49,7 +50,15 @@ When the <code>save</code> button is clicked, it will start and run the Java app
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">simulation_config_server</span><span class="op">(</span><span class="va">id</span>, <span class="va">reference_data</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">simulation_config_server</span><span class="op">(</span></span>
+<span>  <span class="va">id</span>,</span>
+<span>  <span class="va">reference_data</span>,</span>
+<span>  <span class="va">disease_configs</span>,</span>
+<span>  <span class="va">risk_factor_configs</span>,</span>
+<span>  <span class="va">relative_risk_configs</span>,</span>
+<span>  <span class="va">scenario_configs</span>,</span>
+<span>  <span class="va">program_config</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -62,6 +71,26 @@ When the <code>save</code> button is clicked, it will start and run the Java app
 
 <dt id="arg-reference-data">reference_data<a class="anchor" aria-label="anchor" href="#arg-reference-data"></a></dt>
 <dd><p>A reactive, containing the reference meta data.</p></dd>
+
+
+<dt id="arg-disease-configs">disease_configs<a class="anchor" aria-label="anchor" href="#arg-disease-configs"></a></dt>
+<dd><p>A reactive, containing the disease configurations.</p></dd>
+
+
+<dt id="arg-risk-factor-configs">risk_factor_configs<a class="anchor" aria-label="anchor" href="#arg-risk-factor-configs"></a></dt>
+<dd><p>A reactive, containing the risk factor configurations.</p></dd>
+
+
+<dt id="arg-relative-risk-configs">relative_risk_configs<a class="anchor" aria-label="anchor" href="#arg-relative-risk-configs"></a></dt>
+<dd><p>A reactive, containing the relative risk configurations.</p></dd>
+
+
+<dt id="arg-scenario-configs">scenario_configs<a class="anchor" aria-label="anchor" href="#arg-scenario-configs"></a></dt>
+<dd><p>A reactive, containing the scenario configurations.</p></dd>
+
+
+<dt id="arg-program-config">program_config<a class="anchor" aria-label="anchor" href="#arg-program-config"></a></dt>
+<dd><p>A reactive, containing the program configurations.</p></dd>
 
 </dl></div>
     <div class="section level2">

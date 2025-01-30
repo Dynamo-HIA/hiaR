@@ -30,6 +30,7 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="active nav-item"><a class="nav-link" href="../articles/hiaR.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/reference_data.html">Create reference data</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/citation.html">Citation</a></li>
       </ul>
@@ -60,30 +61,34 @@
 
     
     
-<p>This example shows how to use the <code>hiaR</code> package on a
-realistic dataset. The <code>hiaR</code> package is a wrapper for a Java
-application which implements the DYNAMO-HIA model. (TODO: Add model
-explanation).</p>
+<p>This introduction shows how to use the <code>hiaR</code> package in a
+simple example. The <code>hiaR</code> package is a wrapper for a Java
+application which implements the DYNAMO-HIA model. For details on the
+DYNAMO-HIA model, see the <a href="https://dynamo-hia.github.io/" class="external-link">DYNAMO-HIA documentation</a>. The
+DYNAMO-HIA model simulates the health impact of interventions on risk
+factors on disease outcomes and life expectancy in a population. In this
+example, we simulate the effect of an intervention on smoking on the
+development of lung cancer in the Dutch population.</p>
 <p>We start by loading the <code>hiar</code> package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dynamo-hia.github.io/hiaR/">hiaR</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
-<span><span class="co">#&gt;   object 'type_sum.accel' not found</span></span></code></pre></div>
-<p>We apply the model to a dataset from the Netherlands. The model
-requires reference data. The reference data for the Netherlands is
-included in the package. We move the reference data into a temporary
-local directory with:</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dynamo-hia.github.io/hiaR/">hiaR</a></span><span class="op">)</span></span></code></pre></div>
+<div class="section level2">
+<h2 id="reference-data">Reference data<a class="anchor" aria-label="anchor" href="#reference-data"></a>
+</h2>
+<p>To run simulations, the DYNAMO-HIA model requires reference data. The
+reference data for the Netherlands is included in the package. We move
+the reference data into a temporary local directory using the <a href="https://withr.r-lib.org/" class="external-link"><code>withr</code></a> package:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create local temporary directory; the directory will be deleted when the R session is finished</span></span>
 <span><span class="va">temp_dir</span> <span class="op">&lt;-</span> <span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_tempfile.html" class="external-link">local_tempdir</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/copy.html" class="external-link">dir_copy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"example-nl"</span>, package <span class="op">=</span> <span class="st">"hiaR"</span><span class="op">)</span>, <span class="va">temp_dir</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>The <code>Reference_Data</code> folder in our directory now contains
-the reference data for the Netherlands. The reference data contains
-information about the Dutch population, diseases, and risk factors.
-These will be used in the simulations. We can get an overview of the
-available populations, diseases, and risk factors with helper functions
-from the <code>hiaR</code> package:</p>
+the reference data for the Netherlands including information about the
+Dutch population, diseases, and risk factors. These will be used mainly
+as the <em>reference scenario</em> in the simulations. We can get an
+overview of the available populations, diseases, and risk factors with
+helper functions from the <code>hiaR</code> package:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Define path to reference data</span></span>
 <span><span class="va">reference_data_path</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path.html" class="external-link">path</a></span><span class="op">(</span><span class="va">temp_dir</span>, <span class="st">"Reference_Data"</span><span class="op">)</span></span>
@@ -91,22 +96,26 @@ from the <code>hiaR</code> package:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Available diseases:\n"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Available diseases:</span></span>
 <span><span class="va">disease_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_disease_names.html">get_disease_names</a></span><span class="op">(</span><span class="va">reference_data_path</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpWSejv8/file1f6937e75549/Reference_Data/Diseases</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">C:/Users/RUNNER~1/AppData/Local/Temp/Rtmp8AZAO3/filece41d801501/Reference_Data/Diseases</span></span></span>
 <span><span class="co">#&gt; └── <span style="color: #0000BB; font-weight: bold;">Lung_Cancer</span></span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\nAvailable populations:\n"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Available populations:</span></span>
 <span><span class="va">population_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_population_names.html">get_population_names</a></span><span class="op">(</span><span class="va">reference_data_path</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpWSejv8/file1f6937e75549/Reference_Data/Populations</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">C:/Users/RUNNER~1/AppData/Local/Temp/Rtmp8AZAO3/filece41d801501/Reference_Data/Populations</span></span></span>
 <span><span class="co">#&gt; └── <span style="color: #0000BB; font-weight: bold;">Netherlands</span></span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\nAvailable risk factors:\n"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Available risk factors:</span></span>
 <span><span class="va">risk_factor_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_risk_factor_names.html">get_risk_factor_names</a></span><span class="op">(</span><span class="va">reference_data_path</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpWSejv8/file1f6937e75549/Reference_Data/Risk_Factors</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">C:/Users/RUNNER~1/AppData/Local/Temp/Rtmp8AZAO3/filece41d801501/Reference_Data/Risk_Factors</span></span></span>
 <span><span class="co">#&gt; └── <span style="color: #0000BB; font-weight: bold;">Smoking_cat3</span></span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="configuration">Configuration<a class="anchor" aria-label="anchor" href="#configuration"></a>
+</h2>
 <p>We will now configure a simulation to assess the effect of the risk
 factor smoking on the health of the Dutch population. We will use a risk
 factor configuration with three categories (never smoked, former smoker,
@@ -117,18 +126,19 @@ names of the files from the reference data with the
 <code>get_risk_factor_filenames</code> function:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_risk_factor_filenames.html">get_risk_factor_filenames</a></span><span class="op">(</span><span class="va">reference_data_path</span>, <span class="st">"Smoking_cat3"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpWSejv8/file1f6937e75549/Reference_Data/Risk_Factors/Smoking_cat3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">C:/Users/RUNNER~1/AppData/Local/Temp/Rtmp8AZAO3/filece41d801501/Reference_Data/Risk_Factors/Smoking_cat3</span></span></span>
+<span><span class="co">#&gt; ├── configuration.xml</span></span>
 <span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">Prevalences</span></span></span>
 <span><span class="co">#&gt; │   ├── NL_RF_smoking_cat3_Prev_V1.xml</span></span>
 <span><span class="co">#&gt; │   └── RF_smoking_cat_All_Never_Smokers_Prev.xml</span></span>
 <span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">Relative_Risks_For_Death</span></span></span>
 <span><span class="co">#&gt; │   └── RR_smoking_cat3_to_TotalMort.xml</span></span>
-<span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">Transitions</span></span></span>
-<span><span class="co">#&gt; │   ├── NL_RF_smoking_Transitions_Netto.xml</span></span>
-<span><span class="co">#&gt; │   └── NL_RF_smoking_Transitions_Zero.xml</span></span>
-<span><span class="co">#&gt; └── configuration.xml</span></span></code></pre></div>
+<span><span class="co">#&gt; └── <span style="color: #0000BB; font-weight: bold;">Transitions</span></span></span>
+<span><span class="co">#&gt;     ├── NL_RF_smoking_Transitions_Netto.xml</span></span>
+<span><span class="co">#&gt;     └── NL_RF_smoking_Transitions_Zero.xml</span></span></code></pre></div>
 <p>The files in the different sub directories are briefly described here
-(for details the DYNAMO-HIA documentation):</p>
+(for details, see the <a href="https://dynamo-hia.github.io/" class="external-link">DYNAMO-HIA
+documentation</a>):</p>
 <ul>
 <li>
 <code>Prevalence</code>: Files with data on which part of the
@@ -164,7 +174,7 @@ disability weights. We can get the names of the files from the reference
 data with the <code>get_disease_filenames</code> function:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_disease_filenames.html">get_disease_filenames</a></span><span class="op">(</span><span class="va">reference_data_path</span>, <span class="st">"Lung_Cancer"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpWSejv8/file1f6937e75549/Reference_Data/Diseases/Lung_Cancer</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">C:/Users/RUNNER~1/AppData/Local/Temp/Rtmp8AZAO3/filece41d801501/Reference_Data/Diseases/Lung_Cancer</span></span></span>
 <span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">Disability</span></span></span>
 <span><span class="co">#&gt; │   └── NL_disease_LungCa_DALY_V1.xml</span></span>
 <span><span class="co">#&gt; ├── <span style="color: #0000BB; font-weight: bold;">Excess_Mortalities</span></span></span>
@@ -224,15 +234,16 @@ the relative risk data:</p>
 <span>  relative_risk_filename <span class="op">=</span> <span class="st">"RR_to_LungCa-Smoking_cat3"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Besides risk factors and diseases, we also need to configure the
-scenario that we want to simulate. Scenarios require a unique name, a
-success rate for an intervention, the minimum and maximum age as well as
-the targeted gender for the intervention. Most importantly, they need
-names of files with the transition type and prevalence of the risk
-factor which is changed due to the intervention.</p>
+intervention scenario that we want to simulate. Scenarios require a
+unique name, a success rate for an intervention, the minimum and maximum
+age as well as the targeted gender for the intervention. Most
+importantly, they need names of files with the transition type and
+prevalence of the risk factor which is changed due to the
+intervention.</p>
 <p>We create a scenario that intervenes on the risk factor smoking and
 assumes that the targeted population never smoked. We choose this
-intervention by specifying a prevalence file that only contains never
-smokers.</p>
+intervention by specifying a prevalence file that only contains “never
+smokers”.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">smoking_intervention</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/configure_scenario.html">configure_scenario</a></span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="st">"All_Never_Smokers"</span>,</span>
@@ -274,29 +285,139 @@ can look at all the available simulations with the
 <code>get_simulation_names</code> function:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_simulation_names.html">get_simulation_names</a></span><span class="op">(</span><span class="va">temp_dir</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">/tmp/RtmpWSejv8/file1f6937e75549/Simulations</span></span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB; font-weight: bold;">C:/Users/RUNNER~1/AppData/Local/Temp/Rtmp8AZAO3/filece41d801501/Simulations</span></span></span>
 <span><span class="co">#&gt; └── <span style="color: #0000BB; font-weight: bold;">Netherlands_Smoking_Intervention</span></span></span></code></pre></div>
 <p>The subfolder will also contain the results from the simulation.</p>
-<p>Before we can run the simulation, we need to add the simulation name
-to a batch file which we will use as input for the DYNAMO-HIA Java
-application.</p>
+<p>We need to add the simulation name to a batch file which we will use
+as input for the DYNAMO-HIA Java application.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch_file_name</span> <span class="op">&lt;-</span> <span class="st">"simulation_names.txt"</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/write.html" class="external-link">write</a></span><span class="op">(</span><span class="va">simulation_name</span>, <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path.html" class="external-link">path</a></span><span class="op">(</span><span class="va">temp_dir</span>, <span class="va">batch_file_name</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>We can now run the simulation using the <code>run_dynamo_hia</code>
-function. The function takes the path to the simulation folder as an
-argument.</p>
+</div>
+<div class="section level2">
+<h2 id="running-dynamo-hia">Running DYNAMO-HIA<a class="anchor" aria-label="anchor" href="#running-dynamo-hia"></a>
+</h2>
+<p>Before we can run the simulation, we need to download the DYNAMO-HIA
+Java application. We can do this automatically with the
+<code>download_github_release</code> function. The function will
+automatically download the correct version for our operating system and
+place it into our temporary directory.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># TODO: Add dynamo path and download</span></span>
-<span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_dir.html" class="external-link">with_dir</a></span><span class="op">(</span><span class="va">temp_dir</span>, <span class="op">{</span></span>
-<span>  <span class="fu"><a href="../reference/run_dynamo_hia.html">run_dynamo_hia</a></span><span class="op">(</span><span class="va">batch_file_name</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"DYNAMO_HIA_PATH"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/download_github_release.html">download_github_release</a></span><span class="op">(</span></span>
+<span>  repo_url <span class="op">=</span> <span class="st">"https://github.com/Dynamo-HIA/dynamo-hia"</span>,</span>
+<span>  release_tag <span class="op">=</span> <span class="st">"v3.0.0-beta.1"</span>,</span>
+<span>  dest_dir <span class="op">=</span> <span class="va">temp_dir</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>We can now run the simulation using the <code>run_dynamo_hia</code>
+function. The function takes the path to the batch file and the path to
+the DYNAMO-HIA executable as arguments. The latter is set automatically
+by the function <code>download_github_release</code> and stored in the
+environment variable <code>DYNAMO_HIA_PATH</code>.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_dir.html" class="external-link">with_dir</a></span><span class="op">(</span><span class="va">temp_dir</span>, <span class="op">{</span></span>
+<span>  <span class="fu"><a href="../reference/run_dynamo_hia.html">run_dynamo_hia</a></span><span class="op">(</span><span class="va">batch_file_name</span>, <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path.html" class="external-link">path</a></span><span class="op">(</span><span class="va">temp_dir</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"DYNAMO_HIA_PATH"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>The function returns <code>TRUE</code> indicating that the simulation
-was successful. The results of the simulation are stored in the folder
-of the simulation.</p>
-<p>(TODO: Explanation of the results and how to visualize them).</p>
-  </main>
+was successful. The results of the simulation are stored in the
+simulation folder.</p>
+</div>
+<div class="section level2">
+<h2 id="loading-and-visualizing-results">Loading and visualizing results<a class="anchor" aria-label="anchor" href="#loading-and-visualizing-results"></a>
+</h2>
+<p>We can load the results with the <code>load_simulation_results</code>
+function. The function requires the name of the simulation and the path
+to the working directory. We start by loading the population results
+(using <code>type = batchoutput</code>):</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df_population</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_simulation_results.html">load_simulation_results</a></span><span class="op">(</span><span class="va">temp_dir</span>, <span class="va">simulation_name</span>, type <span class="op">=</span> <span class="st">"batchoutput"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Get an overview of the data frame</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df_population</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   year scenario gender    riskClass age total.number Lung_Cancer</span></span>
+<span><span class="co">#&gt; 1 2010        0      0 Never_smoker   0        99076           0</span></span>
+<span><span class="co">#&gt; 2 2010        0      0 Never_smoker   1       103198           0</span></span>
+<span><span class="co">#&gt; 3 2010        0      0 Never_smoker   2       103889           0</span></span>
+<span><span class="co">#&gt; 4 2010        0      0 Never_smoker   3       104573           0</span></span>
+<span><span class="co">#&gt; 5 2010        0      0 Never_smoker   4       106100           0</span></span>
+<span><span class="co">#&gt; 6 2010        0      0 Never_smoker   5       104081           0</span></span>
+<span><span class="co">#&gt;   with.disability with.disease mortality incidence.of.Lung_Cancer</span></span>
+<span><span class="co">#&gt; 1        2005.416            0 499.07038                        0</span></span>
+<span><span class="co">#&gt; 2        2153.652            0  36.93724                        0</span></span>
+<span><span class="co">#&gt; 3        2235.289            0  28.45966                        0</span></span>
+<span><span class="co">#&gt; 4        2319.714            0  21.74706                        0</span></span>
+<span><span class="co">#&gt; 5        2426.453            0  14.21647                        0</span></span>
+<span><span class="co">#&gt; 6        2453.870            0  14.88270                        0</span></span></code></pre></div>
+<p>With the population results, we can plot the population pyramid for
+the starting year of our simulation showing the difference between our
+smoking intervention scenario and the reference scenario:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_population_pyramid.html">plot_population_pyramid</a></span><span class="op">(</span><span class="va">df_population</span>, year <span class="op">=</span> <span class="fl">2010</span>, scenario <span class="op">=</span> <span class="fl">1</span>, difference <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="hiaR_files/figure-html/unnamed-chunk-16-1.png" width="672"></p>
+<p>We can see that disability is more prevalent in older age groups and
+lung cancer only occurs in age groups above 50 and is generally a rare
+disease.</p>
+<p>We can also plot the prevalence of lung cancer at a specific age (75)
+over time:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_prevalence.html">plot_prevalence</a></span><span class="op">(</span><span class="va">df_population</span>, disease <span class="op">=</span> <span class="st">"Lung_Cancer"</span>, age <span class="op">=</span> <span class="fl">75</span><span class="op">)</span></span></code></pre></div>
+<p><img src="hiaR_files/figure-html/unnamed-chunk-17-1.png" width="672"></p>
+<p>The plot shows that the prevalence of lung cancer decreases over the
+years in our intervention scenario.</p>
+<p>We can also compare the mortality across scenarios over time:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_mortality.html">plot_mortality</a></span><span class="op">(</span><span class="va">df_population</span>, age <span class="op">=</span> <span class="fl">75</span><span class="op">)</span></span></code></pre></div>
+<p><img src="hiaR_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
+<p>It seems like our intervention has a positive effect on mortality
+rates in this specific age group.</p>
+<p>Finally, we can plot the simulated life expectancy. This requires the
+life expectancy results which we can load using
+<code>type = cohortLE</code>:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df_life_expectancy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_simulation_results.html">load_simulation_results</a></span><span class="op">(</span><span class="va">temp_dir</span>, <span class="va">simulation_name</span>, type <span class="op">=</span> <span class="st">"cohortLE"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Get an overview of the data frame</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df_life_expectancy</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                         scenario gender age total.life.expectancy</span></span>
+<span><span class="co">#&gt; 1 Netherlands_Reference_Scenario  males   0              77.26253</span></span>
+<span><span class="co">#&gt; 2 Netherlands_Reference_Scenario  males   1              76.76924</span></span>
+<span><span class="co">#&gt; 3 Netherlands_Reference_Scenario  males   2              75.64520</span></span>
+<span><span class="co">#&gt; 4 Netherlands_Reference_Scenario  males   3              75.16501</span></span>
+<span><span class="co">#&gt; 5 Netherlands_Reference_Scenario  males   4              73.52557</span></span>
+<span><span class="co">#&gt; 6 Netherlands_Reference_Scenario  males   5              72.77295</span></span>
+<span><span class="co">#&gt;   expectancy.with.disability expectancy.with.all.diseases</span></span>
+<span><span class="co">#&gt; 1                   6.329091                   0.11618547</span></span>
+<span><span class="co">#&gt; 2                   6.361475                   0.10652938</span></span>
+<span><span class="co">#&gt; 3                   6.317164                   0.11598473</span></span>
+<span><span class="co">#&gt; 4                   6.388107                   0.07567477</span></span>
+<span><span class="co">#&gt; 5                   6.242434                   0.13801868</span></span>
+<span><span class="co">#&gt; 6                   6.267935                   0.10949140</span></span>
+<span><span class="co">#&gt;   life.expectany.with.Lung_Cancer</span></span>
+<span><span class="co">#&gt; 1                      0.11618547</span></span>
+<span><span class="co">#&gt; 2                      0.10652938</span></span>
+<span><span class="co">#&gt; 3                      0.11598473</span></span>
+<span><span class="co">#&gt; 4                      0.07567477</span></span>
+<span><span class="co">#&gt; 5                      0.13801868</span></span>
+<span><span class="co">#&gt; 6                      0.10949140</span></span></code></pre></div>
+<p>We can now plot the life expecaancy for the different scenarios and
+genders at a specific age group:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_life_expectancy.html">plot_life_expectancy</a></span><span class="op">(</span><span class="va">df_life_expectancy</span>, age <span class="op">=</span> <span class="fl">75</span><span class="op">)</span></span></code></pre></div>
+<p><img src="hiaR_files/figure-html/unnamed-chunk-20-1.png" width="672"></p>
+<p>We can see that our intervention increases life expectancy in this
+age group.</p>
+</div>
+<div class="section level2">
+<h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
+</h2>
+<p>In this example, we showed how to use the <code>hiaR</code> package
+to configure and run a simulation of the DYNAMO-HIA model using the
+effect of smoking on lung cancer in the Dutch population as an
+example.</p>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

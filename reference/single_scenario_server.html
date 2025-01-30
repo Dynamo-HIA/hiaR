@@ -16,6 +16,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/hiaR.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/reference_data.html">Create reference data</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/citation.html">Citation</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -40,7 +41,13 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">single_scenario_server</span><span class="op">(</span><span class="va">id</span>, <span class="va">reference_data</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">single_scenario_server</span><span class="op">(</span></span>
+<span>  <span class="va">id</span>,</span>
+<span>  <span class="va">reference_data</span>,</span>
+<span>  <span class="va">prevalence_and_transition_choices</span>,</span>
+<span>  <span class="va">selected_risk_factors</span>,</span>
+<span>  <span class="va">debug</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -56,11 +63,51 @@ It should match the id of the corresponding UI elements.</p></dd>
 <dd><p>A reactive expression. The expression determines the return
 value of the server.</p></dd>
 
+
+<dt id="arg-prevalence-and-transition-choices">prevalence_and_transition_choices<a class="anchor" aria-label="anchor" href="#arg-prevalence-and-transition-choices"></a></dt>
+<dd><p>A reactive value that returns a list
+of two character vector of choices. The names should be <code>prevalences</code> and
+<code>transitions</code>. The choices are the baseline choices for the scenario, but
+they can be narrowed down depending on <code>selected_risk_factors</code>
+and each other's value.</p></dd>
+
+
+<dt id="arg-selected-risk-factors">selected_risk_factors<a class="anchor" aria-label="anchor" href="#arg-selected-risk-factors"></a></dt>
+<dd><p>A reactive value that returns a list of two
+character vectors, named <code>prevalences</code> and <code>transitions</code>. The reactive value
+is the output from a <a href="risk_factor_server.html">risk_factor_server</a>.</p></dd>
+
+
+<dt id="arg-debug">debug<a class="anchor" aria-label="anchor" href="#arg-debug"></a></dt>
+<dd><p>A boolean indicating debug mode. If TRUE, some messages
+are printed to the console.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>If <code>reference_data</code> returns <code>NULL</code>, the server returns an empty list.
 Otherwise, it returns a list where each element is taken from the UI inputs.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>The argument <code>prevalence_and_transition_choices</code> is the universe of possible
+values that the user can select in the scenario. However, depending on what
+risk factors the user chose in the risk factor tab, the choice of transitions
+or prevalences for the scenario may be limited:</p>
+<p><em>In a scenario you must chose either a different transition dataset or a different
+risk factor prevalence dataset from that chosen on the risk factor tab. Therefore, if the
+risk factor prevalence is the same as that on the risk factor tab, the transition dataset
+from the risk factor tab will not be visible, and visa versa. It can occur that the list of
+choices is not refreshed correctly after changing the other choice. In that case the dataset
+does not reappear in the list after changing the other choice. Clicking on the risk factor
+tab and back to the scenario tab will solve this.</em></p>
+<p>(source: https://www.dynamo-hia.eu/sites/default/files/2018-04/DYNAMO_USERMANUAL_2.0.8.pdf, p. 39)</p>
+<p>For this reason, the <code>selected_risk_factors</code> argument is also necessary for the server.
+The filtering logic is implemented in <a href="filter_items.html">filter_items</a>.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><code><a href="filter_items.html">filter_items()</a></code></p></div>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

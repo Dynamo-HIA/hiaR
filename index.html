@@ -32,6 +32,7 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="articles/hiaR.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="articles/reference_data.html">Create reference data</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="articles/citation.html">Citation</a></li>
       </ul>
@@ -75,7 +76,7 @@
 </h2>
 <p>You can install the <code>hiaR</code> package from GitHub via <code>remotes</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"Dynamo-HIA/hiaR"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"Dynamo-HIA/hiaR"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="user-documentation">User Documentation<a class="anchor" aria-label="anchor" href="#user-documentation"></a>
@@ -127,6 +128,11 @@
 <h4 id="imports">Imports<a class="anchor" aria-label="anchor" href="#imports"></a>
 </h4>
 <p>Any functions from <code>shiny</code> and <code>shinyFiles</code> can be used directly without the <code>shiny::</code> prefix. For any other packages, be explicit and use <code>mypackage::myfunction()</code>.</p>
+</div>
+<div class="section level4">
+<h4 id="before-making-a-release">Before Making a Release<a class="anchor" aria-label="anchor" href="#before-making-a-release"></a>
+</h4>
+<p>Before making a release, please change the default value for the <code>release_tag</code> argument in the <code>download_github_release</code> function to the tag of the latest release of <a href="https://github.com/Dynamo-HIA/dynamo-hia" class="external-link">DYNAMO-HIA</a> if necessary.</p>
 </div>
 </div>
 </div>
