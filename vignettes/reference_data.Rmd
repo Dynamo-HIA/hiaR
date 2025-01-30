@@ -161,7 +161,7 @@ withr::with_tempdir({
 
 ```
 
-The function writes the XML files in the `Reference_Data/Diseases/` sub directory where the
+The function writes the XML files in the `Reference_Data/Diseases/` subdirectory where the
 DYNAMO-HIA Java application can find them. It also validates the XML schemata of the files so that 
 they correspond to the expected format. Note that we did not include relative risks from risk
 factors or other diseases (they go in the `risk_factor_list` and `diseases_list` arguments, 
